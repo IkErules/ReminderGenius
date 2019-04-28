@@ -11,8 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".AddContactActivity"
-            android:parentActivityName=".Activity.MainActivity"
+            android:name=".Activities.AddContactActivity"
+            android:parentActivityName=".Activities.MainActivity"
             android:label="@string/contact_title">
         </activity>
         <activity
@@ -36,5 +36,8 @@
             </intent-filter>
         </activity>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>
