@@ -16,7 +16,7 @@ public class SearchContactXmlParser {
 
     private static final String ns = null;
 
-    public List<SearchContact> parse(InputStream in) throws XmlPullParserException, IOException {
+    public ArrayList<SearchContact> parse(InputStream in) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -28,8 +28,8 @@ public class SearchContactXmlParser {
         }
     }
 
-    private List readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
-        List<SearchContact> entries = new ArrayList();
+    private ArrayList readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
+        ArrayList<SearchContact> entries = new ArrayList();
 
         parser.require(XmlPullParser.START_TAG, ns, "feed");
         while (parser.next() != XmlPullParser.END_TAG) {

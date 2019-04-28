@@ -1,7 +1,9 @@
 package ch.hslu.appe.reminder.genius.AsyncTasks;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
 
@@ -12,14 +14,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ch.hslu.appe.reminder.genius.Activities.SearchContactResultActivity;
 import ch.hslu.appe.reminder.genius.Models.SearchContact;
 import ch.hslu.appe.reminder.genius.Parser.SearchContactXmlParser;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
+import android.content.Intent;
 
-public class LoadContactDataAsync extends AsyncTask<String, Void, List<SearchContact>> {
+public class LoadContactDataAsync extends AsyncTask<String, Void, ArrayList<SearchContact>> {
 
     private static final String BASE_SEARCH_URL = "https://tel.search.ch/api/";
     private HttpLoggingInterceptor httpLogger;
@@ -36,8 +40,8 @@ public class LoadContactDataAsync extends AsyncTask<String, Void, List<SearchCon
         httpClient = new OkHttpClient.Builder().addInterceptor(httpLogger).build();
     }
 
-        @Override
-    protected List<SearchContact> doInBackground(String... param) {
+    @Override
+    protected ArrayList<SearchContact> doInBackground(String... param) {
             String searchParam = getSearchParam(param[0]);
 
             Request request = new Request.Builder()
@@ -77,9 +81,13 @@ public class LoadContactDataAsync extends AsyncTask<String, Void, List<SearchCon
     }
 
     @Override
-    protected void onPostExecute(List<SearchContact> searchContacts) {
+    protected void onPostExecute(ArrayList<SearchContact> searchContacts) {
         searchContacts.forEach(searchContact -> {
             Log.i("LoadContactDataAsync", searchContact.toString());
         });
+
+        Intent intent = new Intent(context, SearchContactResultActivity.class);
+        intent.putParcelableArrayListExtra("contacts", searchContacts);
+        context.startActivity(intent);
     }
 }
