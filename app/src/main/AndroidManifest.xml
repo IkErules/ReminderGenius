@@ -11,6 +11,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".AddContactActivity"
+            android:parentActivityName=".Activity.MainActivity"
+            android:label="@string/contact_title">
+        </activity>
+        <activity
             android:name=".Activity.ShowContactActivity"
             android:label="@string/show_contact_text_view_title"
             android:parentActivityName=".Activity.ContactActivity"
@@ -27,7 +32,6 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
