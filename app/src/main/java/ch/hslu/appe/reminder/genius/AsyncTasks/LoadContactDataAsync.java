@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ch.hslu.appe.reminder.genius.Activities.AddContactActivity;
 import ch.hslu.appe.reminder.genius.Activities.SearchContactResultActivity;
 import ch.hslu.appe.reminder.genius.Models.SearchContact;
 import ch.hslu.appe.reminder.genius.Parser.SearchContactXmlParser;
@@ -23,16 +24,22 @@ import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import android.content.Intent;
 
+import static ch.hslu.appe.reminder.genius.Activities.AddContactActivity.PICK_CONTACT_REQUEST;
+
 public class LoadContactDataAsync extends AsyncTask<String, Void, ArrayList<SearchContact>> {
 
+    public static final String SEARCH_CONTACTS_RESULT = "search.contacts.result";
     private static final String BASE_SEARCH_URL = "https://tel.search.ch/api/";
+
     private HttpLoggingInterceptor httpLogger;
     private OkHttpClient httpClient;
     private ListView listView;
     private Context context;
+    private AddContactActivity activity;
 
-    public LoadContactDataAsync(Context context) {
+    public LoadContactDataAsync(Context context, AddContactActivity activity) {
         this.context = context;
+        this.activity = activity;
         this.listView = listView;
         // HttpClient erzeugen und konfigurieren
         httpLogger = new HttpLoggingInterceptor();
@@ -83,11 +90,11 @@ public class LoadContactDataAsync extends AsyncTask<String, Void, ArrayList<Sear
     @Override
     protected void onPostExecute(ArrayList<SearchContact> searchContacts) {
         searchContacts.forEach(searchContact -> {
-            Log.i("LoadContactDataAsync", searchContact.toString());
+            Log.d("LoadContactDataAsync", String.format("Found contact from https request: %s", searchContact.toString()));
         });
 
         Intent intent = new Intent(context, SearchContactResultActivity.class);
-        intent.putParcelableArrayListExtra("contacts", searchContacts);
-        context.startActivity(intent);
+        intent.putParcelableArrayListExtra(SEARCH_CONTACTS_RESULT, searchContacts);
+        activity.startActivityForResult(intent, PICK_CONTACT_REQUEST);
     }
 }

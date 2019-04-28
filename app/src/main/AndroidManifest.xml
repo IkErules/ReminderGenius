@@ -12,13 +12,13 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Activities.SearchContactResultActivity"
-            android:label="@string/title_activity_search_contact_result"
+            android:label="@string/search_contact_result_title"
             android:parentActivityName=".Activities.SearchContactResultActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".Activities.AddContactActivity"
-            android:parentActivityName=".Activity.MainActivity"
-            android:label="@string/contact_title">
+            android:label="@string/add_contact_title"
+            android:parentActivityName=".Activity.MainActivity">
         </activity>
         <activity
             android:name=".Activity.ShowContactActivity"

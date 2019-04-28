@@ -22,6 +22,17 @@
     <string name="menu_contacts">Kunden</string>
     <string name="title_activity_add_contact">AddContactActivity</string>
 
+    <!-- Add Contact -->
+    <string name="add_contact_title">Kontakt hinzufügen</string>
+    <string name="add_contact_search_hint">Name, Vorname</string>
+    <string name="add_contact_name_text_view_hint">Vorname</string>
+    <string name="add_contact_surname_text_view_hint">Nachname</string>
+    <string name="add_contact_email_hint">E-Mail</string>
+    <string name="add_contact_phone_hint">Telefonnummer</string>
+
+    <!-- Search Contact Result -->
+    <string name="search_contact_result_title">Suchresultate</string>
+
     <!-- Kontakt -->
     <string name="contact_title">Kontakt hinzufügen</string>
     <string name="contact_search_hint">Name, Vorname</string>
