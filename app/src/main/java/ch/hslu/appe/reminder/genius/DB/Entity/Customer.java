@@ -1,8 +1,8 @@
-package ch.hslu.appe.reminder.genius.DB.Entities;
+package ch.hslu.appe.reminder.genius.DB.Entity;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import androidx.annotation.NonNull;
 
@@ -11,7 +11,7 @@ public class Customer {
     @PrimaryKey(autoGenerate = true)
     @NonNull
     @ColumnInfo(name = "customerId")
-    private int customerId;
+    public int customerId;
     @ColumnInfo(name = "firstName")
     private String firstName;
     @ColumnInfo(name = "lastName")
@@ -44,6 +44,7 @@ public class Customer {
         this.zip = zip;
     }
 
+    public int getCustomerId(){return this.customerId;}
     public String getFirstName(){return this.firstName;}
     public String getLastName(){return this.lastName;}
     public String getPhone(){return this.phone;}
