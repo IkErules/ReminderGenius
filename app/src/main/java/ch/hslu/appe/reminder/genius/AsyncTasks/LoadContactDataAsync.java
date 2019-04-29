@@ -30,6 +30,7 @@ public class LoadContactDataAsync extends AsyncTask<String, Void, ArrayList<Sear
 
     public static final String SEARCH_CONTACTS_RESULT = "search.contacts.result";
     private static final String BASE_SEARCH_URL = "https://tel.search.ch/api/";
+    private static final String API_KEY = "&key=9fe1be1f621383bf4dcdd496a4bf6c0d";
 
     private HttpLoggingInterceptor httpLogger;
     private OkHttpClient httpClient;
@@ -52,7 +53,7 @@ public class LoadContactDataAsync extends AsyncTask<String, Void, ArrayList<Sear
             String searchParam = getSearchParam(param[0]);
 
             Request request = new Request.Builder()
-                    .url(BASE_SEARCH_URL + searchParam)
+                    .url(BASE_SEARCH_URL + searchParam + API_KEY)
                     .build();
 
             Response response = null;
@@ -84,7 +85,7 @@ public class LoadContactDataAsync extends AsyncTask<String, Void, ArrayList<Sear
     private String getSearchParam(String param) {
         List<String> params = Arrays.asList(param.trim().split(" ", 0));
         String searchParam = String.join("+", params);
-        return String.format("?was=%s", searchParam);
+        return String.format("?q=%s", searchParam);
     }
 
     @Override

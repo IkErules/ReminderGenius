@@ -24,7 +24,7 @@
 
     <!-- Add Contact -->
     <string name="add_contact_title">Kontakt hinzufügen</string>
-    <string name="add_contact_search_hint">Name, Vorname</string>
+    <string name="add_contact_search_hint">Name, Vorname, Ort</string>
     <string name="add_contact_name_text_view_hint">Vorname</string>
     <string name="add_contact_surname_text_view_hint">Nachname</string>
     <string name="add_contact_email_hint">E-Mail</string>
