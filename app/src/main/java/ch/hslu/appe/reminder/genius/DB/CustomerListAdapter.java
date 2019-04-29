@@ -47,7 +47,7 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
     }
 
     public void setCustomers(List<Customer> customers){
-        customers = customers;
+        this.customers = customers;
         notifyDataSetChanged();
     }
 
@@ -55,8 +55,8 @@ public class CustomerListAdapter extends RecyclerView.Adapter<CustomerListAdapte
     // customers has not been updated (means initially, it's null, and we can't return null).
     @Override
     public int getItemCount() {
-        if (customers != null)
-            return customers.size();
+        if (this.customers != null)
+            return this.customers.size();
         else return 0;
     }
 }
