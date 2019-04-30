@@ -32,7 +32,6 @@ public class LoadContactDataAsync extends AsyncTask<String, Void, ArrayList<Sear
 
     private HttpLoggingInterceptor httpLogger;
     private OkHttpClient httpClient;
-    private ListView listView;
     private Context context;
     private AddContactActivity activity;
 

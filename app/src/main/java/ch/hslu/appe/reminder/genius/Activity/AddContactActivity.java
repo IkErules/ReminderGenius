@@ -83,14 +83,40 @@ public class AddContactActivity extends AppCompatActivity {
                 if (data.hasExtra("search.contact.to.import")) {
                     SearchContact selectedContact = data.getParcelableExtra("search.contact.to.import");
                     Log.d("AddContactActivity", String.format("Selected contact: %s", selectedContact.toString()));
-                    TextView name = findViewById(R.id.add_contact_name_text_view);
-                    name.setText(selectedContact.getTitle());
 
-                    SearchView searchView = findViewById(R.id.add_contact_search_view);
-                    searchView.setQuery("", false);
-                    searchView.clearFocus();
+                    setTextFields(selectedContact);
+                    resetSearchView();
                 }
             }
         }
+    }
+
+    private void setTextFields(SearchContact searchContact) {
+        TextView firstname = findViewById(R.id.add_contact_firstname_text_view);
+        firstname.setText(searchContact.getFirstname());
+
+        TextView name = findViewById(R.id.add_contact_name_text_view);
+        name.setText(searchContact.getName());
+
+        TextView address = findViewById(R.id.add_contact_address_text_view);
+        address.setText(searchContact.getStreet());
+
+        TextView zip = findViewById(R.id.add_contact_zip_text_view);
+        zip.setText(searchContact.getZipString());
+
+        TextView city = findViewById(R.id.add_contact_city_text_view);
+        city.setText(searchContact.getCity());
+
+        TextView canton = findViewById(R.id.add_contact_canton_text_view);
+        canton.setText(searchContact.getCanton());
+
+        TextView phone = findViewById(R.id.add_contact_phone_text_view);
+        phone.setText(searchContact.getPhone());
+    }
+
+    private void resetSearchView() {
+        SearchView searchView = findViewById(R.id.add_contact_search_view);
+        searchView.setQuery("", false);
+        searchView.clearFocus();
     }
 }

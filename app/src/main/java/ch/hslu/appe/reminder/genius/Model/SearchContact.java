@@ -82,6 +82,10 @@ public class SearchContact implements Parcelable {
         return zip;
     }
 
+    public String getZipString() {
+        return String.valueOf(zip);
+    }
+
     public void setZip(int zip) {
         this.zip = zip;
     }

@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/add_contact_name_text_view"
+        android:id="@+id/add_contact_firstname_text_view"
         android:layout_width="0dp"
         android:layout_height="47dp"
         android:layout_marginStart="8dp"
@@ -36,7 +36,7 @@
         app:layout_constraintTop_toBottomOf="@+id/add_contact_search_view" />
 
     <EditText
-        android:id="@+id/add_contact_surname_text_view"
+        android:id="@+id/add_contact_name_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -47,7 +47,7 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView3"
-        app:layout_constraintTop_toBottomOf="@+id/add_contact_name_text_view" />
+        app:layout_constraintTop_toBottomOf="@+id/add_contact_firstname_text_view" />
 
     <ImageView
         android:id="@+id/imageView3"
@@ -59,14 +59,29 @@
         app:layout_constraintTop_toBottomOf="@+id/add_contact_search_view"
         app:srcCompat="@drawable/ic_perm_contact_calendar" />
 
+
+    <EditText
+        android:id="@+id/add_contact_address_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:ems="10"
+        android:hint="@string/add_contact_address_hint"
+        android:inputType="textPostalAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView3"
+        app:layout_constraintTop_toBottomOf="@+id/add_contact_name_text_view" />
+
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_contact_surname_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/add_contact_zip_text_view"
         app:srcCompat="@drawable/ic_alternate_email" />
 
     <EditText
@@ -81,7 +96,7 @@
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView4"
-        app:layout_constraintTop_toBottomOf="@+id/add_contact_surname_text_view" />
+        app:layout_constraintTop_toBottomOf="@+id/add_contact_zip_text_view" />
 
     <ImageView
         android:id="@+id/imageView5"
@@ -94,7 +109,7 @@
         app:srcCompat="@drawable/ic_local_phone" />
 
     <EditText
-        android:id="@+id/contact_phone_text_view"
+        android:id="@+id/add_contact_phone_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -106,5 +121,43 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView5"
         app:layout_constraintTop_toBottomOf="@+id/add_contact_email_text_view" />
+
+    <EditText
+        android:id="@+id/add_contact_zip_text_view"
+        android:layout_width="66dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/add_contact_zip_text_view_hint"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/imageView3"
+        app:layout_constraintTop_toBottomOf="@+id/add_contact_address_text_view" />
+
+    <EditText
+        android:id="@+id/add_contact_city_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/add_contact_city_text_view_hint"
+        android:inputType="textPostalAddress"
+        app:layout_constraintStart_toEndOf="@+id/add_contact_zip_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/add_contact_address_text_view" />
+
+    <EditText
+        android:id="@+id/add_contact_canton_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:ems="10"
+        android:hint="@string/add_contact_canton_text_view"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/add_contact_city_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/add_contact_address_text_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -29,6 +29,10 @@
     <string name="add_contact_surname_text_view_hint">Nachname</string>
     <string name="add_contact_email_hint">E-Mail</string>
     <string name="add_contact_phone_hint">Telefonnummer</string>
+    <string name="add_contact_address_hint">Adresse</string>
+    <string name="add_contact_zip_text_view_hint">PLZ</string>
+    <string name="add_contact_city_text_view_hint">Ort</string>
+    <string name="add_contact_canton_text_view">Kt.</string>
 
     <!-- Search Contact Result -->
     <string name="search_contact_result_title">Suchresultate</string>
