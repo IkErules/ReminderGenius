@@ -20,21 +20,20 @@ SRP: Activity draws UI, ViewModel holds the data.
 public class ContactViewModel extends AndroidViewModel {
 
     private ContactRepository repository;
-
     private LiveData<List<Contact>> allContacts;
 
     public ContactViewModel(Application application) {
         super(application);
-        repository = new ContactRepository(application);
-        allContacts = repository.getAllContacts();
+        this.repository = new ContactRepository(application);
+        this.allContacts = this.repository.getAllContacts();
     }
 
-    public LiveData<List<Contact>> getAllContacts() { return allContacts; }
+    public LiveData<List<Contact>> getAllContacts() { return this.allContacts; }
 
-    public void insert(Contact contact) { repository.insert(contact); }
+    public void insert(Contact contact) { this.repository.insert(contact); }
 
     public void deleteAllContacts() {
-        Log.i("contact", "Deleting all Contacts from DB!");
-        repository.deleteAllContacts();
+        Log.i("ContactViewModel", "Deleting all Contacts from DB!");
+        this.repository.deleteAllContacts();
     }
 }

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import ch.hslu.appe.reminder.genius.Activity.ContactActivity;
+import ch.hslu.appe.reminder.genius.Activity.ShowContactActivity;
 import ch.hslu.appe.reminder.genius.DB.Entity.Contact;
 import ch.hslu.appe.reminder.genius.R;
 
@@ -33,6 +33,7 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
     }
 
     public static final String EDIT_CONTACT = "contact.to.edit";
+    public static final String SHOW_CONTACT = "contact.to.show";
     private final LayoutInflater mInflater;
     private List<Contact> contacts; // Cached copy of contacts
     private Context context;
@@ -60,10 +61,19 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
             // start AddContact Activity if an item on the RecyclerView is clicked.
             holder.parentLayout.setOnClickListener(view -> {
                 Contact contact = contacts.get(position);
-                Log.d("ContactListAdapter", "Starting AddContact Activity for contact: " + contact.toString());
-                //Intent editContactIntent = new Intent(context, AddContact.class);
+                Log.d("ContactListAdapter", "Starting ShowContact Activity in order to show contact: " + contact.toString());
+                Intent showContactIntent = new Intent(context, ShowContactActivity.class);
+                showContactIntent.putExtra(SHOW_CONTACT, contact);
+                context.startActivity(showContactIntent);
+            });
+
+            holder.parentLayout.setOnLongClickListener(view -> {
+                Contact contact = contacts.get(position);
+                Log.d("ContactListAdapter", "Starting AddContact Activity in order to edit contact: " + contact.toString());
+                //Intent editContactIntent = new Intent(context, AddContactActivity.class);
                 //editContactIntent.putExtra(EDIT_CONTACT, contact);
                 //context.startActivity(editContactIntent);
+                return true;
             });
         } else {
             // Covers the case of data not being ready yet.

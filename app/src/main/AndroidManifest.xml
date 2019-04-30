@@ -11,6 +11,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".Activity.ShowContactActivity"
+            android:label="@string/show_contact_text_view_title"
+            android:parentActivityName=".Activity.ContactActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
             android:name=".Activity.ContactActivity"
             android:label="@string/contact_text_view_title"
             android:theme="@style/AppTheme.NoActionBar">

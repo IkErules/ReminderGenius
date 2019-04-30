@@ -6,14 +6,26 @@ import androidx.room.RoomDatabase;
 import android.content.Context;
 
 import ch.hslu.appe.reminder.genius.DB.Dao.ContactDao;
+import ch.hslu.appe.reminder.genius.DB.Dao.ImageDao;
+import ch.hslu.appe.reminder.genius.DB.Dao.InstallationDao;
+import ch.hslu.appe.reminder.genius.DB.Dao.InstallationImageDao;
+import ch.hslu.appe.reminder.genius.DB.Dao.ProductCategoryDao;
 import ch.hslu.appe.reminder.genius.DB.Entity.Contact;
+import ch.hslu.appe.reminder.genius.DB.Entity.Image;
+import ch.hslu.appe.reminder.genius.DB.Entity.Installation;
+import ch.hslu.appe.reminder.genius.DB.Entity.InstallationImage;
+import ch.hslu.appe.reminder.genius.DB.Entity.ProductCategory;
 
 // Update the Database Version when a schema change was done.
-@Database(entities = {Contact.class}, version = 3)
+@Database(entities = {Contact.class, ProductCategory.class, Image.class, Installation.class, InstallationImage.class}, version = 4)
 public abstract class ReminderGeniusRoomDb extends RoomDatabase {
 
     // Abstract Getter for all Daos
     public abstract ContactDao contactDao();
+    public abstract ProductCategoryDao productCategoryDao();
+    public abstract ImageDao imageDao();
+    public abstract InstallationDao installationDao();
+    public abstract InstallationImageDao installationImageDao();
 
     private static volatile ReminderGeniusRoomDb INSTANCE;
 

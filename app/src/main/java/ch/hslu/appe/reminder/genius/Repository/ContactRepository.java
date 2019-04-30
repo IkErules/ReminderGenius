@@ -18,31 +18,31 @@ public class ContactRepository {
 
     public ContactRepository(Application application) {
         ReminderGeniusRoomDb db = ReminderGeniusRoomDb.getDatabase(application);
-        contactDao = db.contactDao();
-        allContacts = contactDao.getAllContacts();
+        this.contactDao = db.contactDao();
+        this.allContacts = this.contactDao.getAllContacts();
     }
 
     public LiveData<List<Contact>> getAllContacts() {
-        return allContacts;
+        return this.allContacts;
     }
 
     public void insert (Contact contact) {
-        new insertAsyncTask(contactDao).execute(contact);
+        new insertAsyncTask(this.contactDao).execute(contact);
     }
 
-    public void deleteAllContacts() { new deleteAllContactsAsyncTask(contactDao).execute(); }
+    public void deleteAllContacts() { new deleteAllContactsAsyncTask(this.contactDao).execute(); }
 
     private static class insertAsyncTask extends AsyncTask<Contact, Void, Void> {
 
         private ContactDao mAsyncTaskDao;
 
         insertAsyncTask(ContactDao dao) {
-            mAsyncTaskDao = dao;
+            this.mAsyncTaskDao = dao;
         }
 
         @Override
         protected Void doInBackground(final Contact... params) {
-            mAsyncTaskDao.insert(params[0]);
+            this.mAsyncTaskDao.insert(params[0]);
             return null;
         }
     }
@@ -52,12 +52,12 @@ public class ContactRepository {
         private ContactDao mAsyncTaskDao;
 
         deleteAllContactsAsyncTask(ContactDao dao) {
-            mAsyncTaskDao = dao;
+            this.mAsyncTaskDao = dao;
         }
 
         @Override
         protected Void doInBackground(final Void... params) {
-            mAsyncTaskDao.deleteAllContacts();
+            this.mAsyncTaskDao.deleteAllContacts();
             return null;
         }
     }

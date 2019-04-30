@@ -20,4 +20,7 @@
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
     <string name="recycler_view_item_delete">löschen</string>
+    <string name="show_contact_text_view_title">Kontakt</string>
+    <string name="show_contact_text_view_firstname" />
+    <string name="show_contact_text_view_lastname" />
 </resources>

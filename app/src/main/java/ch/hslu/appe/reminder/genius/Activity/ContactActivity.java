@@ -67,6 +67,7 @@ public class ContactActivity extends AppCompatActivity{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("ContactActivity", "Adding Contact, FAB Clicked.");
                 // TODO: Open AddContact Activity with Intent Data.
                 //Intent intent = new Intent(this, AddContactActivity.class);
                 //startActivity(intent);
