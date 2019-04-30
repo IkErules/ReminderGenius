@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".Activities.AddContactActivity"
+    tools:context=".Activity.AddContactActivity"
     tools:showIn="@layout/activity_add_contact">
 
     <SearchView
@@ -36,7 +36,7 @@
         app:layout_constraintTop_toBottomOf="@+id/add_contact_search_view" />
 
     <EditText
-        android:id="@+id/add_contact_surname_text_view"
+        android:id="@+id/add_contact_ surname_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

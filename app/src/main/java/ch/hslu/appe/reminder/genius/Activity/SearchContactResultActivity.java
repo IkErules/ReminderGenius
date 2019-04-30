@@ -1,6 +1,5 @@
-package ch.hslu.appe.reminder.genius.Activities;
+package ch.hslu.appe.reminder.genius.Activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,14 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.hslu.appe.reminder.genius.Adapters.SearchContactAdapter;
-import ch.hslu.appe.reminder.genius.Models.SearchContact;
+import ch.hslu.appe.reminder.genius.Adapter.SearchContactAdapter;
+import ch.hslu.appe.reminder.genius.Model.SearchContact;
 import ch.hslu.appe.reminder.genius.R;
-import android.content.Intent;
-import android.util.Log;
-import android.view.View;
 
-import static ch.hslu.appe.reminder.genius.AsyncTasks.LoadContactDataAsync.SEARCH_CONTACTS_RESULT;
+import static ch.hslu.appe.reminder.genius.AsyncTask.LoadContactDataAsync.SEARCH_CONTACTS_RESULT;
 
 public class SearchContactResultActivity extends AppCompatActivity {
 

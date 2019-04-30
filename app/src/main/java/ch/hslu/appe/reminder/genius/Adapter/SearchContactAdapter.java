@@ -1,6 +1,5 @@
-package ch.hslu.appe.reminder.genius.Adapters;
+package ch.hslu.appe.reminder.genius.Adapter;
 import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import ch.hslu.appe.reminder.genius.Activities.SearchContactResultActivity;
-import ch.hslu.appe.reminder.genius.Models.SearchContact;
+import ch.hslu.appe.reminder.genius.Activity.SearchContactResultActivity;
+import ch.hslu.appe.reminder.genius.Model.SearchContact;
 import ch.hslu.appe.reminder.genius.R;
 import android.content.Intent;
 

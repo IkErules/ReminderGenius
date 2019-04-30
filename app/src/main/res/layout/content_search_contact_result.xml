@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".Activities.SearchContactResultActivity"
+    tools:context=".Activity.SearchContactResultActivity"
     tools:showIn="@layout/activity_search_contact_result">
 
     <androidx.recyclerview.widget.RecyclerView

@@ -1,4 +1,4 @@
-package ch.hslu.appe.reminder.genius.Activities;
+package ch.hslu.appe.reminder.genius.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import ch.hslu.appe.reminder.genius.AsyncTasks.LoadContactDataAsync;
-import ch.hslu.appe.reminder.genius.Models.SearchContact;
+import ch.hslu.appe.reminder.genius.AsyncTask.LoadContactDataAsync;
+import ch.hslu.appe.reminder.genius.Model.SearchContact;
 import ch.hslu.appe.reminder.genius.R;
 
 public class AddContactActivity extends AppCompatActivity {

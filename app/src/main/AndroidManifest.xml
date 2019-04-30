@@ -11,12 +11,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Activities.SearchContactResultActivity"
+            android:name=".Activity.SearchContactResultActivity"
             android:label="@string/search_contact_result_title"
-            android:parentActivityName=".Activities.SearchContactResultActivity"
+            android:parentActivityName=".Activity.SearchContactResultActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".Activities.AddContactActivity"
+            android:name=".Activity.AddContactActivity"
             android:label="@string/add_contact_title"
             android:parentActivityName=".Activity.MainActivity">
         </activity>

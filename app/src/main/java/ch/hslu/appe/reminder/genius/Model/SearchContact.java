@@ -1,4 +1,4 @@
-package ch.hslu.appe.reminder.genius.Models;
+package ch.hslu.appe.reminder.genius.Model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

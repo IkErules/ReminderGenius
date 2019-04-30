@@ -8,9 +8,8 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 
-import ch.hslu.appe.reminder.genius.Models.SearchContact;
+import ch.hslu.appe.reminder.genius.Model.SearchContact;
 
 public class SearchContactXmlParser {
 
@@ -53,6 +52,14 @@ public class SearchContactXmlParser {
         parser.require(XmlPullParser.START_TAG, ns, "entry");
         String title = null;
         String content = null;
+        String type = null;
+        String name = null;
+        String firstname = null;
+        String maidenname = null;
+        String street = null;
+        int zip = null;
+        <tel:city>Romoos</tel:city>
+        <tel:canton>LU</tel:canton>
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {

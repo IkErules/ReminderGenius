@@ -1,9 +1,7 @@
-package ch.hslu.appe.reminder.genius.AsyncTasks;
+package ch.hslu.appe.reminder.genius.AsyncTask;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
 
@@ -14,9 +12,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import ch.hslu.appe.reminder.genius.Activities.AddContactActivity;
-import ch.hslu.appe.reminder.genius.Activities.SearchContactResultActivity;
-import ch.hslu.appe.reminder.genius.Models.SearchContact;
+import ch.hslu.appe.reminder.genius.Activity.AddContactActivity;
+import ch.hslu.appe.reminder.genius.Activity.SearchContactResultActivity;
+import ch.hslu.appe.reminder.genius.Model.SearchContact;
 import ch.hslu.appe.reminder.genius.Parser.SearchContactXmlParser;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -24,7 +22,7 @@ import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import android.content.Intent;
 
-import static ch.hslu.appe.reminder.genius.Activities.AddContactActivity.PICK_CONTACT_REQUEST;
+import static ch.hslu.appe.reminder.genius.Activity.AddContactActivity.PICK_CONTACT_REQUEST;
 
 public class LoadContactDataAsync extends AsyncTask<String, Void, ArrayList<SearchContact>> {
 
