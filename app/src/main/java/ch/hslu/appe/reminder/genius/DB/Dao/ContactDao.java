@@ -3,6 +3,7 @@ package ch.hslu.appe.reminder.genius.DB.Dao;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -14,7 +15,7 @@ import ch.hslu.appe.reminder.genius.DB.Entity.Contact;
 
 @Dao
 public interface ContactDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Contact contact);
 
     @Update

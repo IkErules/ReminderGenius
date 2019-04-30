@@ -32,7 +32,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/view_foreground"
+        android:id="@+id/contact_foreground_parent_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
