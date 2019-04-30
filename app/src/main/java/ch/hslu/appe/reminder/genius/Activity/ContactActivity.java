@@ -53,13 +53,14 @@ public class ContactActivity extends AppCompatActivity{
 
         this.contactViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
 
+        /** TODO: Hat nach Rebase nicht mehr funktioniert :-/
         this.contactViewModel.getAllContacts().observe(this, new Observer<List<Contact>>() {
             @Override
             public void onChanged(@Nullable final List<Contact> contacts) {
                 // Update the cached copy of the words in the adapter.
                 adapter.setContacts(contacts);
             }
-        });
+        }); */
     }
 
     private void registerListeners() {
