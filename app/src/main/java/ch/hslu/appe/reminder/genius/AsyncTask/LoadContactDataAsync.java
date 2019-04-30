@@ -39,8 +39,7 @@ public class LoadContactDataAsync extends AsyncTask<String, Void, ArrayList<Sear
     public LoadContactDataAsync(Context context, AddContactActivity activity) {
         this.context = context;
         this.activity = activity;
-        this.listView = listView;
-        // HttpClient erzeugen und konfigurieren
+
         httpLogger = new HttpLoggingInterceptor();
         httpLogger.setLevel(HttpLoggingInterceptor.Level.BODY);
         httpClient = new OkHttpClient.Builder().addInterceptor(httpLogger).build();
@@ -61,7 +60,7 @@ public class LoadContactDataAsync extends AsyncTask<String, Void, ArrayList<Sear
                     try {
                         SearchContactXmlParser searchContactXmlParser = new SearchContactXmlParser();
                         return searchContactXmlParser.parse(response.body().byteStream());
-                    } catch (XmlPullParserException ex) {
+                    } catch (Exception ex) {
                         String error = String.format("ERROR: Failed to parse response", ex.getMessage());
                         Log.e("HttpService", error);
                     }

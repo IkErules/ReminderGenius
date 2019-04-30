@@ -1,13 +1,20 @@
 package ch.hslu.appe.reminder.genius.Parser;
 
-import android.util.Xml;
+import android.util.Log;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import ch.hslu.appe.reminder.genius.Model.SearchContact;
 
@@ -15,108 +22,54 @@ public class SearchContactXmlParser {
 
     private static final String ns = null;
 
-    public ArrayList<SearchContact> parse(InputStream in) throws XmlPullParserException, IOException {
-        try {
-            XmlPullParser parser = Xml.newPullParser();
-            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            parser.setInput(in, null);
-            parser.nextTag();
-            return readFeed(parser);
-        } finally {
-            in.close();
-        }
-    }
+    public ArrayList<SearchContact> parse(InputStream in) throws ParserConfigurationException, SAXException, IOException{
+        ArrayList<SearchContact> searchContacts = new ArrayList<>();
 
-    private ArrayList readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
-        ArrayList<SearchContact> entries = new ArrayList();
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
 
-        parser.require(XmlPullParser.START_TAG, ns, "feed");
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            }
-            String name = parser.getName();
-            // Starts by looking for the entry tag
-            if (name.equals("entry")) {
-                entries.add(readEntry(parser));
-            } else {
-                skip(parser);
+        Document document = builder.parse(in);
+        document.getDocumentElement().normalize();
+        NodeList nList = document.getElementsByTagName("entry");
+
+        for (int temp = 0; temp < nList.getLength(); temp++)
+        {
+            Node node = nList.item(temp);
+            if (node.getNodeType() == Node.ELEMENT_NODE)
+            {
+                Element eElement = (Element) node;
+                SearchContact searchContact = getSearchContactFromElement(eElement);
+                Log.i("SearchContactXmlParser", searchContact.toString());
+                searchContacts.add(searchContact );
             }
         }
-        return entries;
+        return searchContacts;
     }
 
-    // Parses the contents of an entry. If it encounters a title, summary, or content tag, hands them off
-    // to their respective "read" methods for processing. Otherwise, skips the tag.
-    private SearchContact readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
-        parser.require(XmlPullParser.START_TAG, ns, "entry");
-        String title = null;
-        String content = null;
-        String type = null;
-        String name = null;
-        String firstname = null;
-        String maidenname = null;
-        String street = null;
-        int zip = null;
-        <tel:city>Romoos</tel:city>
-        <tel:canton>LU</tel:canton>
+    private SearchContact getSearchContactFromElement(Element element) {
+        SearchContact searchContact = new SearchContact();
 
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            }
-            String name = parser.getName();
-            if (name.equals("title")) {
-                title = readTitle(parser);
-            } else if (name.equals("content")) {
-                content = readContent(parser);
-            } else {
-                skip(parser);
-            }
-        }
-        return new SearchContact(title, content);
+        searchContact.setTitle(getTextContentFromElement(element, "title"));
+        searchContact.setContent(getTextContentFromElement(element, "content"));
+        searchContact.setType(getTextContentFromElement(element, "tel:type"));
+        searchContact.setName(getTextContentFromElement(element, "tel:name"));
+        searchContact.setFirstname(getTextContentFromElement(element, "tel:firstname"));
+        searchContact.setMaidenname(getTextContentFromElement(element, "tel:maidenname"));
+        searchContact.setStreet(getTextContentFromElement(element, "tel:street"));
+        searchContact.setZip(getTextContentFromElement(element, "tel:zip"));
+        searchContact.setCity(getTextContentFromElement(element, "tel:city"));
+        searchContact.setCanton(getTextContentFromElement(element, "tel:canton"));
+        searchContact.setPhone(getTextContentFromElement(element, "tel:phone"));
+
+        return searchContact;
     }
 
-    // Processes title tags in the feed.
-    private String readTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, ns, "title");
-        String title = readText(parser);
-        parser.require(XmlPullParser.END_TAG, ns, "title");
-        return title;
+    private String getTextContentFromElement(Element element, String tagName) {
+        NodeList node = element.getElementsByTagName(tagName);
+        return isNodeListEmpty(node) ? "" : node.item(0).getTextContent();
     }
 
-    // Processes content tags in the feed.
-    private String readContent(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, ns, "content");
-        String content = readText(parser);
-        parser.require(XmlPullParser.END_TAG, ns, "content");
-        return content;
-    }
-
-    // For the tags title and summary, extracts their text values.
-    private String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
-        String result = "";
-        if (parser.next() == XmlPullParser.TEXT) {
-            result = parser.getText();
-            parser.nextTag();
-        }
-        return result;
-    }
-
-    private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
-        if (parser.getEventType() != XmlPullParser.START_TAG) {
-            throw new IllegalStateException();
-        }
-        int depth = 1;
-        while (depth != 0) {
-            switch (parser.next()) {
-                case XmlPullParser.END_TAG:
-                    depth--;
-                    break;
-                case XmlPullParser.START_TAG:
-                    depth++;
-                    break;
-            }
-        }
+    private boolean isNodeListEmpty(NodeList nodeList) {
+        return nodeList.getLength() == 0;
     }
 }

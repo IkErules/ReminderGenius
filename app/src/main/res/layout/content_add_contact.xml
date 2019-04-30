@@ -36,7 +36,7 @@
         app:layout_constraintTop_toBottomOf="@+id/add_contact_search_view" />
 
     <EditText
-        android:id="@+id/add_contact_ surname_text_view"
+        android:id="@+id/add_contact_surname_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
