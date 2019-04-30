@@ -8,8 +8,19 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
+    <!-- Contact -->
+    <string name="contact_text_view_title">Kontakte</string>
+    <string name="contact_button_add_test_contact">Test Kontakt hinzufügen</string>
+    <string name="contact_setting_clear_db">Alle Kontakte löschen</string>
+    <string name="contact_toast_clear_db">Alle Kontakte werden gelöscht!</string>
+
     <!-- Menu -->
     <string name="menu_home">Home</string>
+    <string name="menu_contact">Kontakte</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+    <string name="recycler_view_item_delete">löschen</string>
+    <string name="show_contact_text_view_title">Kontakt</string>
+    <string name="show_contact_text_view_firstname" />
+    <string name="show_contact_text_view_lastname" />
 </resources>
