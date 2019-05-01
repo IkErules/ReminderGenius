@@ -11,6 +11,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".Activity.SearchContactResultActivity"
+            android:label="@string/search_contact_result_title"
+            android:parentActivityName=".Activity.SearchContactResultActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Activity.AddContactActivity"
+            android:label="@string/add_contact_title"
+            android:parentActivityName=".Activity.ContactActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
             android:name=".Activity.ShowContactActivity"
             android:label="@string/show_contact_text_view_title"
             android:parentActivityName=".Activity.ContactActivity"
@@ -32,5 +43,8 @@
             </intent-filter>
         </activity>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>

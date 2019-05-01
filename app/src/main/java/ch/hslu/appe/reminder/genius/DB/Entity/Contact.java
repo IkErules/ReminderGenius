@@ -144,6 +144,7 @@ public class Contact implements Parcelable {
         this.lastName = in.readString();
         this.maidenName = in.readString();
         this.phone = in.readString();
+        this.mail = in.readString();
         this.street = in.readString();
         this.city = in.readString();
         this.zip = in.readInt();

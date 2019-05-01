@@ -19,6 +19,32 @@
     <string name="menu_contact">Kontakte</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+    <string name="menu_contacts">Kunden</string>
+    <string name="title_activity_add_contact">AddContactActivity</string>
+
+    <!-- Add Contact -->
+    <string name="add_contact_title">Kontakt hinzufügen</string>
+    <string name="add_contact_search_hint">Name, Vorname, Ort</string>
+    <string name="add_contact_name_text_view_hint">Vorname</string>
+    <string name="add_contact_surname_text_view_hint">Nachname</string>
+    <string name="add_contact_email_hint">E-Mail</string>
+    <string name="add_contact_phone_hint">Telefonnummer</string>
+    <string name="add_contact_address_hint">Adresse</string>
+    <string name="add_contact_zip_text_view_hint">PLZ</string>
+    <string name="add_contact_city_text_view_hint">Ort</string>
+    <string name="add_contact_canton_text_view">Kt.</string>
+
+    <!-- Search Contact Result -->
+    <string name="search_contact_result_title">Suchresultate</string>
+
+    <!-- Kontakt -->
+    <string name="contact_title">Kontakt hinzufügen</string>
+    <string name="contact_search_hint">Name, Vorname</string>
+    <string name="contact_name_text_view_hint">Vorname</string>
+    <string name="contact_surname_text_view_hint">Nachname</string>
+    <string name="contact_email_hint">E-Mail</string>
+    <string name="contact_phone_hint">Telefonnummer</string>
+    <string name="title_activity_search_contact_result">SearchContactResultActivity</string>
     <string name="recycler_view_item_delete">löschen</string>
     <string name="show_contact_text_view_title">Kontakt</string>
     <string name="show_contact_text_view_firstname" />

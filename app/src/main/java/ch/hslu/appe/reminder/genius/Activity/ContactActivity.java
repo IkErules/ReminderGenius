@@ -28,7 +28,7 @@ import ch.hslu.appe.reminder.genius.DB.Entity.Contact;
 import ch.hslu.appe.reminder.genius.R;
 import ch.hslu.appe.reminder.genius.ViewModel.ContactViewModel;
 
-public class ContactActivity extends AppCompatActivity{
+public class ContactActivity extends AppCompatActivity {
 
     private ContactViewModel contactViewModel;
 
@@ -53,6 +53,7 @@ public class ContactActivity extends AppCompatActivity{
 
         this.contactViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
 
+        /** TODO: Hat nach Rebase nicht mehr funktioniert :-/ */
         this.contactViewModel.getAllContacts().observe(this, new Observer<List<Contact>>() {
             @Override
             public void onChanged(@Nullable final List<Contact> contacts) {
@@ -68,9 +69,8 @@ public class ContactActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 Log.d("ContactActivity", "Adding Contact, FAB Clicked.");
-                // TODO: Open AddContact Activity with Intent Data.
-                //Intent intent = new Intent(this, AddContactActivity.class);
-                //startActivity(intent);
+                Intent intent = new Intent(getApplicationContext(), AddContactActivity.class);
+                startActivity(intent);
 
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();

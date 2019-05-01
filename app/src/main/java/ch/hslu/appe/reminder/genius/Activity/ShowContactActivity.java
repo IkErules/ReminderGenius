@@ -1,6 +1,7 @@
 package ch.hslu.appe.reminder.genius.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +21,9 @@ public class ShowContactActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_contact);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent caller = getIntent();
         this.contact = caller.getParcelableExtra(SHOW_CONTACT);
@@ -30,8 +34,12 @@ public class ShowContactActivity extends AppCompatActivity {
 
     private void showContact() {
         // TODO: Display Contact
-        ((TextView) findViewById(R.id.show_contact_firstname_text_view)).setText(this.contact.getFirstName());
-        ((TextView) findViewById(R.id.show_contact_lastname_text_view)).setText(this.contact.getLastName());
+        ((TextView) findViewById(R.id.show_contact_name_text_view)).setText(this.contact.getFirstName() + " " + this.contact.getLastName());
+        ((TextView) findViewById(R.id.show_contact_street_text_view)).setText(this.contact.getStreet());
+        ((TextView) findViewById(R.id.show_contact_zip_text_view)).setText(Integer.toString(this.contact.getZip()));
+        ((TextView) findViewById(R.id.show_contact_city_text_view)).setText(this.contact.getCity());
+        ((TextView) findViewById(R.id.show_contact_mail_text_view)).setText(this.contact.getMail());
+        ((TextView) findViewById(R.id.show_contact_phone_text_view)).setText(this.contact.getPhone());
 
     }
 }
