@@ -12,14 +12,19 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
 
 import ch.hslu.appe.reminder.genius.AsyncTask.LoadContactDataAsync;
+import ch.hslu.appe.reminder.genius.DB.Entity.Contact;
 import ch.hslu.appe.reminder.genius.Model.SearchContact;
 import ch.hslu.appe.reminder.genius.R;
+import ch.hslu.appe.reminder.genius.ViewModel.ContactViewModel;
 
 public class AddContactActivity extends AppCompatActivity {
 
     public static final int PICK_CONTACT_REQUEST = 59;
+    public static final String EDIT_CONTACT = "contact.to.edit";
+    private ContactViewModel contactViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +32,12 @@ public class AddContactActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_contact);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Intent caller = getIntent();
+        Contact contact = caller.getParcelableExtra(EDIT_CONTACT);
+        // TODO: Process Contact and Display
+
+        this.contactViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
 
         addSearchListener();
 
@@ -51,7 +62,10 @@ public class AddContactActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
-            return true;
+            Contact contact = createContactFromTextFields();
+            Log.i("AddContactActivity", "Adding Contact to DB, contact: " + contact.toString());
+            this.contactViewModel.insert(contact);
+            this.finish();
         }
 
         return super.onOptionsItemSelected(item);
@@ -77,6 +91,7 @@ public class AddContactActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         // Check which request we're responding to
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_CONTACT_REQUEST) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
@@ -112,6 +127,21 @@ public class AddContactActivity extends AppCompatActivity {
 
         TextView phone = findViewById(R.id.add_contact_phone_text_view);
         phone.setText(searchContact.getPhone());
+    }
+
+    private Contact createContactFromTextFields() {
+        // TODO: Cleanup Code and fill all fields!
+        String firstname = ((TextView) findViewById(R.id.add_contact_firstname_text_view)).getText().toString();
+        String lastname = ((TextView) findViewById(R.id.add_contact_name_text_view)).getText().toString();
+        String street = ((TextView) findViewById(R.id.add_contact_address_text_view)).getText().toString();
+        int zip = Integer.parseInt(((TextView) findViewById(R.id.add_contact_zip_text_view)).getText().toString());
+        String city = ((TextView) findViewById(R.id.add_contact_city_text_view)).getText().toString();
+        String canton = ((TextView) findViewById(R.id.add_contact_canton_text_view)).getText().toString();
+        String phone = ((TextView) findViewById(R.id.add_contact_phone_text_view)).getText().toString();
+        String mail = ((TextView) findViewById(R.id.add_contact_email_text_view)).getText().toString();
+
+        Contact contact = new Contact(firstname, lastname, "", "", phone, mail, street, city, zip, canton, "");
+        return contact;
     }
 
     private void resetSearchView() {

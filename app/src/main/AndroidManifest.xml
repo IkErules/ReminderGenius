@@ -18,7 +18,8 @@
         <activity
             android:name=".Activity.AddContactActivity"
             android:label="@string/add_contact_title"
-            android:parentActivityName=".Activity.MainActivity">
+            android:parentActivityName=".Activity.ContactActivity"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:name=".Activity.ShowContactActivity"

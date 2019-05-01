@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import ch.hslu.appe.reminder.genius.Activity.AddContactActivity;
 import ch.hslu.appe.reminder.genius.Activity.ShowContactActivity;
 import ch.hslu.appe.reminder.genius.DB.Entity.Contact;
 import ch.hslu.appe.reminder.genius.R;
@@ -70,9 +71,9 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
             holder.parentLayout.setOnLongClickListener(view -> {
                 Contact contact = contacts.get(position);
                 Log.d("ContactListAdapter", "Starting AddContact Activity in order to edit contact: " + contact.toString());
-                //Intent editContactIntent = new Intent(context, AddContactActivity.class);
-                //editContactIntent.putExtra(EDIT_CONTACT, contact);
-                //context.startActivity(editContactIntent);
+                Intent editContactIntent = new Intent(context, AddContactActivity.class);
+                editContactIntent.putExtra(EDIT_CONTACT, contact);
+                context.startActivity(editContactIntent);
                 return true;
             });
         } else {
