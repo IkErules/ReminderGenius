@@ -9,23 +9,64 @@
     tools:showIn="@layout/activity_show_contact">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/show_contact_firstname_text_view"
+        android:id="@+id/show_contact_name_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/show_contact_text_view_firstname"
+        android:layout_marginTop="16dp"
+        android:text=""
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/show_contact_lastname_text_view"
+        android:id="@+id/show_contact_street_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/show_contact_text_view_lastname"
-        app:layout_constraintStart_toEndOf="@+id/show_contact_firstname_text_view"
-        app:layout_constraintTop_toTopOf="@+id/show_contact_firstname_text_view" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/show_contact_name_text_view" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/show_contact_zip_text_view"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text=""
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/show_contact_street_text_view" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/show_contact_city_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text=""
+        app:layout_constraintStart_toEndOf="@+id/show_contact_zip_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/show_contact_street_text_view"
+        app:layout_constraintBaseline_toBaselineOf="@+id/show_contact_zip_text_view"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/show_contact_mail_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text=""
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/show_contact_zip_text_view" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/show_contact_phone_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text=""
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/show_contact_mail_text_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
