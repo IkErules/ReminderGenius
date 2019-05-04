@@ -114,7 +114,7 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
     private void showUndoSnackbar() {
         View view = context.findViewById(R.id.contact_constraint_layout);
         Snackbar snackbar = Snackbar.make(view, R.string.contact_snack_bar_deleted, Snackbar.LENGTH_LONG);
-        snackbar.setAction(R.string.contact_snach_bar_undo_delete, v -> undoDelete());
+        snackbar.setAction(R.string.contact_snack_bar_undo_delete, v -> undoDelete());
         snackbar.show();
     }
 

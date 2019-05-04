@@ -7,6 +7,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 
 import android.view.MenuItem;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -35,6 +36,12 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+
+        FloatingActionButton fab = findViewById(R.id.main_fab);
+        fab.setOnClickListener(view -> {
+            Intent intent = new Intent(this, AddInstallationActivity.class);
+            startActivity(intent);
+        });
     }
 
     @Override
@@ -80,10 +87,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_contact) {
             Intent intent = new Intent(this, ContactActivity.class);
             startActivity(intent);
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
