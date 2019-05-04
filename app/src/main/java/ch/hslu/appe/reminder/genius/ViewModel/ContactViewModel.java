@@ -1,6 +1,7 @@
 package ch.hslu.appe.reminder.genius.ViewModel;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
@@ -31,6 +32,10 @@ public class ContactViewModel extends AndroidViewModel {
     public LiveData<List<Contact>> getAllContacts() { return this.allContacts; }
 
     public void insert(Contact contact) { this.repository.insert(contact); }
+
+    public void delete(Contact contact) {
+        repository.delete(contact);
+    }
 
     public void deleteAllContacts() {
         Log.i("ContactViewModel", "Deleting all Contacts from DB!");

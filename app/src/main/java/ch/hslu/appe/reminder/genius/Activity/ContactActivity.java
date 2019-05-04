@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,6 +32,8 @@ import ch.hslu.appe.reminder.genius.ViewModel.ContactViewModel;
 public class ContactActivity extends AppCompatActivity {
 
     private ContactViewModel contactViewModel;
+    private RecyclerView recyclerView;
+    private ContactListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,21 +42,21 @@ public class ContactActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        this.observeContacts();
-        this.registerListeners();
+        observeContacts();
+        registerListeners();
+        setUpRecyclerView();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void observeContacts() {
-        RecyclerView recyclerView = findViewById(R.id.recyclerview);
-        final ContactListAdapter adapter = new ContactListAdapter(this);
+        this.contactViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
+
+        recyclerView = findViewById(R.id.recyclerview);
+        adapter = new ContactListAdapter(this, contactViewModel);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        this.contactViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
-
-        /** TODO: Hat nach Rebase nicht mehr funktioniert :-/ */
         this.contactViewModel.getAllContacts().observe(this, new Observer<List<Contact>>() {
             @Override
             public void onChanged(@Nullable final List<Contact> contacts) {
@@ -122,4 +125,11 @@ public class ContactActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void setUpRecyclerView() {
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        ItemTouchHelper itemTouchHelper = new
+                ItemTouchHelper(new ContactListAdapter.SwipeToDeleteCallback(adapter));
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
 }

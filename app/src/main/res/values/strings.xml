@@ -49,4 +49,6 @@
     <string name="show_contact_text_view_title">Kontakt</string>
     <string name="show_contact_text_view_firstname" />
     <string name="show_contact_text_view_lastname" />
+    <string name="contact_snack_bar_deleted">Kontakt gelöscht</string>
+    <string name="contact_snach_bar_undo_delete">Rückgängig machen</string>
 </resources>

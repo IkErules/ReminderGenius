@@ -32,6 +32,25 @@ public class ContactRepository {
 
     public void deleteAllContacts() { new deleteAllContactsAsyncTask(this.contactDao).execute(); }
 
+    public void delete(Contact contact) {
+        new deleteAsyncTask(contactDao).execute(contact);
+    }
+
+    private static class deleteAsyncTask extends AsyncTask<Contact, Void, Void> {
+
+        private ContactDao mAsyncTaskDao;
+
+        deleteAsyncTask(ContactDao dao) {
+            this.mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Contact... params) {
+            this.mAsyncTaskDao.deleteContacts(params[0]);
+            return null;
+        }
+    }
+
     private static class insertAsyncTask extends AsyncTask<Contact, Void, Void> {
 
         private ContactDao mAsyncTaskDao;
