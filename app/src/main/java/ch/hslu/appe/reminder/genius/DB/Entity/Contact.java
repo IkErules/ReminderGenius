@@ -124,6 +124,10 @@ public class Contact implements Parcelable {
                 this.getMail(), this.getStreet(), this.getCity(), this.getZip(), this.getCanton(), this.getContactId());
     }
 
+    public String toStringShort() {
+        return String.format("%s %s, %s, %s", getLastName(), getFirstName(), getStreet(), getCity());
+    }
+
     public static final Creator<Contact> CREATOR = new Creator<Contact>() {
         @Override
         public Contact createFromParcel(Parcel in) {

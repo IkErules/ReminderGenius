@@ -8,4 +8,91 @@
     tools:context=".Activity.AddInstallationActivity"
     tools:showIn="@layout/activity_add_installation">
 
+    <Spinner
+        android:id="@+id/add_installation_product_spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <Spinner
+        android:id="@+id/add_installation_customer_spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/add_installation_product_spinner_hint"
+        app:layout_constraintStart_toStartOf="@+id/add_installation_product_spinner"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/add_installation_customer_spinner_hint"
+        app:layout_constraintStart_toStartOf="@+id/add_installation_customer_spinner"
+        app:layout_constraintTop_toBottomOf="@+id/add_installation_product_spinner" />
+
+    <EditText
+        android:id="@+id/add_installation_installation_date_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/main_date_time_picker_hint"
+        android:inputType="date"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <EditText
+        android:id="@+id/add_installation_expire_date_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/main_date_time_picker_hint"
+        android:inputType="date"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/add_installation_installation_date"
+        app:layout_constraintStart_toStartOf="@+id/add_installation_installation_date_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/add_installation_customer_spinner" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/add_installation_expire_date_hint"
+        app:layout_constraintStart_toStartOf="@+id/add_installation_expire_date_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/add_installation_installation_date_text_view" />
 </androidx.constraintlayout.widget.ConstraintLayout>

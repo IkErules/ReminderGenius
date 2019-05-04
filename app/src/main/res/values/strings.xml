@@ -55,4 +55,9 @@
 
     <!-- Installation -->
     <string name="title_activity_add_installation">Installation hinzufügen</string>
+    <string name="add_installation_product_spinner_hint">Produkt</string>
+    <string name="add_installation_customer_spinner_hint">Kunde</string>
+    <string name="add_installation_installation_date">Installationsdatum</string>
+    <string name="add_installation_expire_date_hint">Ablaufdatum</string>
+    <string name="main_date_time_picker_hint">Datum</string>
 </resources>
