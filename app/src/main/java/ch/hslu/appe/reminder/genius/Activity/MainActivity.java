@@ -14,13 +14,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProviders;
 
 import android.view.Menu;
 
-import ch.hslu.appe.reminder.genius.DB.Entity.ProductCategory;
 import ch.hslu.appe.reminder.genius.R;
-import ch.hslu.appe.reminder.genius.ViewModel.ProductCategoryViewModel;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

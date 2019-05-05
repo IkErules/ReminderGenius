@@ -62,4 +62,5 @@
     <string name="main_date_time_picker_hint">Datum</string>
     <string name="add_installation_service_intervall_text_view">Service Intervall</string>
     <string name="add_installation_service_intervall_number">J.</string>
+    <string name="add_installation_notes_hint">Bemerkungen</string>
 </resources>

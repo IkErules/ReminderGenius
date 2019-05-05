@@ -8,18 +8,29 @@ import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 
 public class DatepickerFragment extends DialogFragment {
+
+    private LocalDate initDate;
+
+    public DatepickerFragment() {
+        this(LocalDate.now());
+    }
+
+    public DatepickerFragment(LocalDate initDate) {
+        this.initDate = initDate;
+    }
 
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         final Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
+        int year = initDate.getYear();
+        int month = initDate.getMonthValue();
+        int day = initDate.getDayOfMonth();
 
         return new DatePickerDialog(getActivity(), dateSetListener, year, month, day);
     }

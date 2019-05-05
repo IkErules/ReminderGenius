@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Collections;
 import java.util.HashMap;
 
@@ -33,6 +35,7 @@ import static java.time.format.DateTimeFormatter.*;
 public class AddInstallationActivity extends AppCompatActivity {
 
     private static final String DATE_FORMAT = "dd.MM.yyyy";
+    public static final String INSTALLATION_TO_EDIT = "installation.to.edit";
     private ContactViewModel contactViewModel;
     private ProductCategoryViewModel productCategoryViewModel;
     private InstallationViewModel installationViewModel;
@@ -50,8 +53,8 @@ public class AddInstallationActivity extends AppCompatActivity {
         productCategoryViewModel = ViewModelProviders.of(this).get(ProductCategoryViewModel.class);
         installationViewModel = ViewModelProviders.of(this).get(InstallationViewModel.class);
 
-        if (getIntent().hasExtra("installation.to.edit")) {
-            installation = getIntent().getParcelableExtra("installation.to.edit");
+        if (getIntent().hasExtra(INSTALLATION_TO_EDIT)) {
+            installation = getIntent().getParcelableExtra(INSTALLATION_TO_EDIT);
 
         } else {
             installation = Installation.builder().defaultInstallation();
@@ -62,7 +65,17 @@ public class AddInstallationActivity extends AppCompatActivity {
         addExpireDatePickerListener();
         addInstallationDatePickerListener();
         addNumberPickerListener();
+        addNotesTextViewListener();
         populateTextFieldsFromInstallation();
+    }
+
+    private void addNotesTextViewListener() {
+        TextView notesTextView = findViewById(R.id.add_installation_notes_text_view);
+        notesTextView.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus == false) {
+                installation.setNotes(String.valueOf(notesTextView.getText()));
+            }
+        });
     }
 
     private void populateTextFieldsFromInstallation() {
@@ -74,6 +87,20 @@ public class AddInstallationActivity extends AppCompatActivity {
                 .setText(installation.getInstallationDate().format(ofPattern(DATE_FORMAT)));
         ((TextView) findViewById(R.id.add_installation_expire_date_text_view))
                 .setText(installation.getExpireDate().format(ofPattern(DATE_FORMAT)));
+        ((TextView) findViewById(R.id.add_installation_notes_text_view))
+                .setText(installation.getNotes());
+    }
+
+    private void setInstallationFromTextFields() {
+        CharSequence installationDate = ((TextView) findViewById(R.id.add_installation_installation_date_text_view))
+                .getText();
+        installation.setInstallationDate(convertToLocalDate(String.valueOf(installationDate)));
+        CharSequence expireDate= ((TextView) findViewById(R.id.add_installation_expire_date_text_view))
+                .getText();
+        installation.setExpireDate(convertToLocalDate(String.valueOf(expireDate)));
+        CharSequence notes = ((TextView) findViewById(R.id.add_installation_notes_text_view))
+                .getText();
+        installation.setNotes(String.valueOf(notes));
     }
 
     private void addNumberPickerListener() {
@@ -110,6 +137,13 @@ public class AddInstallationActivity extends AppCompatActivity {
                 productMapper.put(i, products.get(i));
                 productAdapter.add(products.get(i).getCategoryName());
             }
+            if (installation.getProductCategoryId() != -1) {
+                productMapper.entrySet().forEach(product -> {
+                    if (product.getValue().getProductCategoryId() == installation.getProductCategoryId()) {
+                        spinner.setSelection(product.getKey());
+                    }
+                });
+            }
         });
 
         productAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -132,13 +166,6 @@ public class AddInstallationActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
-        if (installation.getProductCategoryId() != -1) {
-            productMapper.entrySet().forEach(product -> {
-                if (product.getValue().getProductCategoryId() == installation.getProductCategoryId()) {
-                    spinner.setSelection(product.getKey());
-                }
-            });
-        }
     }
 
     private void addCustomersToSpinner() {
@@ -154,6 +181,13 @@ public class AddInstallationActivity extends AppCompatActivity {
                 contactIdMapper.put(i, contacts.get(i));
                 contactAdapter.add(contacts.get(i).toStringShort());
             }
+            if (installation.getContactId() != -1) {
+                contactIdMapper.entrySet().forEach(customer -> {
+                    if (customer.getValue().getContactId() == installation.getContactId()) {
+                        spinner.setSelection(customer.getKey());
+                    }
+                });
+            }
         });
 
         contactAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -167,37 +201,47 @@ public class AddInstallationActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
-        if (installation.getContactId() != -1) {
-            contactIdMapper.entrySet().forEach(product -> {
-                if (product.getValue().getContactId() == installation.getProductCategoryId()) {
-                    spinner.setSelection(product.getKey());
-                }
-            });
-        }
     }
 
     private void addExpireDatePickerListener() {
         TextView expireDate = findViewById(R.id.add_installation_expire_date_text_view);
         expireDate.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
-                DatepickerFragment newFragment = new DatepickerFragment();
+                LocalDate initDate = convertToLocalDate(String.valueOf(expireDate.getText()));
+                DatepickerFragment newFragment = new DatepickerFragment(initDate);
                 newFragment.setDateSetListener((view, year, month, day) -> {
                     LocalDate choosenDate = LocalDate.of(view.getYear(), view.getMonth(), view.getDayOfMonth());
                     expireDate.setText(choosenDate.format(ofPattern(DATE_FORMAT)));
+                    installation.setExpireDate(choosenDate);
                 });
                 newFragment.show(getSupportFragmentManager(), "date_picker_expire_date");
+            } else {
+                LocalDate inputDate = convertToLocalDate(String.valueOf(expireDate.getText()));
+                expireDate.setText(inputDate.format(ofPattern(DATE_FORMAT)));
+                installation.setExpireDate(inputDate);
             }
         });
     }
 
+    private LocalDate convertToLocalDate(String toConvert) {
+        LocalDate converted = LocalDate.now();
+        try {
+            converted = LocalDate.parse(toConvert, ofPattern(DATE_FORMAT));
+        } catch (DateTimeParseException ex) {
+            Log.e("AddInstallationActivity", String.format("Error while parsing date %s to LocalDate %s", toConvert, ex.getMessage()));
+        }
+        return converted;
+    }
+
     private void addInstallationDatePickerListener() {
-        TextView installationDate = findViewById(R.id.add_installation_installation_date_text_view);
-        installationDate.setOnFocusChangeListener((v, hasFocus) -> {
+        TextView installationDatePicker = findViewById(R.id.add_installation_installation_date_text_view);
+        installationDatePicker.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 DatepickerFragment newFragment = new DatepickerFragment();
                 newFragment.setDateSetListener((view, year, month, day) -> {
                     LocalDate choosenDate = LocalDate.of(view.getYear(), view.getMonth(), view.getDayOfMonth());
-                    installationDate.setText(choosenDate.format(ofPattern(DATE_FORMAT)));
+                    installationDatePicker.setText(choosenDate.format(ofPattern(DATE_FORMAT)));
+                    installation.setInstallationDate(choosenDate);
                 });
                 newFragment.show(getSupportFragmentManager(), "date_picker_installation_date");
             }
@@ -220,9 +264,9 @@ public class AddInstallationActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
-            // Do some action here
+            setInstallationFromTextFields();
+            installationViewModel.insert(installation);
             this.finish();
         }
 
