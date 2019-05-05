@@ -7,8 +7,10 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.common.collect.ComparisonChain;
+
 @Entity(tableName = "productcategory")
-public class ProductCategory implements Parcelable {
+public class ProductCategory implements Parcelable, Comparable<ProductCategory> {
     @PrimaryKey(autoGenerate = true)
     @NonNull
     public int productCategoryId;
@@ -86,5 +88,12 @@ public class ProductCategory implements Parcelable {
         dest.writeString(this.getCategoryName());
         dest.writeInt(this.getDefaultServiceInterval());
         dest.writeString(this.getDescription());
+    }
+
+    @Override
+    public int compareTo(ProductCategory o) {
+        return ComparisonChain.start()
+                .compare(getCategoryName(), o.getCategoryName())
+                .result();
     }
 }

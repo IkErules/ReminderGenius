@@ -8,8 +8,12 @@ import androidx.room.PrimaryKey;
 
 import androidx.annotation.NonNull;
 
+import com.google.common.collect.ComparisonChain;
+
+import java.util.Comparator;
+
 @Entity(tableName = "contact")
-public class Contact implements Parcelable {
+public class Contact implements Parcelable, Comparable<Contact> {
     @PrimaryKey(autoGenerate = true)
     @NonNull
     public int contactId;
@@ -176,5 +180,15 @@ public class Contact implements Parcelable {
         dest.writeInt(this.getZip());
         dest.writeString(this.getCanton());
         dest.writeString(this.getCountry());
+    }
+
+    @Override
+    public int compareTo(Contact o) {
+        return ComparisonChain.start()
+                .compare(getLastName(), o.getLastName())
+                .compare(getFirstName(), o.getFirstName())
+                .compare(getStreet(), o.getStreet())
+                .compare(getCity(), o.getCity())
+                .result();
     }
 }

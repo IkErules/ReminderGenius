@@ -40,6 +40,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0-alpha04'
+    api 'com.google.guava:guava:27.1-android'
 
     // Room components
     implementation 'androidx.room:room-runtime:2.0.0'

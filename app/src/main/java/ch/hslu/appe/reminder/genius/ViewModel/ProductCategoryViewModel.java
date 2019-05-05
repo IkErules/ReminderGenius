@@ -29,7 +29,7 @@ public class ProductCategoryViewModel extends AndroidViewModel {
         this.allProductCategories = this.repository.getAllProductCategories();
     }
 
-    public LiveData<List<ProductCategory>> getAllContacts() { return this.allProductCategories; }
+    public LiveData<List<ProductCategory>> getAllProductsCategory() { return this.allProductCategories; }
 
     public void insert(ProductCategory productCategory) { this.repository.insert(productCategory); }
 

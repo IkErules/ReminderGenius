@@ -223,7 +223,7 @@ public class Installation implements Parcelable {
         }
 
         public Installation defaultInstallation() {
-            return new Installation(0, 0, "", LocalDate.now(), LocalDate.now().plusYears(2), 2,
+            return new Installation(-1, -1, "", LocalDate.now(), LocalDate.now().plusYears(2), 2,
                     "", false, false, false, false);
         }
 

@@ -8,24 +8,33 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.HashMap;
 
 import ch.hslu.appe.reminder.genius.DB.Entity.Contact;
 import ch.hslu.appe.reminder.genius.DB.Entity.Installation;
+import ch.hslu.appe.reminder.genius.DB.Entity.ProductCategory;
 import ch.hslu.appe.reminder.genius.Fragment.DatepickerFragment;
 import ch.hslu.appe.reminder.genius.R;
 import ch.hslu.appe.reminder.genius.ViewModel.ContactViewModel;
 import ch.hslu.appe.reminder.genius.ViewModel.InstallationViewModel;
+import ch.hslu.appe.reminder.genius.ViewModel.ProductCategoryViewModel;
+
+import static java.time.format.DateTimeFormatter.*;
 
 public class AddInstallationActivity extends AppCompatActivity {
 
+    private static final String DATE_FORMAT = "dd.MM.yyyy";
     private ContactViewModel contactViewModel;
+    private ProductCategoryViewModel productCategoryViewModel;
     private InstallationViewModel installationViewModel;
     private Installation installation;
 
@@ -38,33 +47,39 @@ public class AddInstallationActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         contactViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
+        productCategoryViewModel = ViewModelProviders.of(this).get(ProductCategoryViewModel.class);
         installationViewModel = ViewModelProviders.of(this).get(InstallationViewModel.class);
 
         if (getIntent().hasExtra("installation.to.edit")) {
-            getIntent().getParcelableExtra("installation.to.edit");
+            installation = getIntent().getParcelableExtra("installation.to.edit");
+
         } else {
             installation = Installation.builder().defaultInstallation();
         }
 
-        populateTextFieldsFromInstallation();
+        addProductToSpinner();
         addCustomersToSpinner();
         addExpireDatePickerListener();
         addInstallationDatePickerListener();
         addNumberPickerListener();
+        populateTextFieldsFromInstallation();
     }
 
     private void populateTextFieldsFromInstallation() {
         ((TextView) findViewById(R.id.add_installation_product_details_text_view))
                 .setText(installation.getProductDetails());
+        ((NumberPicker) findViewById(R.id.add_installation_service_intervall_number))
+                .setValue(installation.getServiceInterval());
+        ((TextView) findViewById(R.id.add_installation_installation_date_text_view))
+                .setText(installation.getInstallationDate().format(ofPattern(DATE_FORMAT)));
+        ((TextView) findViewById(R.id.add_installation_expire_date_text_view))
+                .setText(installation.getExpireDate().format(ofPattern(DATE_FORMAT)));
     }
 
     private void addNumberPickerListener() {
         //Get the widgets reference from XML layout
         final TextView tv = findViewById(R.id.textView6);
         NumberPicker np = findViewById(R.id.add_installation_service_intervall_number);
-
-        //Set TextView text color
-        //tv.setTextColor(Color.parseColor("#ffd32b3b"));
 
         //Populate NumberPicker values from minimum and maximum value range
         //Set the minimum value of NumberPicker
@@ -76,19 +91,89 @@ public class AddInstallationActivity extends AppCompatActivity {
 
         //Set a value change listener for NumberPicker
         np.setOnValueChangedListener((picker, oldVal, newVal) -> {
-            TextView installationDateTV = findViewById(R.id.add_installation_installation_date_text_view);
-
-            tv.setText("Selected Number : " + newVal);
+            installation.setServiceInterval(newVal);
+            installation.setExpireDate(installation.getInstallationDate().plusYears(newVal));
+            updateExpirationDateView();
         });
+    }
+
+    private void addProductToSpinner() {
+        Spinner spinner = findViewById(R.id.add_installation_product_spinner);
+
+        HashMap<Integer, ProductCategory> productMapper = new HashMap<>();
+        ArrayAdapter<String> productAdapter= new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item);
+
+        productCategoryViewModel.getAllProductsCategory().observe(this, products -> {
+            Collections.sort(products);
+            for (int i = 0; i < products.size(); i++)
+            {
+                productMapper.put(i, products.get(i));
+                productAdapter.add(products.get(i).getCategoryName());
+            }
+        });
+
+        productAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(productAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ProductCategory selectedProduct = productMapper.get(position);
+                installation.setProductCategoryId(selectedProduct.getProductCategoryId());
+                installation.setServiceInterval(selectedProduct.getDefaultServiceInterval());
+                installation.setExpireDate(installation.getInstallationDate()
+                        .plusYears(selectedProduct.getDefaultServiceInterval()));
+                ((TextView) findViewById(R.id.add_installation_product_details_text_view))
+                        .setText(selectedProduct.getDescription());
+                ((NumberPicker) findViewById(R.id.add_installation_service_intervall_number))
+                        .setValue(selectedProduct.getDefaultServiceInterval());
+                updateExpirationDateView();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+        if (installation.getProductCategoryId() != -1) {
+            productMapper.entrySet().forEach(product -> {
+                if (product.getValue().getProductCategoryId() == installation.getProductCategoryId()) {
+                    spinner.setSelection(product.getKey());
+                }
+            });
+        }
     }
 
     private void addCustomersToSpinner() {
         Spinner spinner = findViewById(R.id.add_installation_customer_spinner);
-        ArrayAdapter<Contact> adapter= new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item);
-        contactViewModel.getAllContacts().observe(this, contacts -> adapter.addAll(contacts));
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+        HashMap<Integer, Contact> contactIdMapper = new HashMap<>();
+        ArrayAdapter<String> contactAdapter= new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item);
+
+        contactViewModel.getAllContacts().observe(this, contacts -> {
+            Collections.sort(contacts);
+            for (int i = 0; i < contacts.size(); i++)
+            {
+                contactIdMapper.put(i, contacts.get(i));
+                contactAdapter.add(contacts.get(i).toStringShort());
+            }
+        });
+
+        contactAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(contactAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                installation.setContactId(contactIdMapper.get(position).getContactId());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+        if (installation.getContactId() != -1) {
+            contactIdMapper.entrySet().forEach(product -> {
+                if (product.getValue().getContactId() == installation.getProductCategoryId()) {
+                    spinner.setSelection(product.getKey());
+                }
+            });
+        }
     }
 
     private void addExpireDatePickerListener() {
@@ -98,7 +183,7 @@ public class AddInstallationActivity extends AppCompatActivity {
                 DatepickerFragment newFragment = new DatepickerFragment();
                 newFragment.setDateSetListener((view, year, month, day) -> {
                     LocalDate choosenDate = LocalDate.of(view.getYear(), view.getMonth(), view.getDayOfMonth());
-                    expireDate.setText(choosenDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+                    expireDate.setText(choosenDate.format(ofPattern(DATE_FORMAT)));
                 });
                 newFragment.show(getSupportFragmentManager(), "date_picker_expire_date");
             }
@@ -112,15 +197,16 @@ public class AddInstallationActivity extends AppCompatActivity {
                 DatepickerFragment newFragment = new DatepickerFragment();
                 newFragment.setDateSetListener((view, year, month, day) -> {
                     LocalDate choosenDate = LocalDate.of(view.getYear(), view.getMonth(), view.getDayOfMonth());
-                    installationDate.setText(choosenDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+                    installationDate.setText(choosenDate.format(ofPattern(DATE_FORMAT)));
                 });
                 newFragment.show(getSupportFragmentManager(), "date_picker_installation_date");
             }
         });
     }
 
-    public void onTestClick() {
-
+    private void updateExpirationDateView() {
+        TextView textView = findViewById(R.id.add_installation_expire_date_text_view);
+        textView.setText(installation.getExpireDate().format(ofPattern(DATE_FORMAT)));
     }
 
     @Override
@@ -142,5 +228,4 @@ public class AddInstallationActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }
