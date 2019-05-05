@@ -1,4 +1,4 @@
-package ch.hslu.appe.reminder.genius.DB;
+package ch.hslu.appe.reminder.genius.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -23,64 +23,61 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
-import ch.hslu.appe.reminder.genius.Activity.AddContactActivity;
-import ch.hslu.appe.reminder.genius.Activity.ShowContactActivity;
-import ch.hslu.appe.reminder.genius.DB.Entity.Contact;
+import ch.hslu.appe.reminder.genius.Activity.AddInstallationActivity;
+import ch.hslu.appe.reminder.genius.DB.Entity.Installation;
 import ch.hslu.appe.reminder.genius.R;
-import ch.hslu.appe.reminder.genius.ViewModel.ContactViewModel;
+import ch.hslu.appe.reminder.genius.ViewModel.InstallationViewModel;
 
-public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.ContactViewHolder> {
+import static ch.hslu.appe.reminder.genius.Activity.AddInstallationActivity.INSTALLATION_TO_EDIT;
 
-    public static final String EDIT_CONTACT = "contact.to.edit";
-    public static final String SHOW_CONTACT = "contact.to.show";
+public class InstallationAdapter extends RecyclerView.Adapter<InstallationAdapter.InstallationViewHolder> {
+
     private final LayoutInflater mInflater;
-    private List<Contact> contacts; // Cached copy of contacts
+    private List<Installation> installations; // Cached copy of installations
     private Activity context;
-    private ContactViewModel contactViewModel;
-    private Contact mRecentlyDeletedItem;
+    private InstallationViewModel installationViewModel;
+    private Installation mRecentlyDeletedItem;
     private int mRecentlyDeletedItemPosition;
 
-    public ContactListAdapter(Activity context, ContactViewModel contactViewModel) {
+    public InstallationAdapter(Activity context, InstallationViewModel installationViewModel) {
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
-        this.contactViewModel = contactViewModel;
+        this.installationViewModel = installationViewModel;
     }
 
     @Override
-    public ContactViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.contact_list_recycler_view_item, parent,false);
-        return new ContactViewHolder(itemView);
+    public InstallationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = mInflater.inflate(R.layout.main_installation_recycler_view_item, parent,false);
+        return new InstallationViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(ContactViewHolder holder, int position) {
-        if (contacts != null) {
-            Contact current = contacts.get(position);
-            holder.contactItemViewName.setText(current.getFirstName() + " " + current.getLastName());
-            holder.contactItemViewAddress.setText(current.getStreet() + "\n" +
-                    current.getZip() + " " + current.getCity() + "\n" +
-                    current.getCity());
+    public void onBindViewHolder(InstallationViewHolder holder, int position) {
+        if (installations != null) {
+            Installation current = installations.get(position);
+            holder.installationItemViewProduct.setText("Product ID: " + current.getProductCategoryId());
+            holder.installationItemViewCustomer.setText("Customer ID: " + current.getContactId());
 
-            // start AddContact Activity if an item on the RecyclerView is clicked.
+            /** start AddContact Activity if an item on the RecyclerView is clicked.
             holder.parentLayout.setOnClickListener(view -> {
-                Contact contact = contacts.get(position);
+                Installation contact = installations.get(position);
                 Log.d("ContactListAdapter", "Starting ShowContact Activity in order to show contact: " + contact.toString());
                 Intent showContactIntent = new Intent(context, ShowContactActivity.class);
                 showContactIntent.putExtra(SHOW_CONTACT, contact);
                 context.startActivity(showContactIntent);
-            });
+            }); */
 
             holder.parentLayout.setOnLongClickListener(view -> {
-                Contact contact = contacts.get(position);
-                Log.d("ContactListAdapter", "Starting AddContact Activity in order to edit contact: " + contact.toString());
-                Intent editContactIntent = new Intent(context, AddContactActivity.class);
-                editContactIntent.putExtra(EDIT_CONTACT, contact);
-                context.startActivity(editContactIntent);
+                Installation installation = installations.get(position);
+                Log.d("InstallationAdapter", "Starting AddInstallation Activity in order to edit installation: " + installation.toString());
+                Intent editInstallationIntent = new Intent(context, AddInstallationActivity.class);
+                editInstallationIntent.putExtra(INSTALLATION_TO_EDIT, installation);
+                context.startActivity(editInstallationIntent);
                 return true;
             });
         } else {
             // Covers the case of data not being ready yet.
-            holder.contactItemViewName.setText("No Contact");
+            holder.installationItemViewProduct.setText("No Contact");
         }
     }
 
@@ -88,50 +85,50 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
         return context;
     }
 
-    public void setContacts(List<Contact> contacts){
-        this.contacts = contacts;
+    public void setInstallations(List<Installation> installations){
+        this.installations = installations;
         notifyDataSetChanged();
     }
 
     // getItemCount() is called many times, and when it is first called,
-    // contacts has not been updated (means initially, it's null, and we can't return null).
+    // installations has not been updated (means initially, it's null, and we can't return null).
     @Override
     public int getItemCount() {
-        if (this.contacts != null)
-            return this.contacts.size();
+        if (this.installations != null)
+            return this.installations.size();
         else return 0;
     }
 
     public void deleteItem(int position) {
-        mRecentlyDeletedItem = contacts.get(position);
+        mRecentlyDeletedItem = installations.get(position);
         mRecentlyDeletedItemPosition = position;
-        contactViewModel.delete(mRecentlyDeletedItem);
-        contacts.remove(position);
+        installationViewModel.delete(mRecentlyDeletedItem);
+        installations.remove(position);
         notifyItemRemoved(position);
         showUndoSnackbar();
     }
 
     private void showUndoSnackbar() {
-        View view = context.findViewById(R.id.contact_constraint_layout);
-        Snackbar snackbar = Snackbar.make(view, R.string.contact_snack_bar_deleted, Snackbar.LENGTH_LONG);
-        snackbar.setAction(R.string.contact_snack_bar_undo_delete, v -> undoDelete());
+        View view = context.findViewById(R.id.main_constraint_layout);
+        Snackbar snackbar = Snackbar.make(view, R.string.main_snack_bar_installation_deleted, Snackbar.LENGTH_LONG);
+        snackbar.setAction(R.string.main_snack_bar_installation_delete_undo, v -> undoDelete());
         snackbar.show();
     }
 
     private void undoDelete() {
-        contactViewModel.insert(mRecentlyDeletedItem);
-        contacts.add(mRecentlyDeletedItemPosition,
+        installationViewModel.insert(mRecentlyDeletedItem);
+        installations.add(mRecentlyDeletedItemPosition,
                 mRecentlyDeletedItem);
         notifyItemInserted(mRecentlyDeletedItemPosition);
     }
 
     public static class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 
-        private ContactListAdapter mAdapter;
+        private InstallationAdapter mAdapter;
         private Drawable icon;
         private final ColorDrawable background;
 
-        public SwipeToDeleteCallback(ContactListAdapter adapter) {
+        public SwipeToDeleteCallback(InstallationAdapter adapter) {
             super(0,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
             mAdapter = adapter;
             icon = ContextCompat.getDrawable(mAdapter.getContext(),
@@ -141,7 +138,8 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
         }
 
         @Override
-        public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+        public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                                float dX, float dY, int actionState, boolean isCurrentlyActive) {
             super.onChildDraw(c, recyclerView, viewHolder, dX,
                     dY, actionState, isCurrentlyActive);
             View itemView = viewHolder.itemView;
@@ -200,16 +198,16 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
     }
 
 
-    class ContactViewHolder extends RecyclerView.ViewHolder {
-        private final TextView contactItemViewName;
-        private final TextView contactItemViewAddress;
+    class InstallationViewHolder extends RecyclerView.ViewHolder {
+        private final TextView installationItemViewProduct;
+        private final TextView installationItemViewCustomer;
         private final RelativeLayout parentLayout;
 
-        private ContactViewHolder(View itemView) {
+        private InstallationViewHolder(View itemView) {
             super(itemView);
-            this.contactItemViewName = itemView.findViewById(R.id.contact_recycler_view_item_name);
-            this.contactItemViewAddress = itemView.findViewById(R.id.contact_recycler_view_item_address);
-            this.parentLayout = itemView.findViewById(R.id.contact_foreground_parent_layout);
+            this.installationItemViewProduct = itemView.findViewById(R.id.main_installation_item_product_id);
+            this.installationItemViewCustomer = itemView.findViewById(R.id.main_installation_item_contact_id);
+            this.parentLayout = itemView.findViewById(R.id.main_installation_parent_layout);
         }
     }
 }

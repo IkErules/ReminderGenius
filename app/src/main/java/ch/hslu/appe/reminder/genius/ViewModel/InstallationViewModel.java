@@ -36,4 +36,8 @@ public class InstallationViewModel extends AndroidViewModel {
         Log.i("InstallationViewModel", "Deleting all Installations from DB!");
         this.repository.deleteAllInstallations();
     }
+
+    public void delete(Installation installation) {
+        this.repository.delete(installation);
+    }
 }

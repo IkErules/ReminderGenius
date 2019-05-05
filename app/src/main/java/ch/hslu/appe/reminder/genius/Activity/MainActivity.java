@@ -14,13 +14,25 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Menu;
 
+import ch.hslu.appe.reminder.genius.Adapter.InstallationAdapter;
+import ch.hslu.appe.reminder.genius.DB.Entity.ProductCategory;
 import ch.hslu.appe.reminder.genius.R;
+import ch.hslu.appe.reminder.genius.ViewModel.InstallationViewModel;
+import ch.hslu.appe.reminder.genius.ViewModel.ProductCategoryViewModel;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private InstallationViewModel installationViewModel;
+    private RecyclerView recyclerView;
+    private InstallationAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +54,17 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, AddInstallationActivity.class);
             startActivity(intent);
         });
+
+        observeInstallation();
+        setUpRecyclerView();
+
+        /** to set up some Products
+        ProductCategoryViewModel productViewModel = ViewModelProviders.of(this).get(ProductCategoryViewModel.class);
+        productViewModel.insert(new ProductCategory("Product 1", 1, "Default description" ));
+        productViewModel.insert(new ProductCategory("Product 2", 2, "Default description 2" ));
+        productViewModel.insert(new ProductCategory("Product 3", 3, "Default description, but pretty long to check if there is a linebreak in AddInstallationView" ));
+        */
+
     }
 
     @Override
@@ -92,5 +115,27 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void setUpRecyclerView() {
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        ItemTouchHelper itemTouchHelper = new
+                ItemTouchHelper(new InstallationAdapter.SwipeToDeleteCallback(adapter));
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    private void observeInstallation() {
+        installationViewModel = ViewModelProviders.of(this).get(InstallationViewModel.class);
+
+        recyclerView = findViewById(R.id.default_recycler_view);
+        adapter = new InstallationAdapter(this, installationViewModel);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        this.installationViewModel.getAllInstallations().observe(this, installations -> {
+            // Update the cached copy of the words in the adapter.
+            adapter.setInstallations(installations);
+        });
     }
 }

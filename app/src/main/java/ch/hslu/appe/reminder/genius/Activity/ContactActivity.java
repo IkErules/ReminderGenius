@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import android.util.Log;
 import android.view.Menu;
@@ -24,7 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import ch.hslu.appe.reminder.genius.DB.ContactListAdapter;
+import ch.hslu.appe.reminder.genius.Adapter.ContactListAdapter;
 import ch.hslu.appe.reminder.genius.DB.Entity.Contact;
 import ch.hslu.appe.reminder.genius.R;
 import ch.hslu.appe.reminder.genius.ViewModel.ContactViewModel;
@@ -52,7 +51,7 @@ public class ContactActivity extends AppCompatActivity {
     private void observeContacts() {
         this.contactViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
 
-        recyclerView = findViewById(R.id.recyclerview);
+        recyclerView = findViewById(R.id.default_recycler_view);
         adapter = new ContactListAdapter(this, contactViewModel);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -68,35 +67,27 @@ public class ContactActivity extends AppCompatActivity {
 
     private void registerListeners() {
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("ContactActivity", "Adding Contact, FAB Clicked.");
-                Intent intent = new Intent(getApplicationContext(), AddContactActivity.class);
-                startActivity(intent);
-
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
+        fab.setOnClickListener(view -> {
+            Log.d("ContactActivity", "Adding Contact, FAB Clicked.");
+            Intent intent = new Intent(getApplicationContext(), AddContactActivity.class);
+            startActivity(intent);
         });
 
-        Button button = (Button) findViewById(R.id.contact_add_contact_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Log.i("contact", "Adding Test Contact to DB.");
-                Contact contact = new Contact("Roman",
-                        "Schraner",
-                        "Person",
-                        "",
-                        "0774690331",
-                        "roman.schraner@stud.hslu.ch",
-                        "Cheerstrasse 13f",
-                        "Luzern",
-                        6014,
-                        "Luzern",
-                        "CH");
-                contactViewModel.insert(contact);
-            }
+        Button button = findViewById(R.id.contact_add_contact_button);
+        button.setOnClickListener(view -> {
+            Log.i("contact", "Adding Test Contact to DB.");
+            Contact contact = new Contact("Roman",
+                    "Schraner",
+                    "Person",
+                    "",
+                    "0774690331",
+                    "roman.schraner@stud.hslu.ch",
+                    "Cheerstrasse 13f",
+                    "Luzern",
+                    6014,
+                    "Luzern",
+                    "CH");
+            contactViewModel.insert(contact);
         });
     }
 

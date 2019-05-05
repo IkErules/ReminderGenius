@@ -32,6 +32,10 @@ public class InstallationRepository {
 
     public void deleteAllInstallations() { new deleteAllInstallationsAsyncTask(this.installationDao).execute(); }
 
+    public void delete(Installation installation) {
+        new deleteInstallationsAsyncTask(this.installationDao).execute(installation);
+    }
+
     private static class insertAsyncTask extends AsyncTask<Installation, Void, Void> {
 
         private InstallationDao mAsyncTaskDao;
@@ -58,6 +62,21 @@ public class InstallationRepository {
         @Override
         protected Void doInBackground(final Void... params) {
             this.mAsyncTaskDao.deleteAllInstallations();
+            return null;
+        }
+    }
+
+    private static class deleteInstallationsAsyncTask extends AsyncTask<Installation, Void, Void> {
+
+        private InstallationDao mAsyncTaskDao;
+
+        deleteInstallationsAsyncTask(InstallationDao dao) {
+            this.mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Installation... params) {
+            this.mAsyncTaskDao.deleteInstallations(params[0]);
             return null;
         }
     }

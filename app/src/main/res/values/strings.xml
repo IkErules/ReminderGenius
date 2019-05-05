@@ -7,6 +7,9 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="main_snack_bar_installation_deleted">Installation gelöscht</string>
+    <string name="main_snack_bar_installation_delete_undo">Rückgängig machen</string>
+    <string name="main_date_time_picker_hint">Datum</string>
 
     <!-- Contact -->
     <string name="contact_text_view_title">Kontakte</string>
@@ -59,7 +62,6 @@
     <string name="add_installation_customer_spinner_hint">Kunde</string>
     <string name="add_installation_installation_date">Installationsdatum</string>
     <string name="add_installation_expire_date_hint">Ablaufdatum</string>
-    <string name="main_date_time_picker_hint">Datum</string>
     <string name="add_installation_service_intervall_text_view">Service Intervall</string>
     <string name="add_installation_service_intervall_number">J.</string>
     <string name="add_installation_notes_hint">Bemerkungen</string>
