@@ -3,8 +3,11 @@ package ch.hslu.appe.reminder.genius.DB;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
+
 import android.content.Context;
 
+import ch.hslu.appe.reminder.genius.DB.Converter.LocalDateConverter;
 import ch.hslu.appe.reminder.genius.DB.Dao.ContactDao;
 import ch.hslu.appe.reminder.genius.DB.Dao.ImageDao;
 import ch.hslu.appe.reminder.genius.DB.Dao.InstallationDao;
@@ -17,7 +20,8 @@ import ch.hslu.appe.reminder.genius.DB.Entity.InstallationImage;
 import ch.hslu.appe.reminder.genius.DB.Entity.ProductCategory;
 
 // Update the Database Version when a schema change was done.
-@Database(entities = {Contact.class, ProductCategory.class, Image.class, Installation.class, InstallationImage.class}, version = 4)
+@Database(entities = {Contact.class, ProductCategory.class, Image.class, Installation.class, InstallationImage.class}, version = 5)
+@TypeConverters({LocalDateConverter.class})
 public abstract class ReminderGeniusRoomDb extends RoomDatabase {
 
     // Abstract Getter for all Daos

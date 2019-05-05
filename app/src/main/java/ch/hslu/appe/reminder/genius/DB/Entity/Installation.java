@@ -8,18 +8,20 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-import static androidx.room.ForeignKey.CASCADE;
+import java.time.LocalDate;
+
+import static androidx.room.ForeignKey.NO_ACTION;
 
 @Entity(tableName = "installation",
         foreignKeys = {
         @ForeignKey(entity = ProductCategory.class,
                 parentColumns = "productCategoryId",
                 childColumns = "productCategoryId",
-                onDelete = CASCADE),
+                onDelete = NO_ACTION),
         @ForeignKey(entity = Contact.class,
                 parentColumns = "contactId",
                 childColumns = "contactId",
-                onDelete = CASCADE)
+                onDelete = NO_ACTION)
         })
 public class Installation implements Parcelable {
     @PrimaryKey(autoGenerate = true)
@@ -30,9 +32,8 @@ public class Installation implements Parcelable {
     @NonNull
     private int contactId;
     private String productDetails;
-    private int installDateYear;
-    private int installDateMonth;
-    private int installDateDay;
+    private LocalDate  installationDate;
+    private LocalDate expireDate;
     private int serviceInterval;
     private String notes;
     private boolean notifyCustomerMail;
@@ -43,9 +44,8 @@ public class Installation implements Parcelable {
     public Installation(int productCategoryId,
                         int contactId,
                         String productDetails,
-                        int installDateYear,
-                        int installDateMonth,
-                        int installDateDay,
+                        LocalDate installationDate,
+                        LocalDate expireDate,
                         int serviceInterval,
                         String notes,
                         boolean notifyCustomerMail,
@@ -56,9 +56,8 @@ public class Installation implements Parcelable {
         this.productCategoryId = productCategoryId;
         this.contactId = contactId;
         this.productDetails = productDetails;
-        this.installDateYear = installDateYear;
-        this.installDateMonth = installDateMonth;
-        this.installDateDay = installDateDay;
+        this.installationDate = installationDate;
+        this.expireDate = expireDate;
         this.serviceInterval = serviceInterval;
         this.notes = notes;
         this.notifyCustomerMail = notifyCustomerMail;
@@ -71,9 +70,12 @@ public class Installation implements Parcelable {
     public int getProductCategoryId() {return this.productCategoryId;}
     public int getContactId(){return this.contactId;}
     public String getProductDetails(){return this.productDetails;}
-    public int getInstallDateYear(){return this.installDateYear;}
-    public int getInstallDateMonth(){return this.installDateMonth;}
-    public int getInstallDateDay(){return this.installDateDay;}
+    public LocalDate getInstallationDate() {
+        return installationDate;
+    }
+    public LocalDate getExpireDate() {
+        return expireDate;
+    }
     public int getServiceInterval(){return this.serviceInterval;}
     public String getNotes(){return this.notes;}
     public boolean getNotifyCustomerMail(){return this.notifyCustomerMail;}
@@ -97,16 +99,12 @@ public class Installation implements Parcelable {
         this.productDetails = productDetails;
     }
 
-    public void setInstallDateYear(int installDateYear) {
-        this.installDateYear = installDateYear;
+    public void setInstallationDate(LocalDate installationDate) {
+        this.installationDate = installationDate;
     }
 
-    public void setInstallDateMonth(int installDateMonth) {
-        this.installDateMonth = installDateMonth;
-    }
-
-    public void setInstallDateDay(int installDateDay) {
-        this.installDateDay = installDateDay;
+    public void setExpireDate(LocalDate expireDate) {
+        this.expireDate = expireDate;
     }
 
     public void setServiceInterval(int serviceInterval) {
@@ -133,12 +131,26 @@ public class Installation implements Parcelable {
         this.notifyCreatorSms = notifyCreatorSms;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     @Override
     public String toString() {
-        return String.format("Installation[installationId: %s, productCategoryId: %s, contactId: %s, productDetails: %s, installDateYear: %s, installDateMonth: %s, installDateDay: %s, serviceInterval: %s, notes: %s, notifyCustomerMail: %s, notifyCustomerSms: %s, notifyCreatorMail: %s, notifyCreatorSms: %s]",
-                this.getInstallationId(), this.getProductCategoryId(), this.getContactId(), this.getProductDetails(), this.getInstallDateYear(), this.getInstallDateMonth(),
-                this.getInstallDateDay(), this.getServiceInterval(), this.getNotes(), this.getNotifyCustomerMail(), this.getNotifyCustomerSms(), this.getNotifyCreatorMail(),
-                this.getNotifyCreatorSms());
+        return "Installation{" +
+                "installationId=" + installationId +
+                ", productCategoryId=" + productCategoryId +
+                ", contactId=" + contactId +
+                ", productDetails='" + productDetails + '\'' +
+                ", installationDate=" + installationDate +
+                ", expireDate=" + expireDate +
+                ", serviceInterval=" + serviceInterval +
+                ", notes='" + notes + '\'' +
+                ", notifyCustomerMail=" + notifyCustomerMail +
+                ", notifyCustomerSms=" + notifyCustomerSms +
+                ", notifyCreatorMail=" + notifyCreatorMail +
+                ", notifyCreatorSms=" + notifyCreatorSms +
+                '}';
     }
 
     public static final Creator<Installation> CREATOR = new Creator<Installation>() {
@@ -159,9 +171,8 @@ public class Installation implements Parcelable {
         this.productCategoryId = in.readInt();
         this.contactId = in.readInt();
         this.productDetails = in.readString();
-        this.installDateYear = in.readInt();
-        this.installDateMonth = in.readInt();
-        this.installDateDay = in.readInt();
+        this.installationDate = (LocalDate) in.readSerializable();
+        this.expireDate = (LocalDate) in.readSerializable();
         this.serviceInterval = in.readInt();
         this.notes = in.readString();
         this.notifyCustomerMail = in.readByte() != 0;
@@ -182,14 +193,93 @@ public class Installation implements Parcelable {
         dest.writeInt(this.getProductCategoryId());
         dest.writeInt(this.getContactId());
         dest.writeString(this.getProductDetails());
-        dest.writeInt(this.getInstallDateYear());
-        dest.writeInt(this.getInstallDateMonth());
-        dest.writeInt(this.getInstallDateDay());
+        dest.writeSerializable(this.getInstallationDate());
+        dest.writeSerializable(this.getExpireDate());
         dest.writeInt(this.getServiceInterval());
         dest.writeString(this.getNotes());
         dest.writeByte((byte) (this.getNotifyCustomerMail() ? 1 : 0));
         dest.writeByte((byte) (this.getNotifyCustomerSms() ? 1 : 0));
         dest.writeByte((byte) (this.getNotifyCreatorMail() ? 1 : 0));
         dest.writeByte((byte) (this.getNotifyCreatorSms() ? 1 : 0));
+    }
+
+    public static class Builder {
+        private int productCategoryId;
+        private int contactId;
+        private String productDetails;
+        private LocalDate installationDate;
+        private LocalDate expireDate;
+        private int serviceInterval;
+        private String notes;
+        private boolean notifyCustomerMail;
+        private boolean notifyCustomerSms;
+        private boolean notifyCreatorMail;
+        private boolean notifyCreatorSms;
+
+        public Installation build() {
+            return new Installation(productCategoryId, contactId, productDetails, installationDate,
+                    expireDate, serviceInterval, notes, notifyCustomerMail, notifyCustomerSms,
+                    notifyCreatorMail, notifyCreatorSms);
+        }
+
+        public Installation defaultInstallation() {
+            return new Installation(0, 0, "", LocalDate.now(), LocalDate.now().plusYears(2), 2,
+                    "", false, false, false, false);
+        }
+
+        public Builder setProductCategoryId(int productCategoryId) {
+            this.productCategoryId = productCategoryId;
+            return this;
+        }
+
+        public Builder setContactId(int contactId) {
+            this.contactId = contactId;
+            return this;
+        }
+
+        public Builder setProductDetails(String productDetails) {
+            this.productDetails = productDetails;
+            return this;
+        }
+
+        public Builder setInstallationDate(LocalDate installationDate) {
+            this.installationDate = installationDate;
+            return this;
+        }
+
+        public Builder setExpireDate(LocalDate expireDate) {
+            this.expireDate = expireDate;
+            return this;
+        }
+
+        public Builder setServiceInterval(int serviceInterval) {
+            this.serviceInterval = serviceInterval;
+            return this;
+        }
+
+        public Builder setNotes(String notes) {
+            this.notes = notes;
+            return this;
+        }
+
+        public Builder setNotifyCustomerMail(boolean notifyCustomerMail) {
+            this.notifyCustomerMail = notifyCustomerMail;
+            return this;
+        }
+
+        public Builder setNotifyCustomerSms(boolean notifyCustomerSms) {
+            this.notifyCustomerSms = notifyCustomerSms;
+            return this;
+        }
+
+        public Builder setNotifyCreatorMail(boolean notifyCreatorMail) {
+            this.notifyCreatorMail = notifyCreatorMail;
+            return this;
+        }
+
+        public Builder setNotifyCreatorSms(boolean notifyCreatorSms) {
+            this.notifyCreatorSms = notifyCreatorSms;
+            return this;
+        }
     }
 }

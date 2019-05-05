@@ -50,7 +50,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/add_installation_customer_spinner_hint"
         app:layout_constraintStart_toStartOf="@+id/add_installation_customer_spinner"
-        app:layout_constraintTop_toBottomOf="@+id/add_installation_product_spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/add_installation_product_details_text_view" />
 
     <EditText
         android:id="@+id/add_installation_installation_date_text_view"
@@ -95,4 +95,37 @@
         android:text="@string/add_installation_expire_date_hint"
         app:layout_constraintStart_toStartOf="@+id/add_installation_expire_date_text_view"
         app:layout_constraintTop_toBottomOf="@+id/add_installation_installation_date_text_view" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/add_installation_service_intervall_text_view"
+        app:layout_constraintStart_toEndOf="@+id/add_installation_installation_date_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/add_installation_customer_spinner" />
+
+    <NumberPicker
+        android:id="@+id/add_installation_service_intervall_number"
+        android:layout_width="95dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/add_installation_service_intervall_number"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/add_installation_expire_date_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+    <TextView
+        android:id="@+id/add_installation_product_details_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_installation_product_spinner" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -60,4 +60,6 @@
     <string name="add_installation_installation_date">Installationsdatum</string>
     <string name="add_installation_expire_date_hint">Ablaufdatum</string>
     <string name="main_date_time_picker_hint">Datum</string>
+    <string name="add_installation_service_intervall_text_view">Service Intervall</string>
+    <string name="add_installation_service_intervall_number">J.</string>
 </resources>
