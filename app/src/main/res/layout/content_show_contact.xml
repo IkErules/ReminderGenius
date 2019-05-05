@@ -10,63 +10,56 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/show_contact_name_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text=""
+        style="@style/details_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/show_contact_street_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/show_contact_text_view_lastname"
+    <View
+        android:id="@+id/contact_name_divider"
+        style="@style/details_divider_full"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/show_contact_name_text_view" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/show_contact_zip_text_view"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text=""
+        android:id="@+id/show_contact_address_text_view"
+        style="@style/details_text_with_drawable"
+        android:drawableStart="@drawable/ic_location_black_o54_24dp"
+        android:background="?android:attr/selectableItemBackground"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/show_contact_street_text_view" />
+        app:layout_constraintTop_toBottomOf="@+id/contact_name_divider" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/show_contact_city_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text=""
-        app:layout_constraintStart_toEndOf="@+id/show_contact_zip_text_view"
-        app:layout_constraintTop_toBottomOf="@+id/show_contact_street_text_view"
-        app:layout_constraintBaseline_toBaselineOf="@+id/show_contact_zip_text_view"/>
+    <View
+        android:id="@+id/contact_detail_divider"
+        style="@style/details_divider_indent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/show_contact_address_text_view" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/show_contact_mail_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text=""
+        style="@style/details_text_with_drawable"
+        android:drawableStart="@drawable/ic_mail_black_o54_24dp"
+        android:background="?android:attr/selectableItemBackground"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/show_contact_zip_text_view" />
+        app:layout_constraintTop_toBottomOf="@+id/contact_detail_divider" />
+
+    <View
+        android:id="@+id/contact_detail_divider2"
+        style="@style/details_divider_indent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/show_contact_mail_text_view" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/show_contact_phone_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text=""
+        style="@style/details_text_with_drawable"
+        android:drawableStart="@drawable/ic_local_phone_black_o54_24dp"
+        android:background="?android:attr/selectableItemBackground"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/show_contact_mail_text_view" />
+        app:layout_constraintTop_toBottomOf="@+id/contact_detail_divider2" />
+
+    <View
+        android:id="@+id/contact_detail_divider3"
+        style="@style/details_divider_indent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/show_contact_phone_text_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
