@@ -9,11 +9,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -95,7 +97,33 @@ public class ContactActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.activity_contact_menu, menu);
+
+        this.addSearchListener(menu);
+
         return true;
+    }
+
+    private void addSearchListener(Menu menu) {
+        MenuItem searchItem = menu.findItem(R.id.contact_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        // Set Icon on Keyboard
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        searchView.setQueryHint(getString(R.string.contact_search_desc));
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
     }
 
     @Override
