@@ -24,6 +24,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import ch.hslu.appe.reminder.genius.Activity.AddContactActivity;
@@ -63,9 +65,7 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
         if (contacts != null) {
             Contact current = contacts.get(position);
             holder.contactItemViewName.setText(current.getFirstName() + " " + current.getLastName());
-            holder.contactItemViewAddress.setText(current.getStreet() + "\n" +
-                    current.getZip() + " " + current.getCity() + "\n" +
-                    current.getCity());
+            holder.contactItemViewAddress.setText(current.getFormattedAddress());
 
             // start AddContact Activity if an item on the RecyclerView is clicked.
             holder.parentLayout.setOnClickListener(view -> {
@@ -95,9 +95,19 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
     }
 
     public void setContacts(List<Contact> contacts){
+        this.sortContactsByFirstName(contacts);
         this.contacts = contacts;
         this.contactsFull = new ArrayList<>(this.contacts);
         notifyDataSetChanged();
+    }
+
+    public void sortContactsByFirstName(List<Contact> contacts) {
+        Collections.sort(contacts, new Comparator<Contact>() {
+            @Override
+            public int compare(Contact lhs, Contact rhs) {
+                return lhs.getFirstName().compareToIgnoreCase(rhs.getFirstName());
+            }
+        });
     }
 
     // getItemCount() is called many times, and when it is first called,
@@ -113,7 +123,6 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
         mRecentlyDeletedItem = contacts.get(position);
         mRecentlyDeletedItemPosition = position;
         contactViewModel.delete(mRecentlyDeletedItem);
-        contacts.remove(position);
         notifyItemRemoved(position);
         showUndoSnackbar();
     }
