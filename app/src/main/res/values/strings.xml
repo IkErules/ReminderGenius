@@ -67,5 +67,12 @@
     <string name="add_installation_service_intervall_number">J.</string>
     <string name="add_installation_notes_hint">Bemerkungen</string>
     <string name="title_activity_show_installation">Installation anzeigen</string>
+    <string name="show_installation_contact_header">Kontakt</string>
+    <string name="show_installation_productcategory_header">Produkt</string>
+    <string name="show_installation_header">Installation</string>
+    <string name="show_installation_notifycustomermail_check_box">Kontakt per Mail benachrichtigen</string>
+    <string name="show_installation_notifycustomersms_check_box">Kontakt per SMS benachrichtigen</string>
+    <string name="show_installation_notifytechnicianmail_check_box">Mich per Mail benachrichtigen</string>
+    <string name="show_installation_notifytechniciansms_check_box">Mich per SMS benachrichtigen</string>
 
 </resources>

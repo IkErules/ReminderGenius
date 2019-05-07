@@ -16,7 +16,8 @@
         <activity android:name=".Activity.ShowInstallationActivity"
             android:label="@string/title_activity_show_installation"
             android:parentActivityName=".Activity.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <activity
             android:name=".Activity.AddInstallationActivity"
             android:label="@string/title_activity_add_installation"
