@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".Activity.ShowInstallationActivity"
+    tools:showIn="@layout/activity_show_installation">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/show_installation_name_text_view"
+        style="@style/details_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/installation_name_divider"
+        style="@style/details_divider_full"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/show_installation_name_text_view" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/show_installation_contact_text_view"
+        style="@style/details_text_with_drawable"
+        android:drawableStart="@drawable/ic_location_black_o54_24dp"
+        android:background="?android:attr/selectableItemBackground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/installation_name_divider" />
+
+    <View
+        android:id="@+id/installation_detail_divider"
+        style="@style/details_divider_indent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/show_installation_contact_text_view" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/show_installation_mail_text_view"
+        style="@style/details_text_with_drawable"
+        android:drawableStart="@drawable/ic_mail_black_o54_24dp"
+        android:background="?android:attr/selectableItemBackground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/installation_detail_divider" />
+
+    <View
+        android:id="@+id/installation_detail_divider2"
+        style="@style/details_divider_indent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/show_installation_mail_text_view" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/show_installation_phone_text_view"
+        style="@style/details_text_with_drawable"
+        android:drawableStart="@drawable/ic_local_phone_black_o54_24dp"
+        android:background="?android:attr/selectableItemBackground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/installation_detail_divider2" />
+
+    <View
+        android:id="@+id/installation_detail_divider3"
+        style="@style/details_divider_indent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/show_installation_phone_text_view" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/show_installation_productcategory_name_text_view"
+        style="@style/details_text_with_drawable"
+        android:drawableStart="@drawable/ic_product_black_24dp"
+        android:background="?android:attr/selectableItemBackground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/installation_detail_divider3" />
+
+    <View
+        android:id="@+id/installation_detail_divider4"
+        style="@style/details_divider_indent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/show_installation_productcategory_name_text_view" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/show_installation_productcategory_description_text_view"
+        style="@style/details_text_no_drawable"
+        android:background="?android:attr/selectableItemBackground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/installation_detail_divider4" />
+
+    <View
+        android:id="@+id/installation_detail_divider5"
+        style="@style/details_divider_indent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/show_installation_productcategory_description_text_view" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/show_installation_expiredate_text_view"
+        style="@style/details_text_with_drawable"
+        android:drawableStart="@drawable/ic_date_range_black_24dp"
+        android:background="?android:attr/selectableItemBackground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/installation_detail_divider5" />
+
+    <View
+        android:id="@+id/installation_detail_divider6"
+        style="@style/details_divider_indent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/show_installation_expiredate_text_view" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/show_installation_notes_text_view"
+        style="@style/details_text_with_drawable"
+        android:drawableStart="@drawable/ic_event_note_black_24dp"
+        android:background="?android:attr/selectableItemBackground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/installation_detail_divider6" />
+
+    <View
+        android:id="@+id/installation_detail_divider7"
+        style="@style/details_divider_indent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/show_installation_notes_text_view" />
+
+
+    
+
+</androidx.constraintlayout.widget.ConstraintLayout>

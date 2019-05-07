@@ -50,6 +50,14 @@
         <item name="android:drawablePadding">12dp</item>
     </style>
 
+    <style name="details_text_no_drawable" parent="@style/details_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingVertical">12dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:paddingLeft">36dp</item>
+    </style>
+
     <style name="details_divider_full">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">1dp</item>

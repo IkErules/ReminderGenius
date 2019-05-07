@@ -53,6 +53,8 @@ public class AddInstallationActivity extends AppCompatActivity {
         productCategoryViewModel = ViewModelProviders.of(this).get(ProductCategoryViewModel.class);
         installationViewModel = ViewModelProviders.of(this).get(InstallationViewModel.class);
 
+        productCategoryViewModel.insert(new ProductCategory("Test-Category", 1, "Test Kategorie mit Beschreibung."));
+
         if (getIntent().hasExtra(INSTALLATION_TO_EDIT)) {
             installation = getIntent().getParcelableExtra(INSTALLATION_TO_EDIT);
 

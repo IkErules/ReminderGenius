@@ -66,5 +66,6 @@
     <string name="add_installation_service_intervall_text_view">Service Intervall</string>
     <string name="add_installation_service_intervall_number">J.</string>
     <string name="add_installation_notes_hint">Bemerkungen</string>
+    <string name="title_activity_show_installation">Installation anzeigen</string>
 
 </resources>

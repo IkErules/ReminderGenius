@@ -30,6 +30,8 @@ public class ProductCategoryRepository {
         new insertAsyncTask(this.productCategoryDao).execute(productCategory);
     }
 
+    public LiveData<ProductCategory> getProductCategoryById(int id) { return this.productCategoryDao.findProductCategoryById(id); }
+
     public void deleteAllProductCategories() { new deleteAllProductCategoriesAsyncTask(this.productCategoryDao).execute(); }
 
     private static class insertAsyncTask extends AsyncTask<ProductCategory, Void, Void> {
