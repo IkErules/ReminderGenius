@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,6 +23,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import ch.hslu.appe.reminder.genius.Activity.AddContactActivity;
@@ -29,12 +34,15 @@ import ch.hslu.appe.reminder.genius.DB.Entity.Contact;
 import ch.hslu.appe.reminder.genius.R;
 import ch.hslu.appe.reminder.genius.ViewModel.ContactViewModel;
 
-public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.ContactViewHolder> {
+public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.ContactViewHolder> implements Filterable {
 
     public static final String EDIT_CONTACT = "contact.to.edit";
     public static final String SHOW_CONTACT = "contact.to.show";
     private final LayoutInflater mInflater;
+
     private List<Contact> contacts; // Cached copy of contacts
+    private List<Contact> contactsFull;
+
     private Activity context;
     private ContactViewModel contactViewModel;
     private Contact mRecentlyDeletedItem;
@@ -57,9 +65,7 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
         if (contacts != null) {
             Contact current = contacts.get(position);
             holder.contactItemViewName.setText(current.getFirstName() + " " + current.getLastName());
-            holder.contactItemViewAddress.setText(current.getStreet() + "\n" +
-                    current.getZip() + " " + current.getCity() + "\n" +
-                    current.getCity());
+            holder.contactItemViewAddress.setText(current.getFormattedAddress());
 
             // start AddContact Activity if an item on the RecyclerView is clicked.
             holder.parentLayout.setOnClickListener(view -> {
@@ -89,8 +95,19 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
     }
 
     public void setContacts(List<Contact> contacts){
+        this.sortContactsByFirstName(contacts);
         this.contacts = contacts;
+        this.contactsFull = new ArrayList<>(this.contacts);
         notifyDataSetChanged();
+    }
+
+    public void sortContactsByFirstName(List<Contact> contacts) {
+        Collections.sort(contacts, new Comparator<Contact>() {
+            @Override
+            public int compare(Contact lhs, Contact rhs) {
+                return lhs.getFirstName().compareToIgnoreCase(rhs.getFirstName());
+            }
+        });
     }
 
     // getItemCount() is called many times, and when it is first called,
@@ -106,7 +123,6 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
         mRecentlyDeletedItem = contacts.get(position);
         mRecentlyDeletedItemPosition = position;
         contactViewModel.delete(mRecentlyDeletedItem);
-        contacts.remove(position);
         notifyItemRemoved(position);
         showUndoSnackbar();
     }
@@ -124,6 +140,55 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
                 mRecentlyDeletedItem);
         notifyItemInserted(mRecentlyDeletedItemPosition);
     }
+
+    protected List<Contact> filterContacts(String filterString) {
+        List<Contact> filteredList = new ArrayList<>();
+
+        for (Contact contact : this.contactsFull) {
+            if (contact.getFormattedAddressWithName().toLowerCase().contains(filterString)) {
+                filteredList.add(contact);
+            } else if ((contact.getLastName() + " " + contact.getFirstName()).toLowerCase().contains(filterString)) {
+                // Add Contact even if user is searching for lastname + firstname instead of firstname + lastname
+                filteredList.add(contact);
+            }
+        }
+
+        return filteredList;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return contactFilter;
+    }
+
+    private Filter contactFilter = new Filter() {
+        @Override
+        // Automatically performed in the Background
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Contact> filteredContacts = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredContacts.addAll(contactsFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                filteredContacts.addAll(filterContacts(filterPattern));
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredContacts;
+
+            return results;
+        }
+
+        @Override
+        // Results from Filtering will be returned to this method from performFiltering
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            contacts.clear();
+            contacts.addAll((List) results.values);
+            // Notify observers that the List has changed.
+            notifyDataSetChanged();
+        }
+    };
 
     public static class SwipeToDeleteCallback extends ItemTouchHelper.SimpleCallback {
 

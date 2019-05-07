@@ -60,18 +60,53 @@ public class Contact implements Parcelable, Comparable<Contact> {
         this.country = country;
     }
 
-    public int getContactId(){return this.contactId;}
-    public String getType() {return this.type;}
-    public String getFirstName(){return this.firstName;}
-    public String getLastName(){return this.lastName;}
-    public String getMaidenName(){return this.maidenName;}
-    public String getPhone(){return this.phone;}
-    public String getMail(){return this.mail;}
-    public String getStreet(){return this.street;}
-    public String getCity(){return this.city;}
-    public int getZip(){return this.zip;}
-    public String getCanton(){return this.canton;}
-    public String getCountry(){return this.country;}
+    public int getContactId() {
+        return this.contactId;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    public String getLastName() {
+        return this.lastName;
+    }
+
+    public String getMaidenName() {
+        return this.maidenName;
+    }
+
+    public String getPhone() {
+        return this.phone;
+    }
+
+    public String getMail() {
+        return this.mail;
+    }
+
+    public String getStreet() {
+        return this.street;
+    }
+
+    public String getCity() {
+        return this.city;
+    }
+
+    public int getZip() {
+        return this.zip;
+    }
+
+    public String getCanton() {
+        return this.canton;
+    }
+
+    public String getCountry() {
+        return this.country;
+    }
 
     public void setContactId(int contactId) {
         this.contactId = contactId;
@@ -120,6 +155,33 @@ public class Contact implements Parcelable, Comparable<Contact> {
     public void setCountry(String country) {
         this.country = country;
     }
+
+    public String getFormattedAddressWithName() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.getFirstName() + " " + this.getLastName());
+        sb.append(System.getProperty("line.separator"));
+        sb.append(this.getFormattedAddress());
+
+        return sb.toString();
+    }
+
+    public String getFormattedAddress() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.getStreet());
+        sb.append(System.getProperty("line.separator"));
+        sb.append(Integer.toString(this.getZip()) + " " + this.getCity());
+        if (!(this.getCanton().isEmpty())) {
+            sb.append(System.getProperty("line.separator"));
+            sb.append(this.getCanton());
+        }
+        if (!(this.getCountry().isEmpty())) {
+            sb.append(" ");
+            sb.append(this.getCountry());
+        }
+
+        return sb.toString();
+    }
+
 
     @Override
     public String toString() {

@@ -37,13 +37,8 @@ public class ShowContactActivity extends AppCompatActivity {
     }
 
     private void showContact() {
-        // TODO: Display Contact
         ((TextView) findViewById(R.id.show_contact_name_text_view)).setText(this.contact.getFirstName() + " " + this.contact.getLastName());
-        ((TextView) findViewById(R.id.show_contact_address_text_view)).setText(
-                        this.contact.getStreet() + "\n" +
-                        Integer.toString(this.contact.getZip()) + " " + this.contact.getCity() + "\n" +
-                        this.contact.getCanton() + " " + this.contact.getCountry()
-        );
+        ((TextView) findViewById(R.id.show_contact_address_text_view)).setText(this.contact.getFormattedAddress());
         ((TextView) findViewById(R.id.show_contact_mail_text_view)).setText(this.contact.getMail());
         ((TextView) findViewById(R.id.show_contact_phone_text_view)).setText(this.contact.getPhone());
     }
