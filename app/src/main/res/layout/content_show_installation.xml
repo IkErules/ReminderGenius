@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_marginTop="?android:attr/actionBarSize" >
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".Activity.ShowInstallationActivity"
+        tools:showIn="@layout/activity_show_installation">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/show_installation_name_text_view"
+            style="@style/details_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/installation_name_divider"
+            style="@style/details_divider_full"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_name_text_view" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/show_installation_contact_header_text_view"
+            style="@style/details_subhheader_text_with_drawable"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableStart="@drawable/ic_contact_black_o54_24dp"
+            android:text="@string/show_installation_contact_header"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/installation_name_divider" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/show_installation_contact_text_view"
+            style="@style/details_text_no_drawable"
+            android:background="?android:attr/selectableItemBackground"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_contact_header_text_view" />
+        <!--
+        <View
+            android:id="@+id/installation_detail_divider"
+            style="@style/details_divider_indent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_contact_text_view" />
+            -->
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/show_installation_mail_text_view"
+            style="@style/details_text_no_drawable"
+            android:background="?android:attr/selectableItemBackground"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_contact_text_view" />
+
+        <!--
+        <View
+            android:id="@+id/installation_detail_divider2"
+            style="@style/details_divider_indent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_mail_text_view" />
+            -->
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/show_installation_phone_text_view"
+            style="@style/details_text_no_drawable"
+            android:background="?android:attr/selectableItemBackground"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_mail_text_view" />
+
+        <View
+            android:id="@+id/installation_detail_divider3"
+            style="@style/details_divider_full"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_phone_text_view" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/show_installation_productcategory_header_text_view"
+            style="@style/details_subhheader_text_with_drawable"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableStart="@drawable/ic_product_black_24dp"
+            android:text="@string/show_installation_productcategory_header"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/installation_detail_divider3" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/show_installation_productcategory_name_text_view"
+            style="@style/details_text_no_drawable"
+            android:background="?android:attr/selectableItemBackground"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_productcategory_header_text_view" />
+
+        <!--
+        <View
+            android:id="@+id/installation_detail_divider4"
+            style="@style/details_divider_indent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_productcategory_name_text_view" />
+            -->
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/show_installation_productcategory_description_text_view"
+            style="@style/details_text_no_drawable"
+            android:background="?android:attr/selectableItemBackground"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_productcategory_name_text_view" />
+
+        <View
+            android:id="@+id/installation_detail_divider5"
+            style="@style/details_divider_full"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_productcategory_description_text_view" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/show_installation_header_text_view"
+            style="@style/details_subhheader_text_with_drawable"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableStart="@drawable/ic_product_black_24dp"
+            android:text="@string/show_installation_header"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/installation_detail_divider5" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/show_installation_expiredate_text_view"
+            style="@style/details_text_no_drawable"
+            android:background="?android:attr/selectableItemBackground"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_header_text_view" />
+
+        <!--
+        <View
+            android:id="@+id/installation_detail_divider6"
+            style="@style/details_divider_indent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_expiredate_text_view" />
+            -->
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/show_installation_notes_text_view"
+            style="@style/details_text_no_drawable"
+            android:background="?android:attr/selectableItemBackground"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_expiredate_text_view" />
+
+        <!--
+        <View
+            android:id="@+id/installation_detail_divider7"
+            style="@style/details_divider_indent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_notes_text_view" />
+            -->
+
+        <CheckBox
+            android:id="@+id/show_installation_notify_customer_mail_check_box"
+            style="@style/details_check_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:text="@string/show_installation_notifycustomermail_check_box"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_notes_text_view" />
+
+        <CheckBox
+            android:id="@+id/show_installation_notify_customer_sms_check_box"
+            style="@style/details_check_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:text="@string/show_installation_notifycustomersms_check_box"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_notify_customer_mail_check_box" />
+
+        <CheckBox
+            android:id="@+id/show_installation_notify_technician_mail_check_box"
+            style="@style/details_check_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:text="@string/show_installation_notifytechnicianmail_check_box"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_notify_customer_sms_check_box" />
+
+        <CheckBox
+            android:id="@+id/show_installation_notify_technician_sms_check_box"
+            style="@style/details_check_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:text="@string/show_installation_notifytechniciansms_check_box"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_notify_technician_mail_check_box" />
+
+        <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_notify_technician_sms_check_box"
+            tools:context=".Activity.ShowContactActivity"
+            tools:showIn="@layout/activity_main">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/show_installation_image_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                tools:listitem="@layout/show_installation_image_list_recycler_view_item" />
+
+        </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

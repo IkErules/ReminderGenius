@@ -7,50 +7,55 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
+import static androidx.room.ForeignKey.CASCADE;
+import static androidx.room.ForeignKey.NO_ACTION;
+
 @Entity(tableName = "installationimage",
-        primaryKeys = {"installationId", "imageId"},
+        primaryKeys = {"installationIdFk", "imageIdFk"},
         foreignKeys = {
                 @ForeignKey(entity = Installation.class,
                         parentColumns = "installationId",
-                        childColumns = "installationId"),
+                        childColumns = "installationIdFk",
+                        onDelete = CASCADE),
                 @ForeignKey(entity = Image.class,
                         parentColumns = "imageId",
-                        childColumns = "imageId")
+                        childColumns = "imageIdFk",
+                        onDelete = CASCADE)
         })
 public class InstallationImage implements Parcelable {
     @NonNull
-    public int installationId;
+    public int installationIdFk;
     @NonNull
-    private int imageId;
+    private int imageIdFk;
 
-    public InstallationImage(int installationId,
-                             int imageId) {
+    public InstallationImage(int installationIdFk,
+                             int imageIdFk) {
 
-        this.installationId = installationId;
-        this.imageId = imageId;
+        this.installationIdFk = installationIdFk;
+        this.imageIdFk = imageIdFk;
     }
 
-    public int getInstallationId() {
-        return this.installationId;
+    public int getInstallationIdFk() {
+        return this.installationIdFk;
     }
 
-    public int getImageId() {
-        return this.imageId;
+    public int getImageIdFk() {
+        return this.imageIdFk;
     }
 
 
-    public void setInstallationId(int installationId) {
-        this.installationId = installationId;
+    public void setInstallationIdFk(int installationId) {
+        this.installationIdFk = installationId;
     }
 
-    public void setImageId(int imageId) {
-        this.imageId = imageId;
+    public void setImageIdFk(int imageId) {
+        this.imageIdFk = imageId;
     }
 
     @Override
     public String toString() {
         return String.format("InstallationImage[installationId: %s, imageId: %s]",
-                this.getInstallationId(), this.getImageId());
+                this.getInstallationIdFk(), this.getImageIdFk());
     }
 
     public static final Creator<InstallationImage> CREATOR = new Creator<InstallationImage>() {
@@ -67,8 +72,8 @@ public class InstallationImage implements Parcelable {
 
     // Convert Parcel to Contact --> Deserialize
     protected InstallationImage(Parcel in) {
-        this.installationId = in.readInt();
-        this.imageId = in.readInt();
+        this.installationIdFk = in.readInt();
+        this.imageIdFk = in.readInt();
     }
 
     @Override
@@ -79,7 +84,7 @@ public class InstallationImage implements Parcelable {
     @Override
     // Serialize Contact to Parcel
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.getInstallationId());
-        dest.writeInt(this.getImageId());
+        dest.writeInt(this.getInstallationIdFk());
+        dest.writeInt(this.getImageIdFk());
     }
 }

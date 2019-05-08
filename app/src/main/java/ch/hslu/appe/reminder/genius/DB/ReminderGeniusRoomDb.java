@@ -20,7 +20,7 @@ import ch.hslu.appe.reminder.genius.DB.Entity.InstallationImage;
 import ch.hslu.appe.reminder.genius.DB.Entity.ProductCategory;
 
 // Update the Database Version when a schema change was done.
-@Database(entities = {Contact.class, ProductCategory.class, Image.class, Installation.class, InstallationImage.class}, version = 5)
+@Database(entities = {Contact.class, ProductCategory.class, Image.class, Installation.class, InstallationImage.class}, version = 7)
 @TypeConverters({LocalDateConverter.class})
 public abstract class ReminderGeniusRoomDb extends RoomDatabase {
 

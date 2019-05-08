@@ -18,7 +18,7 @@ public interface InstallationImageDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(InstallationImage installationImage);
 
-    @Query("SELECT * FROM image INNER JOIN installationimage ON image.imageId=installationimage.imageId WHERE installationimage.installationId=:installationId")
+    @Query("SELECT * FROM image INNER JOIN installationimage ON image.imageId=installationimage.imageIdFk WHERE installationimage.installationIdFk=:installationId")
     public LiveData<List<Image>> getImagesForInstallation(final int installationId);
 
     @Update
@@ -30,6 +30,6 @@ public interface InstallationImageDao {
     @Query("DELETE FROM installationimage")
     void deleteAllInstallationImageRelations();
 
-    @Query("SELECT * from installationimage ORDER BY installationId ASC")
+    @Query("SELECT * from installationimage ORDER BY installationIdFk ASC")
     public LiveData<List<InstallationImage>> getAllInstallationImageRelations();
 }

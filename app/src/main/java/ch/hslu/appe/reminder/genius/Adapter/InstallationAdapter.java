@@ -24,11 +24,13 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
 
 import ch.hslu.appe.reminder.genius.Activity.AddInstallationActivity;
+import ch.hslu.appe.reminder.genius.Activity.ShowInstallationActivity;
 import ch.hslu.appe.reminder.genius.DB.Entity.Installation;
 import ch.hslu.appe.reminder.genius.R;
 import ch.hslu.appe.reminder.genius.ViewModel.InstallationViewModel;
 
 import static ch.hslu.appe.reminder.genius.Activity.AddInstallationActivity.INSTALLATION_TO_EDIT;
+import static ch.hslu.appe.reminder.genius.Activity.ShowInstallationActivity.SHOW_INSTALLATION;
 
 public class InstallationAdapter extends RecyclerView.Adapter<InstallationAdapter.InstallationViewHolder> {
 
@@ -58,14 +60,14 @@ public class InstallationAdapter extends RecyclerView.Adapter<InstallationAdapte
             holder.installationItemViewProduct.setText("Product ID: " + current.getProductCategoryId());
             holder.installationItemViewCustomer.setText("Customer ID: " + current.getContactId());
 
-            /** start AddContact Activity if an item on the RecyclerView is clicked.
+            // start AddContact Activity if an item on the RecyclerView is clicked.
             holder.parentLayout.setOnClickListener(view -> {
                 Installation contact = installations.get(position);
-                Log.d("ContactListAdapter", "Starting ShowContact Activity in order to show contact: " + contact.toString());
-                Intent showContactIntent = new Intent(context, ShowContactActivity.class);
-                showContactIntent.putExtra(SHOW_CONTACT, contact);
-                context.startActivity(showContactIntent);
-            }); */
+                Log.d("InstallationAdapter", "Starting ShowInstallation Activity in order to show installation: " + installations.toString());
+                Intent showInstallationIntent = new Intent(context, ShowInstallationActivity.class);
+                showInstallationIntent.putExtra(SHOW_INSTALLATION, contact);
+                context.startActivity(showInstallationIntent);
+            });
 
             holder.parentLayout.setOnLongClickListener(view -> {
                 Installation installation = installations.get(position);

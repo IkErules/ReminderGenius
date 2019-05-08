@@ -23,7 +23,7 @@ public class InstallationImageRepository {
         this.allInstallationImageRelations = this.installationImageDao.getAllInstallationImageRelations();
     }
 
-    public LiveData<List<InstallationImage>> getAllInstallatioImageRelations() {
+    public LiveData<List<InstallationImage>> getAllInstallationImageRelations() {
         return this.allInstallationImageRelations;
     }
 

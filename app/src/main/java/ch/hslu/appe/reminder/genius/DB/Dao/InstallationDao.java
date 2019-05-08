@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import ch.hslu.appe.reminder.genius.DB.Entity.Installation;
@@ -18,17 +19,37 @@ public interface InstallationDao {
     void insert(Installation contact);
 
     @Update
-    public void updateInstallations(Installation... contacts);
+    public void updateInstallations(Installation... installations);
 
     @Delete
-    public void deleteInstallations(Installation... contacts);
+    public void deleteInstallations(Installation... installations);
 
     @Query("DELETE FROM Installation")
     void deleteAllInstallations();
 
+    @Query("SELECT * FROM Installation WHERE installationId = :id")
+    public LiveData<Installation> findInstallationById(int id);
+
     // TODO: Add method to search by any component
     @Query("SELECT * FROM Installation WHERE productDetails LIKE :search ")
     public LiveData<List<Installation>> findInstallationsWithProductDetails(String search);
+
+    @Query("SELECT * FROM Installation WHERE " +
+            "productCategoryId = :prodCatId " +
+            "AND contactId = :contactId " +
+            "AND productDetails = :prodDetails " +
+            "AND installationDate = :instDate " +
+            "AND expireDate = :expireDate " +
+            "AND serviceInterval = :serviceInterval " +
+            "AND notes = :notes " +
+            "AND notifyCustomerMail = :notCustMail " +
+            "AND notifyCustomerSms = :notCustSms " +
+            "AND notifyCreatorMail = :notCreatorMail " +
+            "AND notifyCreatorSms = :notCreatorSms ")
+    public LiveData<Installation> findInstallationByAllProperties(int prodCatId, int contactId, String prodDetails, LocalDate instDate,
+                                                                        LocalDate expireDate, int serviceInterval, String notes,
+                                                                        boolean notCustMail, boolean notCustSms, boolean notCreatorMail,
+                                                                        boolean notCreatorSms);
 
     @Query("SELECT * from Installation ORDER BY installationId ASC")
     public LiveData<List<Installation>> getAllInstallations();

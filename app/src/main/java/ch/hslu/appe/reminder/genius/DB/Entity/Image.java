@@ -1,11 +1,20 @@
 package ch.hslu.appe.reminder.genius.DB.Entity;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 @Entity(tableName = "image")
 public class Image implements Parcelable {
@@ -15,6 +24,8 @@ public class Image implements Parcelable {
     @NonNull
     private String path;
     private String description;
+    @Ignore
+    private Bitmap img;
 
     public Image(String path,
                  String description) {
@@ -39,6 +50,18 @@ public class Image implements Parcelable {
         this.description = description;
     }
 
+    public Bitmap loadImageFromStorage() {
+        this.img = null;
+
+        try {
+            File f = new File(this.getPath());
+            this.img = BitmapFactory.decodeStream(new FileInputStream(f));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return this.img;
+    }
 
     @Override
     public String toString() {

@@ -10,9 +10,15 @@
         <item name="colorControlHighlight">#d50000</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.FullScreen" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
@@ -42,12 +48,36 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="details_subhheader_text_with_drawable" parent="@style/details_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingVertical">8dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:drawablePadding">12dp</item>
+    </style>
+
     <style name="details_text_with_drawable" parent="@style/details_text">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingVertical">12dp</item>
         <item name="android:textSize">15sp</item>
         <item name="android:drawablePadding">12dp</item>
+    </style>
+
+    <style name="details_text_no_drawable" parent="@style/details_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingVertical">12dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:paddingLeft">36dp</item>
+    </style>
+
+    <style name="details_check_box" parent="@style/details_text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingVertical">12dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:layout_marginLeft">48dp</item>
     </style>
 
     <style name="details_divider_full">
@@ -61,6 +91,18 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_marginLeft">48dp</item>
         <item name="android:background">?android:listDivider</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
     </style>
 
 </resources>

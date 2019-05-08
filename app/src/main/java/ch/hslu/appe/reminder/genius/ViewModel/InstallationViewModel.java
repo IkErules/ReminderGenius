@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import ch.hslu.appe.reminder.genius.DB.Entity.Installation;
@@ -29,6 +30,15 @@ public class InstallationViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Installation>> getAllInstallations() { return this.allInstallations; }
+
+    public LiveData<Installation> getInstallationById(int id) { return repository.getInstallationById(id); }
+
+    public LiveData<Installation> getInstallationByAllProperties(int prodCatId, int contactId, String prodDetails, LocalDate instDate,
+                                                                 LocalDate expireDate, int serviceInterval, String notes,
+                                                                 boolean notCustMail, boolean notCustSms, boolean notCreatorMail,
+                                                                 boolean notCreatorSms) {
+        return repository.getInstallationByAllProperties(prodCatId, contactId, prodDetails, instDate, expireDate, serviceInterval,
+                notes, notCustMail, notCustSms, notCreatorMail, notCreatorSms); }
 
     public void insert(Installation installation) { this.repository.insert(installation); }
 

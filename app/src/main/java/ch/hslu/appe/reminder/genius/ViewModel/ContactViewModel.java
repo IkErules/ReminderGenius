@@ -37,6 +37,8 @@ public class ContactViewModel extends AndroidViewModel {
         repository.delete(contact);
     }
 
+    public LiveData<Contact> getContactById(int id) { return repository.getContactById(id); }
+
     public void deleteAllContacts() {
         Log.i("ContactViewModel", "Deleting all Contacts from DB!");
         this.repository.deleteAllContacts();

@@ -33,6 +33,8 @@ public class ProductCategoryViewModel extends AndroidViewModel {
 
     public void insert(ProductCategory productCategory) { this.repository.insert(productCategory); }
 
+    public LiveData<ProductCategory> getProductCategoryById(int id) { return this.repository.getProductCategoryById(id); }
+
     public void deleteAllProductCategories() {
         Log.i("ProductCategoryViewModel", "Deleting all ProductCategories from DB!");
         this.repository.deleteAllProductCategories();

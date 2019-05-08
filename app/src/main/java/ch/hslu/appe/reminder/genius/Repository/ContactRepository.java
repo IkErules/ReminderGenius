@@ -2,6 +2,7 @@ package ch.hslu.appe.reminder.genius.Repository;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -15,6 +16,8 @@ public class ContactRepository {
 
     private ContactDao contactDao;
     private LiveData<List<Contact>> allContacts;
+
+    public Contact singleContact;
 
     public ContactRepository(Application application) {
         ReminderGeniusRoomDb db = ReminderGeniusRoomDb.getDatabase(application);
@@ -35,6 +38,8 @@ public class ContactRepository {
     public void delete(Contact contact) {
         new deleteAsyncTask(contactDao).execute(contact);
     }
+
+    public LiveData<Contact> getContactById(int id) { return this.contactDao.findContactById(id); }
 
     private static class deleteAsyncTask extends AsyncTask<Contact, Void, Void> {
 
