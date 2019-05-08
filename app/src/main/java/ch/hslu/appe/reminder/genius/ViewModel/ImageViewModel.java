@@ -32,6 +32,8 @@ public class ImageViewModel extends AndroidViewModel {
 
     public void insert(Image image) { this.repository.insert(image); }
 
+    public LiveData<Image> getImageWithPath(String path) { return repository.getImageWithPath(path); }
+
     public void deleteAllImages() {
         Log.i("ImageViewModel", "Deleting all Images from DB!");
         this.repository.deleteAllImages();

@@ -1,9 +1,15 @@
 package ch.hslu.appe.reminder.genius.Activity;
 
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.util.Log;
@@ -16,17 +22,24 @@ import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Collections;
 import java.util.HashMap;
 
 import ch.hslu.appe.reminder.genius.DB.Entity.Contact;
+import ch.hslu.appe.reminder.genius.DB.Entity.Image;
 import ch.hslu.appe.reminder.genius.DB.Entity.Installation;
+import ch.hslu.appe.reminder.genius.DB.Entity.InstallationImage;
 import ch.hslu.appe.reminder.genius.DB.Entity.ProductCategory;
 import ch.hslu.appe.reminder.genius.Fragment.DatepickerFragment;
 import ch.hslu.appe.reminder.genius.R;
 import ch.hslu.appe.reminder.genius.ViewModel.ContactViewModel;
+import ch.hslu.appe.reminder.genius.ViewModel.ImageViewModel;
+import ch.hslu.appe.reminder.genius.ViewModel.InstallationImageViewModel;
 import ch.hslu.appe.reminder.genius.ViewModel.InstallationViewModel;
 import ch.hslu.appe.reminder.genius.ViewModel.ProductCategoryViewModel;
 
@@ -39,6 +52,8 @@ public class AddInstallationActivity extends AppCompatActivity {
     private ContactViewModel contactViewModel;
     private ProductCategoryViewModel productCategoryViewModel;
     private InstallationViewModel installationViewModel;
+    private ImageViewModel imageViewModel;
+    private InstallationImageViewModel installationImageViewModel;
     private Installation installation;
 
     @Override
@@ -52,6 +67,8 @@ public class AddInstallationActivity extends AppCompatActivity {
         contactViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
         productCategoryViewModel = ViewModelProviders.of(this).get(ProductCategoryViewModel.class);
         installationViewModel = ViewModelProviders.of(this).get(InstallationViewModel.class);
+        imageViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
+        installationImageViewModel = ViewModelProviders.of(this).get(InstallationImageViewModel.class);
 
         productCategoryViewModel.insert(new ProductCategory("Test-Category", 1, "Test Kategorie mit Beschreibung."));
 
@@ -69,6 +86,51 @@ public class AddInstallationActivity extends AppCompatActivity {
         addNumberPickerListener();
         addNotesTextViewListener();
         populateTextFieldsFromInstallation();
+    }
+
+    private void addTestImages(int installationId) {
+        addImage(R.drawable.eagle, "eagle.jpg", "Test Eagle Image");
+        addImage(R.drawable.bear, "bear.jpg", "Test Bear Image");
+        addImage(R.drawable.bonobo, "bonobo.jpg", "Test Bonobo Image");
+        addImage(R.drawable.horse, "horse.jpg", "Test Horse Image");
+    }
+
+    private void addImage(int resourceId, String fileName, String description) {
+        this.saveToInternalStorage((Bitmap) BitmapFactory.decodeResource(this.getResources(), resourceId), fileName);
+        File directory = getDir("installationImages", Context.MODE_PRIVATE);
+        String path = (new File(directory, fileName)).toString();
+
+        imageViewModel.insert(new Image(path, description));
+
+        this.createInstallationImageRelation(path);
+    }
+
+    private void createInstallationImageRelation(String path) {
+        this.imageViewModel.getImageWithPath(path).observe(this, new Observer<Image>() {
+            @Override
+            public void onChanged(@Nullable final Image imageFromDb) {
+                Log.d("AddInstallationActivity", "Adding InstallationImage Relation: " + imageFromDb.toString() + ", " + installation.toString());
+                installationImageViewModel.insert(new InstallationImage(installation.getInstallationId(), imageFromDb.getImageId()));
+            }
+        });
+    }
+
+    private void observeInstallationInsertion() {
+        this.installationViewModel.getInstallationByAllProperties(installation.getProductCategoryId(), installation.getContactId(),
+                installation.getProductDetails(), installation.getInstallationDate(), installation.getExpireDate(), installation.getServiceInterval(),
+                installation.getNotes(), installation.getNotifyCustomerMail(), installation.getNotifyCustomerSms(), installation.getNotifyCreatorMail(),
+                installation.getNotifyCreatorSms()).observe(this, new Observer<Installation>() {
+            @Override
+            public void onChanged(@Nullable final Installation installationFromDb) {
+                if (installationFromDb != null) {
+                    installation = installationFromDb;
+                    Log.d("AddInstallationActivity", "Added Installation: " + installationFromDb.toString());
+                    addTestImages(installationFromDb.getInstallationId());
+                } else {
+                    Log.w("AddInstallationActivity", "Installation not yet ready.");
+                }
+            }
+        });
     }
 
     private void addNotesTextViewListener() {
@@ -269,9 +331,36 @@ public class AddInstallationActivity extends AppCompatActivity {
         if (id == R.id.action_save) {
             setInstallationFromTextFields();
             installationViewModel.insert(installation);
+            /* Testing Only: Add Sample Pictures to Installation. */
+            this.observeInstallationInsertion();
+
             this.finish();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private String saveToInternalStorage(Bitmap bitmapImage, String fileName){
+        ContextWrapper cw = new ContextWrapper(this.getApplicationContext());
+        // path to /data/data/yourapp/app_data/installationImages
+        File directory = cw.getDir("installationImages", Context.MODE_PRIVATE);
+        // Create imageDir
+        File mypath = new File(directory, fileName);
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(mypath);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return directory.getAbsolutePath();
     }
 }

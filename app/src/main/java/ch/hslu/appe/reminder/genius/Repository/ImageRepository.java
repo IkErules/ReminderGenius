@@ -30,9 +30,11 @@ public class ImageRepository {
         new insertAsyncTask(this.imageDao).execute(image);
     }
 
+    public LiveData<Image> getImageWithPath(String path) { return this.imageDao.findImageWithPath(path); }
+
     public void deleteAllImages() { new deleteAllImagesAsyncTask(this.imageDao).execute(); }
 
-    private static class insertAsyncTask extends AsyncTask<Image, Void, Void> {
+    private static class insertAsyncTask extends AsyncTask<Image, Void, Long> {
 
         private ImageDao mAsyncTaskDao;
 
@@ -41,9 +43,8 @@ public class ImageRepository {
         }
 
         @Override
-        protected Void doInBackground(final Image... params) {
-            this.mAsyncTaskDao.insert(params[0]);
-            return null;
+        protected Long doInBackground(final Image... params) {
+            return this.mAsyncTaskDao.insert(params[0]);
         }
     }
 

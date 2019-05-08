@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import ch.hslu.appe.reminder.genius.DB.Dao.InstallationDao;
@@ -25,6 +26,15 @@ public class InstallationRepository {
     public LiveData<List<Installation>> getAllInstallations() {
         return this.allInstallations;
     }
+
+    public LiveData<Installation> getInstallationById(int id) { return this.installationDao.findInstallationById(id); }
+
+    public LiveData<Installation> getInstallationByAllProperties(int prodCatId, int contactId, String prodDetails, LocalDate instDate,
+                                                                 LocalDate expireDate, int serviceInterval, String notes,
+                                                                 boolean notCustMail, boolean notCustSms, boolean notCreatorMail,
+                                                                 boolean notCreatorSms) {
+        return this.installationDao.findInstallationByAllProperties(prodCatId, contactId, prodDetails, instDate, expireDate, serviceInterval,
+                notes, notCustMail, notCustSms, notCreatorMail, notCreatorSms); }
 
     public void insert (Installation installation) {
         new insertAsyncTask(this.installationDao).execute(installation);

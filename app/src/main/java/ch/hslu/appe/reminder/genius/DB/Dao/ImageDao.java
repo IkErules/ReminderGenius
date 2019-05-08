@@ -15,7 +15,7 @@ import ch.hslu.appe.reminder.genius.DB.Entity.Image;
 @Dao
 public interface ImageDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Image image);
+    long insert(Image image);
 
     @Update
     public void updateImages(Image... images);
@@ -26,8 +26,8 @@ public interface ImageDao {
     @Query("DELETE FROM image")
     void deleteAllImages();
 
-    @Query("SELECT * FROM image WHERE path LIKE :search ")
-    public LiveData<List<Image>> findImagesWithPath(String search);
+    @Query("SELECT * FROM image WHERE path = :search ")
+    public LiveData<Image> findImageWithPath(String search);
 
     @Query("SELECT * from image ORDER BY imageId ASC")
     public LiveData<List<Image>> getAllImages();

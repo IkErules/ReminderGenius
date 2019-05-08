@@ -1,33 +1,29 @@
 package ch.hslu.appe.reminder.genius.Activity;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.viewpager.widget.ViewPager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import androidx.viewpager2.widget.ViewPager2;
-
-
-import java.util.ArrayList;
 import java.util.List;
 
-import ch.hslu.appe.reminder.genius.Adapter.ShowInstallationViewPagerAdapter;
+import ch.hslu.appe.reminder.genius.Adapter.ShowInstallationImageAdapter;
 import ch.hslu.appe.reminder.genius.DB.Entity.Contact;
+import ch.hslu.appe.reminder.genius.DB.Entity.Image;
 import ch.hslu.appe.reminder.genius.DB.Entity.Installation;
 import ch.hslu.appe.reminder.genius.DB.Entity.ProductCategory;
 import ch.hslu.appe.reminder.genius.R;
 import ch.hslu.appe.reminder.genius.ViewModel.ContactViewModel;
+import ch.hslu.appe.reminder.genius.ViewModel.InstallationImageViewModel;
 import ch.hslu.appe.reminder.genius.ViewModel.InstallationViewModel;
 import ch.hslu.appe.reminder.genius.ViewModel.ProductCategoryViewModel;
 
@@ -39,11 +35,14 @@ public class ShowInstallationActivity extends AppCompatActivity {
     private Contact contact;
     private ProductCategory productCategory;
 
-    private ViewPager2 installationImageViewPager;
+    private RecyclerView recyclerView;
+
+    private ShowInstallationImageAdapter adapter;
 
     private ContactViewModel contactViewModel;
     private ProductCategoryViewModel productCategoryViewModel;
     private InstallationViewModel installationViewModel;
+    private InstallationImageViewModel installationImageViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,28 +56,39 @@ public class ShowInstallationActivity extends AppCompatActivity {
         this.contactViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
         this.productCategoryViewModel = ViewModelProviders.of(this).get(ProductCategoryViewModel.class);
         this.installationViewModel = ViewModelProviders.of(this).get(InstallationViewModel.class);
+        this.installationImageViewModel = ViewModelProviders.of(this).get(InstallationImageViewModel.class);
 
-        this.installationImageViewPager = findViewById(R.id.show_installation_image_view_pager);
-
-        List<Drawable> list = new ArrayList<>();
-        list.add(getDrawable(R.drawable.eagle));
-        list.add(getDrawable(R.drawable.bear));
-        list.add(getDrawable(R.drawable.bonobo));
-        list.add(getDrawable(R.drawable.horse));
-
-        this.installationImageViewPager.setAdapter(new ShowInstallationViewPagerAdapter(this, list, this.installationImageViewPager));
+        this.recyclerView = findViewById(R.id.show_installation_image_recycler_view);
+        this.recyclerView.setHasFixedSize(true);
 
         Intent caller = getIntent();
         this.installation = caller.getParcelableExtra(SHOW_INSTALLATION);
         Log.d("ShowInstallationActivity", "Got Installation to display: " + this.installation.toString());
 
-
         this.setContactFromInstallation();
         this.setProductCategoryFromInstallation();
+
+        this.observeImages();
 
         this.showInstallation();
 
         //this.registerListeners();
+    }
+
+    private void observeImages() {
+        recyclerView = findViewById(R.id.show_installation_image_recycler_view);
+        adapter = new ShowInstallationImageAdapter(this, this.installationImageViewModel);
+        recyclerView.setAdapter(adapter);
+        // Make RecyclerView Horizontal
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        this.installationImageViewModel.getImagesForInstallation(this.installation.getInstallationId()).observe(this, new Observer<List<Image>>() {
+            @Override
+            public void onChanged(@Nullable final List<Image> images) {
+                // Update the cached copy of the words in the adapter.
+                adapter.setImages(images);
+            }
+        });
     }
 
     private void setProductCategoryFromInstallation() {
@@ -142,4 +152,5 @@ public class ShowInstallationActivity extends AppCompatActivity {
             //onContactPhoneClicked();
         });
     } */
+
 }

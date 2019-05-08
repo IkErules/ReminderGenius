@@ -75,4 +75,9 @@
     <string name="show_installation_notifytechnicianmail_check_box">Mich per Mail benachrichtigen</string>
     <string name="show_installation_notifytechniciansms_check_box">Mich per SMS benachrichtigen</string>
 
+    <string name="title_activity_show_image_fullscreen">ShowImageFullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_image_fullscreen">Bild im Vollbildmodus anzeigen</string>
+
 </resources>
