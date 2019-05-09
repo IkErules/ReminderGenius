@@ -1,4 +1,5 @@
 package ch.hslu.appe.reminder.genius.Activity;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -18,14 +19,19 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Constraints;
+import androidx.work.Data;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import android.view.Menu;
 
+import java.util.concurrent.TimeUnit;
+
 import ch.hslu.appe.reminder.genius.Adapter.InstallationAdapter;
-import ch.hslu.appe.reminder.genius.DB.Entity.ProductCategory;
 import ch.hslu.appe.reminder.genius.R;
 import ch.hslu.appe.reminder.genius.ViewModel.InstallationViewModel;
-import ch.hslu.appe.reminder.genius.ViewModel.ProductCategoryViewModel;
+import ch.hslu.appe.reminder.genius.Worker.NotificationWorker;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -58,12 +64,14 @@ public class MainActivity extends AppCompatActivity
         observeInstallation();
         setUpRecyclerView();
 
+        this.scheduleNotification();
+
         /** to set up some Products
-        ProductCategoryViewModel productViewModel = ViewModelProviders.of(this).get(ProductCategoryViewModel.class);
-        productViewModel.insert(new ProductCategory("Product 1", 1, "Default description" ));
-        productViewModel.insert(new ProductCategory("Product 2", 2, "Default description 2" ));
-        productViewModel.insert(new ProductCategory("Product 3", 3, "Default description, but pretty long to check if there is a linebreak in AddInstallationView" ));
-        */
+         ProductCategoryViewModel productViewModel = ViewModelProviders.of(this).get(ProductCategoryViewModel.class);
+         productViewModel.insert(new ProductCategory("Product 1", 1, "Default description" ));
+         productViewModel.insert(new ProductCategory("Product 2", 2, "Default description 2" ));
+         productViewModel.insert(new ProductCategory("Product 3", 3, "Default description, but pretty long to check if there is a linebreak in AddInstallationView" ));
+         */
 
     }
 
@@ -137,5 +145,25 @@ public class MainActivity extends AppCompatActivity
             // Update the cached copy of the words in the adapter.
             adapter.setInstallations(installations);
         });
+    }
+
+    // Notification will run every 15 Minutes from now on.
+    private void scheduleNotification() {
+        Constraints constraints = new Constraints.Builder().setRequiresBatteryNotLow(false).build();
+        Data installationData = new Data.Builder().putString("test-property", "test-value").build();
+
+        // Minimum Schedule Interval: 15 Minutes
+        PeriodicWorkRequest notificationRequestPeriodic = new PeriodicWorkRequest.Builder(NotificationWorker.class, 15,
+                TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .setInputData(installationData)
+                .build();
+
+        WorkManager.getInstance().enqueue(notificationRequestPeriodic);
+    }
+
+    private void cancelNotification() {
+        WorkManager instance = WorkManager.getInstance();
+        instance.cancelAllWork();
     }
 }

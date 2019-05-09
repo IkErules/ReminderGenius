@@ -27,6 +27,11 @@ public class InstallationRepository {
         return this.allInstallations;
     }
 
+
+    public LiveData<List<Installation>> getInstallationsByExpireDate(LocalDate date) {
+        return this.installationDao.findInstallationsByExpireDate(date);
+    }
+
     public LiveData<Installation> getInstallationById(int id) { return this.installationDao.findInstallationById(id); }
 
     public LiveData<Installation> getInstallationByAllProperties(int prodCatId, int contactId, String prodDetails, LocalDate instDate,
