@@ -32,7 +32,7 @@ public class Installation implements Parcelable {
     @NonNull
     private int contactId;
     private String productDetails;
-    private LocalDate  installationDate;
+    private LocalDate installationDate;
     private LocalDate expireDate;
     private int serviceInterval;
     private String notes;

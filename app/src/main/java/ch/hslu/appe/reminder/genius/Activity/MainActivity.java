@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -26,9 +27,12 @@ import androidx.work.WorkManager;
 
 import android.view.Menu;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import ch.hslu.appe.reminder.genius.Adapter.InstallationAdapter;
+import ch.hslu.appe.reminder.genius.DB.Entity.Installation;
 import ch.hslu.appe.reminder.genius.R;
 import ch.hslu.appe.reminder.genius.ViewModel.InstallationViewModel;
 import ch.hslu.appe.reminder.genius.Worker.NotificationWorker;
@@ -62,9 +66,8 @@ public class MainActivity extends AppCompatActivity
         });
 
         observeInstallation();
+        observeInstallationByExpireDate();
         setUpRecyclerView();
-
-        this.scheduleNotification();
 
         /** to set up some Products
          ProductCategoryViewModel productViewModel = ViewModelProviders.of(this).get(ProductCategoryViewModel.class);
@@ -144,13 +147,36 @@ public class MainActivity extends AppCompatActivity
         this.installationViewModel.getAllInstallations().observe(this, installations -> {
             // Update the cached copy of the words in the adapter.
             adapter.setInstallations(installations);
+            Log.d("MainActivity", "Scheduling Notification");
+            if (installations.size() > 0) {
+                this.scheduleNotification(installations);
+            }
+
+        });
+    }
+
+    private void observeInstallationByExpireDate() {
+        installationViewModel = ViewModelProviders.of(this).get(InstallationViewModel.class);
+
+        this.installationViewModel.getInstallationsByExpireDate(LocalDate.now().plusMonths(24)).observe(this, installations -> {
+            // Update the cached copy of the words in the adapter.
+            adapter.setInstallationsExpiringSoon(installations);
         });
     }
 
     // Notification will run every 15 Minutes from now on.
-    private void scheduleNotification() {
+    private void scheduleNotification(List<Installation> installations) {
+        int counter = 0;
+        for (Installation installation : installations) {
+            if ((((LocalDate) LocalDate.now().plusMonths(24)).compareTo(installation.getExpireDate())) > 0) {
+                counter += 1;
+            } else {
+                Log.d("MainActivity", "Date " + installation.getExpireDate().toString() + ", is not smaller than " + LocalDate.now().plusMonths(24).toString());
+            }
+        }
+
         Constraints constraints = new Constraints.Builder().setRequiresBatteryNotLow(false).build();
-        Data installationData = new Data.Builder().putString("test-property", "test-value").build();
+        Data installationData = new Data.Builder().putInt(NotificationWorker.INSTALLATIONS_EXPIRING_SOON, counter).build();
 
         // Minimum Schedule Interval: 15 Minutes
         PeriodicWorkRequest notificationRequestPeriodic = new PeriodicWorkRequest.Builder(NotificationWorker.class, 15,

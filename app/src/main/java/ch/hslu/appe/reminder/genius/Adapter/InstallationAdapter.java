@@ -36,6 +36,7 @@ public class InstallationAdapter extends RecyclerView.Adapter<InstallationAdapte
 
     private final LayoutInflater mInflater;
     private List<Installation> installations; // Cached copy of installations
+    private List<Installation> installationsExpiringSoon;
     private Activity context;
     private InstallationViewModel installationViewModel;
     private Installation mRecentlyDeletedItem;
@@ -88,7 +89,13 @@ public class InstallationAdapter extends RecyclerView.Adapter<InstallationAdapte
     }
 
     public void setInstallations(List<Installation> installations){
+        Log.d("InstallationAdapter", "Setting installations: " + installations.get(0).toString());
         this.installations = installations;
+        notifyDataSetChanged();
+    }
+
+    public void setInstallationsExpiringSoon(List<Installation> installations){
+        this.installationsExpiringSoon = installations;
         notifyDataSetChanged();
     }
 
@@ -98,6 +105,12 @@ public class InstallationAdapter extends RecyclerView.Adapter<InstallationAdapte
     public int getItemCount() {
         if (this.installations != null)
             return this.installations.size();
+        else return 0;
+    }
+
+    public int getSoonExpiringInstallationCount() {
+        if (this.installationsExpiringSoon != null)
+            return this.installationsExpiringSoon.size();
         else return 0;
     }
 

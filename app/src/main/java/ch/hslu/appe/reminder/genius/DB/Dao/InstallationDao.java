@@ -34,8 +34,8 @@ public interface InstallationDao {
     @Query("SELECT * FROM Installation WHERE productDetails LIKE :search ")
     public LiveData<List<Installation>> findInstallationsWithProductDetails(String search);
 
-    // TODO: Add method to search by any component
-    @Query("SELECT * FROM Installation WHERE expireDate <= :date")
+    // Not working!
+    @Query("SELECT * FROM Installation WHERE datetime(expireDate) < :date")
     public LiveData<List<Installation>> findInstallationsByExpireDate(LocalDate date);
 
     @Query("SELECT * FROM Installation WHERE " +
