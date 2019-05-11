@@ -37,7 +37,7 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
             // Set the alarm here.
             Log.d("BootBroadcastReceiver", "Received Boot Complete Event.");
 
-            this.showTestNotifications(context);
+            /*this.showTestNotifications(context);
 
             Constraints constraints = new Constraints.Builder().setRequiresBatteryNotLow(false).build();
             Data installationData = new Data.Builder().putInt(NotificationWorker.INSTALLATIONS_EXPIRING_SOON, 1).build();
@@ -49,7 +49,7 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
                     .setInputData(installationData)
                     .build();
 
-            WorkManager.getInstance().enqueue(notificationRequestPeriodic);
+            WorkManager.getInstance().enqueue(notificationRequestPeriodic);*/
         }
     }
 
