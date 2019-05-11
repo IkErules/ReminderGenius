@@ -331,8 +331,9 @@ public class AddInstallationActivity extends AppCompatActivity {
         if (id == R.id.action_save) {
             setInstallationFromTextFields();
             installationViewModel.insert(installation);
-            /* Testing Only: Add Sample Pictures to Installation. */
+            /* Testing Only: Add Sample Pictures to Installation.
             this.observeInstallationInsertion();
+            */
 
             this.finish();
         }
