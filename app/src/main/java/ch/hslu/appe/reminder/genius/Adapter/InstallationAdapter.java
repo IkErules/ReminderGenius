@@ -89,9 +89,13 @@ public class InstallationAdapter extends RecyclerView.Adapter<InstallationAdapte
     }
 
     public void setInstallations(List<Installation> installations){
-        Log.d("InstallationAdapter", "Setting installations: " + installations.get(0).toString());
-        this.installations = installations;
-        notifyDataSetChanged();
+        if ((installations != null) & (!(installations.isEmpty()))) {
+            Log.d("InstallationAdapter", "Setting installations: " + installations.get(0).toString());
+            this.installations = installations;
+            notifyDataSetChanged();
+        } else {
+            Log.w("InstallationAdapter", "No Installations available.");
+        }
     }
 
     public void setInstallationsExpiringSoon(List<Installation> installations){
@@ -112,6 +116,10 @@ public class InstallationAdapter extends RecyclerView.Adapter<InstallationAdapte
         if (this.installationsExpiringSoon != null)
             return this.installationsExpiringSoon.size();
         else return 0;
+    }
+
+    public List<Installation> getInstallations() {
+        return this.installations;
     }
 
     public void deleteItem(int position) {

@@ -30,6 +30,9 @@ public interface InstallationDao {
     @Query("SELECT * FROM Installation WHERE installationId = :id")
     public LiveData<Installation> findInstallationById(int id);
 
+    @Query("SELECT * FROM Installation WHERE installationId = :id")
+    public Installation findSingleInstallationById(int id);
+
     // TODO: Add method to search by any component
     @Query("SELECT * FROM Installation WHERE productDetails LIKE :search ")
     public LiveData<List<Installation>> findInstallationsWithProductDetails(String search);

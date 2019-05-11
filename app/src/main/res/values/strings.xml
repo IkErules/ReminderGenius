@@ -79,5 +79,8 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_image_fullscreen">Bild im Vollbildmodus anzeigen</string>
+    <string name="notification_title">Service bald fällig</string>
+    <string name="notification_text">Installation ...</string>
+    <string name="main_action_show_notification_text">Benachrichtigung erzeugen</string>
 
 </resources>

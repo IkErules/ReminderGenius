@@ -33,6 +33,8 @@ public class InstallationViewModel extends AndroidViewModel {
 
     public LiveData<Installation> getInstallationById(int id) { return repository.getInstallationById(id); }
 
+    public Installation getSingleInstallationByIdSync(int id) { return repository.getSingleInstallationByIdSync(id); }
+
     public LiveData<List<Installation>> getInstallationsByExpireDate(LocalDate date) { return repository.getInstallationsByExpireDate(date); }
 
     public LiveData<Installation> getInstallationByAllProperties(int prodCatId, int contactId, String prodDetails, LocalDate instDate,
