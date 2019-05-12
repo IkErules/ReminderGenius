@@ -100,12 +100,6 @@ public class MainActivity extends AppCompatActivity
 
         this.setBroadCastReceiver();
 
-      /* to set up some Products
-        productCategoryViewModel.insert(new ProductCategory("Boiler", 1, "Standard Boiler für Warmwasser." ));
-        productCategoryViewModel.insert(new ProductCategory("Heizung", 2, "Standard Heizung." ));
-        productCategoryViewModel.insert(new ProductCategory("Solaranlage", 3, "Standard Solaranlage, mit einer Grösse von 2x3m pro Panel." ));
-        */
-
         this.filterByExpireDateSeekBar = (SeekBar) findViewById(R.id.main_filter_by_expire_date_seekbar);
         this.filterByExpireDateTextView = (TextView) findViewById(R.id.main_filter_by_expire_date_text_view);
         this.filterByExpireDateTextView.setText(String.format(getApplicationContext().getResources().getString(R.string.main_text_view_months_filter), Integer.toString(this.sharedPreferences.getInt(SettingsFragment.NOTIFICATION_DURATION_MONTHS, 0))));

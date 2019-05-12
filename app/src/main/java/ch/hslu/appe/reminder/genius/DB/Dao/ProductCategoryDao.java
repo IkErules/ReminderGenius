@@ -17,6 +17,9 @@ public interface ProductCategoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(ProductCategory productCategory);
 
+    @Insert
+    void insertAll(ProductCategory... products);
+
     @Update
     public void updateProductCategories(ProductCategory... productCategories);
 

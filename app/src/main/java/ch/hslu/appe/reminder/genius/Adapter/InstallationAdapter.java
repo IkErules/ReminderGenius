@@ -161,9 +161,11 @@ public class InstallationAdapter extends RecyclerView.Adapter<InstallationAdapte
     protected List<Installation> filterInstallationsByExpireDate(LocalDate expireDate) {
         List<Installation> filteredList = new ArrayList<>();
 
-        for (Installation installation : this.installationsFull) {
-            if (installation.getExpireDate().isBefore(expireDate)) {
-                filteredList.add(installation);
+        if (this.installationsFull != null) {
+            for (Installation installation : this.installationsFull) {
+                if (installation.getExpireDate().isBefore(expireDate)) {
+                    filteredList.add(installation);
+                }
             }
         }
 
@@ -231,10 +233,12 @@ public class InstallationAdapter extends RecyclerView.Adapter<InstallationAdapte
         @Override
         // Results from Filtering will be returned to this method from performFiltering
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            installations.clear();
-            installations.addAll((List) results.values);
-            // Notify observers that the List has changed.
-            notifyDataSetChanged();
+            if (installations != null) {
+                installations.clear();
+                installations.addAll((List) results.values);
+                // Notify observers that the List has changed.
+                notifyDataSetChanged();
+            }
         }
     };
 

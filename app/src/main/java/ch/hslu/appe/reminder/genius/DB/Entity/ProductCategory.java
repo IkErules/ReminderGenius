@@ -96,4 +96,11 @@ public class ProductCategory implements Parcelable, Comparable<ProductCategory> 
                 .compare(getCategoryName(), o.getCategoryName())
                 .result();
     }
+
+    public static ProductCategory[] prePopulateData() {
+        return new ProductCategory[]{
+                new ProductCategory("Boiler", 1, "Standard Boiler für Warmwasser."),
+                new ProductCategory("Heizung", 2, "Standard Heizung."),
+                new ProductCategory("Solaranlage", 3, "Standard Solaranlage, mit einer Grösse von 2x3m pro Panel.")};
+    }
 }
