@@ -28,9 +28,14 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -51,11 +56,16 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private InstallationViewModel installationViewModel;
+    private ProductCategoryViewModel productCategoryViewModel;
     private ContactViewModel contactViewModel;
+
     private RecyclerView recyclerView;
     private InstallationAdapter adapter;
 
     private SharedPreferences sharedPreferences;
+
+    private SeekBar filterByExpireDateSeekBar;
+    private TextView filterByExpireDateTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +88,9 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         });
 
-        contactViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
+        this.installationViewModel = ViewModelProviders.of(this).get(InstallationViewModel.class);
+        this.productCategoryViewModel = ViewModelProviders.of(this).get(ProductCategoryViewModel.class);
+        this.contactViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         observeInstallation();
@@ -86,13 +98,54 @@ public class MainActivity extends AppCompatActivity
 
         this.setBroadCastReceiver();
 
-        /** to set up some Products
-         ProductCategoryViewModel productViewModel = ViewModelProviders.of(this).get(ProductCategoryViewModel.class);
-         productViewModel.insert(new ProductCategory("Product 1", 1, "Default description 1" ));
-         productViewModel.insert(new ProductCategory("Product 2", 2, "Default description 2" ));
-         productViewModel.insert(new ProductCategory("Product 3", 3, "Default description, but pretty long to check if there is a linebreak in AddInstallationView" ));
-         */
+      /* to set up some Products
+        productCategoryViewModel.insert(new ProductCategory("Boiler", 1, "Standard Boiler für Warmwasser." ));
+        productCategoryViewModel.insert(new ProductCategory("Heizung", 2, "Standard Heizung." ));
+        productCategoryViewModel.insert(new ProductCategory("Solaranlage", 3, "Standard Solaranlage, mit einer Grösse von 2x3m pro Panel." ));
+        */
 
+        this.filterByExpireDateSeekBar = (SeekBar) findViewById(R.id.main_filter_by_expire_date_seekbar);
+        this.filterByExpireDateTextView = (TextView) findViewById(R.id.main_filter_by_expire_date_text_view);
+        this.filterByExpireDateTextView.setText(String.format(getApplicationContext().getResources().getString(R.string.main_text_view_months_filter), Integer.toString(this.sharedPreferences.getInt(SettingsFragment.NOTIFICATION_DURATION_MONTHS, 0))));
+        this.filterByExpireDateSeekBar.setProgress(this.sharedPreferences.getInt(SettingsFragment.NOTIFICATION_DURATION_MONTHS, 0));
+        this.setSeekBarListener();
+        this.registerButtonListener();
+
+    }
+
+    private void registerButtonListener() {
+        Button showAllInstallationsBtn = (Button) findViewById(R.id.main_show_all_installations_button);
+        showAllInstallationsBtn.setOnClickListener((View v) -> {
+            LocalDate expireDate = LocalDate.now().plusMonths(100);
+            adapter.getFilterByExpireDate().filter(expireDate.toString());
+        });
+    }
+
+    private void setSeekBarListener() {
+        this.filterByExpireDateSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progress = 0;
+
+            // When Progress value changed.
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
+                progress = progressValue;
+                Log.i("MainActivity", "Changing seekbar's progress to: " + progress);
+                LocalDate expireDate = LocalDate.now().plusMonths(progressValue);
+                adapter.getFilterByExpireDate().filter(expireDate.toString());
+                TextView seekBarText = (TextView) findViewById(R.id.main_filter_by_expire_date_text_view);
+                seekBarText.setText(String.format(getApplicationContext().getResources().getString(R.string.main_text_view_months_filter), Integer.toString(progressValue)));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                Log.i("MainActivity", "Start Tracking Touch Seekbar");
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                Log.i("MainActivity", "Stop Tracking Touch Seekbar");
+            }
+        });
     }
 
     private void setBroadCastReceiver() {
@@ -213,6 +266,9 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             // Handle the camera action
+        } else if (id == R.id.nav_installation) {
+            Intent intent = new Intent(this, InstallationActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_contact) {
             Intent intent = new Intent(this, ContactActivity.class);
             startActivity(intent);
@@ -232,16 +288,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void observeInstallation() {
-        installationViewModel = ViewModelProviders.of(this).get(InstallationViewModel.class);
-
         recyclerView = findViewById(R.id.default_recycler_view);
-        adapter = new InstallationAdapter(this, installationViewModel);
+        adapter = new InstallationAdapter(this, installationViewModel, productCategoryViewModel, contactViewModel);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         this.installationViewModel.getAllInstallations().observe(this, installations -> {
             // Update the cached copy of the words in the adapter.
             adapter.setInstallations(installations);
+            adapter.getFilterByExpireDate().filter(LocalDate.now().plusMonths(this.filterByExpireDateSeekBar.getProgress()).toString());
         });
     }
 }

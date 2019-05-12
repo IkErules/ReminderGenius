@@ -35,6 +35,10 @@ public class ProductCategoryViewModel extends AndroidViewModel {
 
     public LiveData<ProductCategory> getProductCategoryById(int id) { return this.repository.getProductCategoryById(id); }
 
+    public ProductCategory getSingleProductCategoryByIdSync(int id) {
+        return this.repository.getSingleProductCategoryByIdSync(id);
+    }
+
     public void deleteAllProductCategories() {
         Log.i("ProductCategoryViewModel", "Deleting all ProductCategories from DB!");
         this.repository.deleteAllProductCategories();
