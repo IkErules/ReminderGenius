@@ -5,13 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -80,7 +80,10 @@ public class ShowInstallationActivity extends AppCompatActivity {
         this.setProductCategoryFromInstallation();
 
         this.observeImages();
+
         this.showInstallation();
+
+        //this.registerListeners();
     }
 
     private void observeImages() {
@@ -90,9 +93,12 @@ public class ShowInstallationActivity extends AppCompatActivity {
         // Make RecyclerView Horizontal
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        installationImageViewModel.getImagesForInstallation(installation.getInstallationId()).observe(this, images -> {
-            // Update the cached copy of the words in the adapter.
-            adapter.setImages(images);
+        this.installationImageViewModel.getImagesForInstallation(this.installation.getInstallationId()).observe(this, new Observer<List<Image>>() {
+            @Override
+            public void onChanged(@Nullable final List<Image> images) {
+                // Update the cached copy of the words in the adapter.
+                adapter.setImages(images);
+            }
         });
     }
 
@@ -194,7 +200,6 @@ public class ShowInstallationActivity extends AppCompatActivity {
         address.setOnClickListener((View v) -> {
             //onContactAddressClicked();
         });
-
         TextView mail = (TextView) findViewById(R.id.show_contact_mail_text_view);
         mail.setOnClickListener((View v) -> {
             //onContactMailClicked();
