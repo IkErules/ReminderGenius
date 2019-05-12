@@ -11,46 +11,62 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ch.hslu.appe.reminder.genius.Activity.AddInstallationActivity;
 import ch.hslu.appe.reminder.genius.Activity.ShowInstallationActivity;
+import ch.hslu.appe.reminder.genius.DB.Entity.Contact;
 import ch.hslu.appe.reminder.genius.DB.Entity.Installation;
+import ch.hslu.appe.reminder.genius.DB.Entity.ProductCategory;
 import ch.hslu.appe.reminder.genius.R;
+import ch.hslu.appe.reminder.genius.ViewModel.ContactViewModel;
 import ch.hslu.appe.reminder.genius.ViewModel.InstallationViewModel;
+import ch.hslu.appe.reminder.genius.ViewModel.ProductCategoryViewModel;
 
 import static ch.hslu.appe.reminder.genius.Activity.AddInstallationActivity.INSTALLATION_TO_EDIT;
 import static ch.hslu.appe.reminder.genius.Activity.ShowInstallationActivity.SHOW_INSTALLATION;
 
-public class InstallationAdapter extends RecyclerView.Adapter<InstallationAdapter.InstallationViewHolder> {
+public class InstallationAdapter extends RecyclerView.Adapter<InstallationAdapter.InstallationViewHolder> implements Filterable {
 
     private final LayoutInflater mInflater;
     private List<Installation> installations; // Cached copy of installations
-    private List<Installation> installationsExpiringSoon;
+    private List<Installation> installationsFull;
+
     private Activity context;
+
     private InstallationViewModel installationViewModel;
+    private ProductCategoryViewModel productCategoryViewModel;
+    private ContactViewModel contactViewModel;
+
     private Installation mRecentlyDeletedItem;
     private int mRecentlyDeletedItemPosition;
 
-    public InstallationAdapter(Activity context, InstallationViewModel installationViewModel) {
+    public InstallationAdapter(Activity context, InstallationViewModel installationViewModel, ProductCategoryViewModel productCategoryViewModel, ContactViewModel contactViewModel) {
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
+
         this.installationViewModel = installationViewModel;
+        this.productCategoryViewModel = productCategoryViewModel;
+        this.contactViewModel = contactViewModel;
     }
 
     @Override
     public InstallationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.main_installation_recycler_view_item, parent,false);
+        View itemView = mInflater.inflate(R.layout.installation_list_recycler_view_item, parent,false);
         return new InstallationViewHolder(itemView);
     }
 
@@ -58,15 +74,20 @@ public class InstallationAdapter extends RecyclerView.Adapter<InstallationAdapte
     public void onBindViewHolder(InstallationViewHolder holder, int position) {
         if (installations != null) {
             Installation current = installations.get(position);
-            holder.installationItemViewProduct.setText("Product ID: " + current.getProductCategoryId());
-            holder.installationItemViewCustomer.setText("Customer ID: " + current.getContactId());
+            ProductCategory productCategory = this.productCategoryViewModel.getSingleProductCategoryByIdSync(current.getProductCategoryId());
+            Contact contact = this.contactViewModel.getSingleContactByIdSync(current.getContactId());
+
+            holder.installationItemViewProduct.setText(productCategory.getCategoryName());
+            holder.installationItemViewCustomer.setText(contact.getFirstName() + " " + contact.getLastName());
+            holder.installationItemViewInstallationDetails.setText("Installationsdatum: "  + current.getFriendlyInstallationDateAsString() + "\n" +
+                    "Nächster Service: " + current.getFriendlyExpireDateAsString());
 
             // start AddContact Activity if an item on the RecyclerView is clicked.
             holder.parentLayout.setOnClickListener(view -> {
-                Installation contact = installations.get(position);
+                Installation installation = installations.get(position);
                 Log.d("InstallationAdapter", "Starting ShowInstallation Activity in order to show installation: " + installations.toString());
                 Intent showInstallationIntent = new Intent(context, ShowInstallationActivity.class);
-                showInstallationIntent.putExtra(SHOW_INSTALLATION, contact);
+                showInstallationIntent.putExtra(SHOW_INSTALLATION, installation);
                 context.startActivity(showInstallationIntent);
             });
 
@@ -80,7 +101,7 @@ public class InstallationAdapter extends RecyclerView.Adapter<InstallationAdapte
             });
         } else {
             // Covers the case of data not being ready yet.
-            holder.installationItemViewProduct.setText("No Contact");
+            holder.installationItemViewProduct.setText("No Product");
         }
     }
 
@@ -92,15 +113,11 @@ public class InstallationAdapter extends RecyclerView.Adapter<InstallationAdapte
         if ((installations != null) & (!(installations.isEmpty()))) {
             Log.d("InstallationAdapter", "Setting installations: " + installations.get(0).toString());
             this.installations = installations;
+            this.installationsFull = new ArrayList<>(this.installations);
             notifyDataSetChanged();
         } else {
             Log.w("InstallationAdapter", "No Installations available.");
         }
-    }
-
-    public void setInstallationsExpiringSoon(List<Installation> installations){
-        this.installationsExpiringSoon = installations;
-        notifyDataSetChanged();
     }
 
     // getItemCount() is called many times, and when it is first called,
@@ -112,15 +129,66 @@ public class InstallationAdapter extends RecyclerView.Adapter<InstallationAdapte
         else return 0;
     }
 
-    public int getSoonExpiringInstallationCount() {
-        if (this.installationsExpiringSoon != null)
-            return this.installationsExpiringSoon.size();
-        else return 0;
-    }
-
     public List<Installation> getInstallations() {
         return this.installations;
     }
+
+    protected List<Installation> filterInstallations(String filterString) {
+        List<Installation> filteredList = new ArrayList<>();
+
+        for (Installation installation : this.installationsFull) {
+            ProductCategory productCategory = this.productCategoryViewModel.getSingleProductCategoryByIdSync(installation.getProductCategoryId());
+            Contact contact = this.contactViewModel.getSingleContactByIdSync(installation.getContactId());
+
+            if ((installation.getProductDetails().toLowerCase().contains(filterString)) | (installation.getNotes().toLowerCase().contains(filterString))) {
+                filteredList.add(installation);
+            } else if ((productCategory.getCategoryName().toLowerCase().contains(filterString)) | (productCategory.getDescription().toLowerCase().contains(filterString))) {
+                filteredList.add(installation);
+            } else if (contact.getFormattedAddressWithName().toLowerCase().contains(filterString)) {
+                filteredList.add(installation);
+            } else if ((contact.getLastName() + " " + contact.getFirstName()).toLowerCase().contains(filterString)) {
+                // Add Contact even if user is searching for lastname + firstname instead of firstname + lastname
+                filteredList.add(installation);
+            }
+        }
+
+        return filteredList;
+    }
+
+    @Override
+    public Filter getFilter() {
+        return installationFilter;
+    }
+
+    private Filter installationFilter = new Filter() {
+        @Override
+        // Automatically performed in the Background
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Installation> filteredInstallations = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredInstallations.addAll(installationsFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                filteredInstallations.addAll(filterInstallations(filterPattern));
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredInstallations;
+
+            return results;
+        }
+
+        @Override
+        // Results from Filtering will be returned to this method from performFiltering
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            installations.clear();
+            installations.addAll((List) results.values);
+            // Notify observers that the List has changed.
+            notifyDataSetChanged();
+        }
+    };
+
 
     public void deleteItem(int position) {
         mRecentlyDeletedItem = installations.get(position);
@@ -132,7 +200,7 @@ public class InstallationAdapter extends RecyclerView.Adapter<InstallationAdapte
     }
 
     private void showUndoSnackbar() {
-        View view = context.findViewById(R.id.main_constraint_layout);
+        View view = context.findViewById(R.id.installation_constraint_layout);
         Snackbar snackbar = Snackbar.make(view, R.string.main_snack_bar_installation_deleted, Snackbar.LENGTH_LONG);
         snackbar.setAction(R.string.main_snack_bar_installation_delete_undo, v -> undoDelete());
         snackbar.show();
@@ -224,13 +292,15 @@ public class InstallationAdapter extends RecyclerView.Adapter<InstallationAdapte
     class InstallationViewHolder extends RecyclerView.ViewHolder {
         private final TextView installationItemViewProduct;
         private final TextView installationItemViewCustomer;
+        private final TextView installationItemViewInstallationDetails;
         private final RelativeLayout parentLayout;
 
         private InstallationViewHolder(View itemView) {
             super(itemView);
-            this.installationItemViewProduct = itemView.findViewById(R.id.main_installation_item_product_id);
-            this.installationItemViewCustomer = itemView.findViewById(R.id.main_installation_item_contact_id);
-            this.parentLayout = itemView.findViewById(R.id.main_installation_parent_layout);
+            this.installationItemViewProduct = itemView.findViewById(R.id.installation_recycler_view_item_product_name);
+            this.installationItemViewCustomer = itemView.findViewById(R.id.installation_recycler_view_item_contact);
+            this.installationItemViewInstallationDetails = itemView.findViewById(R.id.installation_recycler_view_item_installation_details);
+            this.parentLayout = itemView.findViewById(R.id.installation_foreground_parent_layout);
         }
     }
 }

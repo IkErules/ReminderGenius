@@ -15,8 +15,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.AppPreferencesActivity"
-            android:parentActivityName=".Activity.MainActivity"/>
+        <activity
+            android:name=".Activity.InstallationActivity"
+            android:label="@string/installation_text_view_title"
+            android:parentActivityName=".Activity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.AppPreferencesActivity"
+            android:parentActivityName=".Activity.MainActivity" />
         <activity
             android:name=".Activity.ImageFullScreenActivity"
             android:label="@string/title_activity_image_fullscreen"

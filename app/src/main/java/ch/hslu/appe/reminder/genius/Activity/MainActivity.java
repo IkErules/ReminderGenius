@@ -48,9 +48,12 @@ import java.util.concurrent.TimeUnit;
 import ch.hslu.appe.reminder.genius.Adapter.InstallationAdapter;
 import ch.hslu.appe.reminder.genius.BroadCastReceiver.BootBroadcastReceiver;
 import ch.hslu.appe.reminder.genius.DB.Entity.Installation;
+import ch.hslu.appe.reminder.genius.DB.Entity.ProductCategory;
 import ch.hslu.appe.reminder.genius.Fragment.SettingsFragment;
 import ch.hslu.appe.reminder.genius.R;
+import ch.hslu.appe.reminder.genius.ViewModel.ContactViewModel;
 import ch.hslu.appe.reminder.genius.ViewModel.InstallationViewModel;
+import ch.hslu.appe.reminder.genius.ViewModel.ProductCategoryViewModel;
 import ch.hslu.appe.reminder.genius.Worker.NotificationWorker;
 
 import static ch.hslu.appe.reminder.genius.Activity.ShowInstallationActivity.SHOW_INSTALLATION;
@@ -59,6 +62,9 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private InstallationViewModel installationViewModel;
+    private ProductCategoryViewModel productCategoryViewModel;
+    private ContactViewModel contactViewModel;
+
     private RecyclerView recyclerView;
     private InstallationAdapter adapter;
 
@@ -85,6 +91,10 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         });
 
+        this.installationViewModel = ViewModelProviders.of(this).get(InstallationViewModel.class);
+        this.productCategoryViewModel = ViewModelProviders.of(this).get(ProductCategoryViewModel.class);
+        this.contactViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
+
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         observeInstallation();
@@ -92,12 +102,10 @@ public class MainActivity extends AppCompatActivity
 
         this.setBroadCastReceiver();
 
-        /** to set up some Products
-         ProductCategoryViewModel productViewModel = ViewModelProviders.of(this).get(ProductCategoryViewModel.class);
-         productViewModel.insert(new ProductCategory("Product 1", 1, "Default description" ));
-         productViewModel.insert(new ProductCategory("Product 2", 2, "Default description 2" ));
-         productViewModel.insert(new ProductCategory("Product 3", 3, "Default description, but pretty long to check if there is a linebreak in AddInstallationView" ));
-         */
+        // to set up some Products
+        productCategoryViewModel.insert(new ProductCategory("Boiler", 1, "Standard Boiler für Warmwasser." ));
+        productCategoryViewModel.insert(new ProductCategory("Heizung", 2, "Standard Heizung." ));
+        productCategoryViewModel.insert(new ProductCategory("Solaranlage", 3, "Standard Solaranlage, mit einer Grösse von 2x3m pro Panel." ));
 
     }
 
@@ -217,6 +225,9 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             // Handle the camera action
+        } else if (id == R.id.nav_installation) {
+            Intent intent = new Intent(this, InstallationActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_contact) {
             Intent intent = new Intent(this, ContactActivity.class);
             startActivity(intent);
@@ -236,10 +247,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void observeInstallation() {
-        installationViewModel = ViewModelProviders.of(this).get(InstallationViewModel.class);
-
         recyclerView = findViewById(R.id.default_recycler_view);
-        adapter = new InstallationAdapter(this, installationViewModel);
+        adapter = new InstallationAdapter(this, installationViewModel, productCategoryViewModel, contactViewModel);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/view_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/recycler_view_row_background">
+
+        <ImageView
+            android:id="@+id/delete_icon"
+            android:layout_width="@dimen/recycler_view_ic_delete"
+            android:layout_height="@dimen/recycler_view_ic_delete"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/recycler_view_padd_10"
+            android:src="@drawable/ic_recycler_view_delete_black_24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/recycler_view_padd_10"
+            android:layout_toLeftOf="@id/delete_icon"
+            android:text="@string/recycler_view_item_delete"
+            android:textColor="#fff"
+            android:textSize="13dp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/installation_foreground_parent_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:padding="@dimen/recycler_view_padd_10">
+
+        <TextView
+            android:id="@+id/installation_recycler_view_item_product_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
+            android:textColor="@color/recycler_view_item_name"
+            android:textSize="17dp" />
+
+        <TextView
+            android:id="@+id/installation_recycler_view_item_contact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/installation_recycler_view_item_product_name"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/recycler_view_item_description"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/installation_recycler_view_item_installation_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/installation_recycler_view_item_contact"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/recycler_view_item_description"
+            android:textSize="12dp" />
+
+
+    </RelativeLayout>
+</FrameLayout>

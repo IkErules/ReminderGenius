@@ -110,6 +110,8 @@
     <string name="preferences_display_notifications_frequency_days_title_text">Häufigkeit der Benachrichtigung</string>
     <string name="notification_due_date_text">Fälligkeitsdatum</string>
     <string name="notification_product_text">Produkt</string>
+    <string name="installation_text_view_title">Installation</string>
+    <string name="installation_search_desc">Installation suchen...</string>
 
 
 </resources>

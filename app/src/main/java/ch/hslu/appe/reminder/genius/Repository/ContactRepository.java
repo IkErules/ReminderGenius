@@ -41,6 +41,10 @@ public class ContactRepository {
 
     public LiveData<Contact> getContactById(int id) { return this.contactDao.findContactById(id); }
 
+    public Contact getSingleContactByIdSync(int id) {
+        return this.contactDao.findSingleContactById(id);
+    }
+
     private static class deleteAsyncTask extends AsyncTask<Contact, Void, Void> {
 
         private ContactDao mAsyncTaskDao;

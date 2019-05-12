@@ -59,6 +59,6 @@ public interface InstallationDao {
                                                                         boolean notCustMail, boolean notCustSms, boolean notCreatorMail,
                                                                         boolean notCreatorSms);
 
-    @Query("SELECT * from Installation ORDER BY installationId ASC")
+    @Query("SELECT * from Installation ORDER BY expireDate ASC")
     public LiveData<List<Installation>> getAllInstallations();
 }
