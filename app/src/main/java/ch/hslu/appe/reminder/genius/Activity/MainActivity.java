@@ -4,13 +4,9 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.core.app.NotificationCompat;
@@ -32,25 +28,21 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.work.Constraints;
-import androidx.work.Data;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
 
 import android.view.Menu;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 import ch.hslu.appe.reminder.genius.Adapter.InstallationAdapter;
 import ch.hslu.appe.reminder.genius.BroadCastReceiver.BootBroadcastReceiver;
 import ch.hslu.appe.reminder.genius.DB.Entity.Installation;
+import ch.hslu.appe.reminder.genius.DB.Entity.ProductCategory;
 import ch.hslu.appe.reminder.genius.Fragment.SettingsFragment;
 import ch.hslu.appe.reminder.genius.R;
+import ch.hslu.appe.reminder.genius.ViewModel.ContactViewModel;
 import ch.hslu.appe.reminder.genius.ViewModel.InstallationViewModel;
+import ch.hslu.appe.reminder.genius.ViewModel.ProductCategoryViewModel;
 import ch.hslu.appe.reminder.genius.Worker.NotificationWorker;
 
 import static ch.hslu.appe.reminder.genius.Activity.ShowInstallationActivity.SHOW_INSTALLATION;
@@ -59,6 +51,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private InstallationViewModel installationViewModel;
+    private ContactViewModel contactViewModel;
     private RecyclerView recyclerView;
     private InstallationAdapter adapter;
 
@@ -85,6 +78,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         });
 
+        contactViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         observeInstallation();
@@ -94,7 +88,7 @@ public class MainActivity extends AppCompatActivity
 
         /** to set up some Products
          ProductCategoryViewModel productViewModel = ViewModelProviders.of(this).get(ProductCategoryViewModel.class);
-         productViewModel.insert(new ProductCategory("Product 1", 1, "Default description" ));
+         productViewModel.insert(new ProductCategory("Product 1", 1, "Default description 1" ));
          productViewModel.insert(new ProductCategory("Product 2", 2, "Default description 2" ));
          productViewModel.insert(new ProductCategory("Product 3", 3, "Default description, but pretty long to check if there is a linebreak in AddInstallationView" ));
          */
@@ -181,14 +175,16 @@ public class MainActivity extends AppCompatActivity
                 Objects.requireNonNull(notificationManager).createNotificationChannel(channel);
             }
 
-            Objects.requireNonNull(notificationManager).notify(installation.getInstallationId(), this.createNotification(
-                    getApplicationContext().getResources().getString(R.string.notification_title),
-                    getApplicationContext().getResources().getString(R.string.notification_text) + ": " + Integer.toString(installation.getInstallationId()),
-                    "Installation: " + Integer.toString(installation.getInstallationId()) + "\n" +
-                            "Fälligkeitsdatum: " + installation.getExpireDate().toString() + "\n" +
-                            "Produkt: " + Integer.toString(installation.getProductCategoryId()) + "\n" +
-                            "Kontakt: " + Integer.toString(installation.getContactId()),
-                    pendingIntent));
+            contactViewModel.getContactById(installation.getContactId()).observe(this, contact ->
+                    Objects.requireNonNull(notificationManager).notify(installation.getInstallationId(), this.createNotification(
+                            getApplicationContext().getResources().getString(R.string.notification_title),
+                            "Kunde: " + contact.getLastName() + " " + installation.getFriendlyExpireDateAsString(),
+                            "Installation: " + Integer.toString(installation.getInstallationId()) + "\n" +
+                                    "Fälligkeitsdatum: " + installation.getExpireDate().toString() + "\n" +
+                                    "Produkt: " + Integer.toString(installation.getProductCategoryId()) + "\n" +
+                                    "Kontakt: " + contact.getFormattedAddressWithName(),
+                            pendingIntent))
+                    );
 
             notificationCounter += 1;
         }
