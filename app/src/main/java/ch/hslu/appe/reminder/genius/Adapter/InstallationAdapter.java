@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.hslu.appe.reminder.genius.Activity.AddInstallationActivity;
+import ch.hslu.appe.reminder.genius.Activity.InstallationActivity;
+import ch.hslu.appe.reminder.genius.Activity.MainActivity;
 import ch.hslu.appe.reminder.genius.Activity.ShowInstallationActivity;
 import ch.hslu.appe.reminder.genius.DB.Entity.Contact;
 import ch.hslu.appe.reminder.genius.DB.Entity.Installation;
@@ -247,7 +249,14 @@ public class InstallationAdapter extends RecyclerView.Adapter<InstallationAdapte
     }
 
     private void showUndoSnackbar() {
-        View view = context.findViewById(R.id.installation_constraint_layout);
+        View view;
+
+        if (context.getClass().getName().equals(MainActivity.class.getName())) {
+            view = context.findViewById(R.id.main_constraint_layout);
+        } else {
+            view = context.findViewById(R.id.installation_constraint_layout);
+        }
+
         Snackbar snackbar = Snackbar.make(view, R.string.main_snack_bar_installation_deleted, Snackbar.LENGTH_LONG);
         snackbar.setAction(R.string.main_snack_bar_installation_delete_undo, v -> undoDelete());
         snackbar.show();
