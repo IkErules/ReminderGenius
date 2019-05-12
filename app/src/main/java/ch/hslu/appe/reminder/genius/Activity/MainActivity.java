@@ -4,13 +4,9 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.core.app.NotificationCompat;
@@ -32,29 +28,24 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.work.Constraints;
-import androidx.work.Data;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
-
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 import ch.hslu.appe.reminder.genius.Adapter.InstallationAdapter;
 import ch.hslu.appe.reminder.genius.BroadCastReceiver.BootBroadcastReceiver;
 import ch.hslu.appe.reminder.genius.DB.Entity.Installation;
-import ch.hslu.appe.reminder.genius.DB.Entity.ProductCategory;
 import ch.hslu.appe.reminder.genius.Fragment.SettingsFragment;
 import ch.hslu.appe.reminder.genius.R;
 import ch.hslu.appe.reminder.genius.ViewModel.ContactViewModel;
 import ch.hslu.appe.reminder.genius.ViewModel.InstallationViewModel;
 import ch.hslu.appe.reminder.genius.ViewModel.ProductCategoryViewModel;
-import ch.hslu.appe.reminder.genius.Worker.NotificationWorker;
 
 import static ch.hslu.appe.reminder.genius.Activity.ShowInstallationActivity.SHOW_INSTALLATION;
 
@@ -69,6 +60,9 @@ public class MainActivity extends AppCompatActivity
     private InstallationAdapter adapter;
 
     private SharedPreferences sharedPreferences;
+
+    private SeekBar filterByExpireDateSeekBar;
+    private TextView filterByExpireDateTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,11 +96,54 @@ public class MainActivity extends AppCompatActivity
 
         this.setBroadCastReceiver();
 
-        // to set up some Products
+      /* to set up some Products
         productCategoryViewModel.insert(new ProductCategory("Boiler", 1, "Standard Boiler für Warmwasser." ));
         productCategoryViewModel.insert(new ProductCategory("Heizung", 2, "Standard Heizung." ));
         productCategoryViewModel.insert(new ProductCategory("Solaranlage", 3, "Standard Solaranlage, mit einer Grösse von 2x3m pro Panel." ));
+        */
 
+        this.filterByExpireDateSeekBar = (SeekBar) findViewById(R.id.main_filter_by_expire_date_seekbar);
+        this.filterByExpireDateTextView = (TextView) findViewById(R.id.main_filter_by_expire_date_text_view);
+        this.filterByExpireDateTextView.setText(String.format(getApplicationContext().getResources().getString(R.string.main_text_view_months_filter), Integer.toString(this.sharedPreferences.getInt(SettingsFragment.NOTIFICATION_DURATION_MONTHS, 0))));
+        this.filterByExpireDateSeekBar.setProgress(this.sharedPreferences.getInt(SettingsFragment.NOTIFICATION_DURATION_MONTHS, 0));
+        this.setSeekBarListener();
+        this.registerButtonListener();
+
+    }
+
+    private void registerButtonListener() {
+        Button showAllInstallationsBtn = (Button) findViewById(R.id.main_show_all_installations_button);
+        showAllInstallationsBtn.setOnClickListener((View v) -> {
+            LocalDate expireDate = LocalDate.now().plusMonths(100);
+            adapter.getFilterByExpireDate().filter(expireDate.toString());
+        });
+    }
+
+    private void setSeekBarListener() {
+        this.filterByExpireDateSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progress = 0;
+
+            // When Progress value changed.
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
+                progress = progressValue;
+                Log.i("MainActivity", "Changing seekbar's progress to: " + progress);
+                LocalDate expireDate = LocalDate.now().plusMonths(progressValue);
+                adapter.getFilterByExpireDate().filter(expireDate.toString());
+                TextView seekBarText = (TextView) findViewById(R.id.main_filter_by_expire_date_text_view);
+                seekBarText.setText(String.format(getApplicationContext().getResources().getString(R.string.main_text_view_months_filter), Integer.toString(progressValue)));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                Log.i("MainActivity", "Start Tracking Touch Seekbar");
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                Log.i("MainActivity", "Stop Tracking Touch Seekbar");
+            }
+        });
     }
 
     private void setBroadCastReceiver() {
@@ -255,6 +292,7 @@ public class MainActivity extends AppCompatActivity
         this.installationViewModel.getAllInstallations().observe(this, installations -> {
             // Update the cached copy of the words in the adapter.
             adapter.setInstallations(installations);
+            adapter.getFilterByExpireDate().filter(LocalDate.now().plusMonths(this.filterByExpireDateSeekBar.getProgress()).toString());
         });
     }
 }

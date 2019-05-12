@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -155,6 +156,18 @@ public class InstallationAdapter extends RecyclerView.Adapter<InstallationAdapte
         return filteredList;
     }
 
+    protected List<Installation> filterInstallationsByExpireDate(LocalDate expireDate) {
+        List<Installation> filteredList = new ArrayList<>();
+
+        for (Installation installation : this.installationsFull) {
+            if (installation.getExpireDate().isBefore(expireDate)) {
+                filteredList.add(installation);
+            }
+        }
+
+        return filteredList;
+    }
+
     @Override
     public Filter getFilter() {
         return installationFilter;
@@ -171,6 +184,40 @@ public class InstallationAdapter extends RecyclerView.Adapter<InstallationAdapte
             } else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
                 filteredInstallations.addAll(filterInstallations(filterPattern));
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredInstallations;
+
+            return results;
+        }
+
+        @Override
+        // Results from Filtering will be returned to this method from performFiltering
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            installations.clear();
+            installations.addAll((List) results.values);
+            // Notify observers that the List has changed.
+            notifyDataSetChanged();
+        }
+    };
+
+
+    public Filter getFilterByExpireDate() {
+        return installationFilterByExpireDate;
+    }
+
+    private Filter installationFilterByExpireDate = new Filter() {
+        @Override
+        // Automatically performed in the Background
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Installation> filteredInstallations = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredInstallations.addAll(installationsFull);
+            } else {
+                LocalDate filterPattern = LocalDate.parse(constraint);
+                filteredInstallations.addAll(filterInstallationsByExpireDate(filterPattern));
             }
 
             FilterResults results = new FilterResults();
