@@ -3,10 +3,9 @@
     <string name="app_name">ReminderGenius</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">ReminderGenius</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Einstellungen</string>
     <string name="main_snack_bar_installation_deleted">Installation gelöscht</string>
     <string name="main_snack_bar_installation_delete_undo">Rückgängig machen</string>
     <string name="main_date_time_picker_hint">Datum</string>
