@@ -127,7 +127,7 @@ public class ShowInstallationActivity extends AppCompatActivity {
 
     private void onContactMailClicked() {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.setData(Uri.parse("mailto:" + this.contact.getMail())); // only email apps should handle this
         intent.putExtra(Intent.EXTRA_EMAIL, this.contact.getMail());
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);

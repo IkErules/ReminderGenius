@@ -9,19 +9,6 @@
     tools:context=".Activity.ContactActivity"
     tools:showIn="@layout/activity_contact">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/contact_add_contact_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="@color/colorPrimary"
-        android:text="@string/contact_button_add_test_contact"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/default_recycler_view"
         android:layout_width="0dp"
@@ -32,7 +19,7 @@
         android:background="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/contact_add_contact_button"
+        app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/contact_list_recycler_view_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

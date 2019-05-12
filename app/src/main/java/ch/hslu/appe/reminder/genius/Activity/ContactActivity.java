@@ -73,23 +73,6 @@ public class ContactActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), AddContactActivity.class);
             startActivity(intent);
         });
-
-        Button button = findViewById(R.id.contact_add_contact_button);
-        button.setOnClickListener(view -> {
-            Log.i("contact", "Adding Test Contact to DB.");
-            Contact contact = new Contact("Roman",
-                    "Schraner",
-                    "Person",
-                    "",
-                    "0774690331",
-                    "roman.schraner@stud.hslu.ch",
-                    "Cheerstrasse 13f",
-                    "Luzern",
-                    6014,
-                    "Luzern",
-                    "CH");
-            contactViewModel.insert(contact);
-        });
     }
 
     @Override

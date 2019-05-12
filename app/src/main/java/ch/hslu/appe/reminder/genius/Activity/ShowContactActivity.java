@@ -44,18 +44,24 @@ public class ShowContactActivity extends AppCompatActivity {
     }
 
     private void registerListeners() {
-        TextView address = (TextView) findViewById(R.id.show_contact_address_text_view);
+        TextView address = findViewById(R.id.show_contact_address_text_view);
         address.setOnClickListener((View v) -> {
-            onContactAddressClicked();
+            if (!((TextView) v).getText().equals("")) {
+                onContactAddressClicked();
+            }
         });
 
-        TextView mail = (TextView) findViewById(R.id.show_contact_mail_text_view);
+        TextView mail = findViewById(R.id.show_contact_mail_text_view);
         mail.setOnClickListener((View v) -> {
-            onContactMailClicked();
+            if (!((TextView) v).getText().equals("")) {
+                onContactMailClicked();
+            }
         });
-        TextView phone = (TextView) findViewById(R.id.show_contact_phone_text_view);
+        TextView phone = findViewById(R.id.show_contact_phone_text_view);
         phone.setOnClickListener((View v) -> {
-            onContactPhoneClicked();
+            if (!((TextView) v).getText().equals("")) {
+                onContactPhoneClicked();
+            }
         });
     }
 
@@ -77,7 +83,7 @@ public class ShowContactActivity extends AppCompatActivity {
 
     private void onContactMailClicked() {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.setData(Uri.parse("mailto:" + this.contact.getMail())); // only email apps should handle this
         intent.putExtra(Intent.EXTRA_EMAIL, this.contact.getMail());
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);

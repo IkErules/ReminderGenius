@@ -54,10 +54,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_contact_search_view"
-        app:srcCompat="@drawable/ic_perm_contact_calendar" />
+        app:layout_constraintTop_toTopOf="@+id/add_contact_firstname_text_view"
+        app:srcCompat="@drawable/ic_contact_black_o54_24dp" />
 
 
     <EditText
@@ -81,8 +81,8 @@
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_contact_zip_text_view"
-        app:srcCompat="@drawable/ic_alternate_email" />
+        app:layout_constraintTop_toTopOf="@+id/add_contact_email_text_view"
+        app:srcCompat="@drawable/ic_mail_black_o54_24dp" />
 
     <EditText
         android:id="@+id/add_contact_email_text_view"
@@ -103,10 +103,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_contact_email_text_view"
-        app:srcCompat="@drawable/ic_local_phone" />
+        app:layout_constraintTop_toTopOf="@+id/add_contact_phone_text_view"
+        app:srcCompat="@drawable/ic_local_phone_black_o54_24dp" />
 
     <EditText
         android:id="@+id/add_contact_phone_text_view"
@@ -159,5 +159,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/add_contact_city_text_view"
         app:layout_constraintTop_toBottomOf="@+id/add_contact_address_text_view" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_vertical_margin"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/add_contact_address_text_view"
+        app:srcCompat="@drawable/ic_location_black_o54_24dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
