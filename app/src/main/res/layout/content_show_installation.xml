@@ -19,11 +19,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <FrameLayout
+            android:id="@+id/show_installation_fragment_frame"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:paddingHorizontal="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_name_text_view" />
+
         <View
             android:id="@+id/installation_name_divider"
             style="@style/details_divider_full"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/show_installation_name_text_view" />
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_fragment_frame" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/show_installation_contact_header_text_view"

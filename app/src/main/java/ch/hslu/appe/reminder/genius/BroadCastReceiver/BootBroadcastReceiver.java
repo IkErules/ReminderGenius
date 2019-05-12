@@ -8,10 +8,12 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
+import androidx.preference.PreferenceManager;
 import androidx.work.Constraints;
 import androidx.work.Data;
 import androidx.work.PeriodicWorkRequest;
@@ -23,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 import ch.hslu.appe.reminder.genius.Activity.ShowInstallationActivity;
 import ch.hslu.appe.reminder.genius.DB.Entity.Installation;
+import ch.hslu.appe.reminder.genius.Fragment.SettingsFragment;
 import ch.hslu.appe.reminder.genius.R;
 import ch.hslu.appe.reminder.genius.Worker.NotificationWorker;
 
@@ -36,6 +39,12 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
         if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
             // Set the alarm here.
             Log.d("BootBroadcastReceiver", "Received Boot Complete Event.");
+
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+
+            int frequencyInDays = sharedPreferences.getInt(SettingsFragment.NOTIFICATION_FREQUENCY_DAYS, 0);
+
+            NotificationWorker.enqueueSelf(frequencyInDays);
 
             /*this.showTestNotifications(context);
 

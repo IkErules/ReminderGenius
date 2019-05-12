@@ -29,6 +29,9 @@ public interface ProductCategoryDao {
     @Query("SELECT * FROM productcategory WHERE productCategoryId = :id")
     public LiveData<ProductCategory> findProductCategoryById(int id);
 
+    @Query("SELECT * FROM productcategory WHERE productCategoryId = :id")
+    public ProductCategory findSingleProductCategoryById(int id);
+
     @Query("SELECT * FROM productcategory WHERE categoryName LIKE :search " +
             "OR description LIKE :search")
     public LiveData<List<ProductCategory>> findProductCategoriesWithName(String search);

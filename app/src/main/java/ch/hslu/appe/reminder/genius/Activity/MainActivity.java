@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -27,6 +28,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,6 +48,7 @@ import java.util.concurrent.TimeUnit;
 import ch.hslu.appe.reminder.genius.Adapter.InstallationAdapter;
 import ch.hslu.appe.reminder.genius.BroadCastReceiver.BootBroadcastReceiver;
 import ch.hslu.appe.reminder.genius.DB.Entity.Installation;
+import ch.hslu.appe.reminder.genius.Fragment.SettingsFragment;
 import ch.hslu.appe.reminder.genius.R;
 import ch.hslu.appe.reminder.genius.ViewModel.InstallationViewModel;
 import ch.hslu.appe.reminder.genius.Worker.NotificationWorker;
@@ -58,6 +61,8 @@ public class MainActivity extends AppCompatActivity
     private InstallationViewModel installationViewModel;
     private RecyclerView recyclerView;
     private InstallationAdapter adapter;
+
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,10 +85,12 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         });
 
+        this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
         observeInstallation();
         setUpRecyclerView();
 
-        BootBroadcastReceiver.enableBroadcastReceiver(this);
+        this.setBroadCastReceiver();
 
         /** to set up some Products
          ProductCategoryViewModel productViewModel = ViewModelProviders.of(this).get(ProductCategoryViewModel.class);
@@ -92,6 +99,17 @@ public class MainActivity extends AppCompatActivity
          productViewModel.insert(new ProductCategory("Product 3", 3, "Default description, but pretty long to check if there is a linebreak in AddInstallationView" ));
          */
 
+    }
+
+    private void setBroadCastReceiver() {
+        Boolean displayNotification = this.sharedPreferences.getBoolean(SettingsFragment.SHOW_NOTIFICATIONS, true);
+        if (!displayNotification) {
+            Log.i("MainAcitivity", "Disabling BroadCastReceiver");
+            BootBroadcastReceiver.disableBroadcastReceiver(this);
+        } else {
+            Log.i("MainAcitivity", "Enabling BroadCastReceiver");
+            BootBroadcastReceiver.enableBroadcastReceiver(this);
+        }
     }
 
     @Override
@@ -129,6 +147,8 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent setPrefs = new Intent(this, AppPreferencesActivity.class);
+            startActivity(setPrefs);
             return true;
         } else if (id == R.id.main_action_show_notification) {
             this.showTestNotifications();
@@ -226,50 +246,6 @@ public class MainActivity extends AppCompatActivity
         this.installationViewModel.getAllInstallations().observe(this, installations -> {
             // Update the cached copy of the words in the adapter.
             adapter.setInstallations(installations);
-            Log.d("MainActivity", "Scheduling Notification");
-            if (installations.size() > 0) {
-                this.scheduleNotification(installations);
-            }
-
         });
-    }
-
-    private void observeInstallationByExpireDate() {
-        installationViewModel = ViewModelProviders.of(this).get(InstallationViewModel.class);
-
-        this.installationViewModel.getInstallationsByExpireDate(LocalDate.now().plusMonths(24)).observe(this, installations -> {
-            // Update the cached copy of the words in the adapter.
-            adapter.setInstallationsExpiringSoon(installations);
-        });
-    }
-
-    // Notification will run every 15 Minutes from now on.
-    private void scheduleNotification(List<Installation> installations) {
-        for (Installation installation : installations) {
-            if ((((LocalDate) LocalDate.now().plusMonths(24)).compareTo(installation.getExpireDate())) > 0) {
-                this.enqueueNotificationWorkRequest(installation.getInstallationId());
-            } else {
-                Log.d("MainActivity", "Date " + installation.getExpireDate().toString() + ", is not smaller than " + LocalDate.now().plusMonths(24).toString());
-            }
-        }
-    }
-
-    private void enqueueNotificationWorkRequest(int installationId) {
-        Constraints constraints = new Constraints.Builder().setRequiresBatteryNotLow(false).build();
-        Data installationData = new Data.Builder().putInt(NotificationWorker.INSTALLATIONS_EXPIRING_SOON, installationId).build();
-
-        // Minimum Schedule Interval: 15 Minutes
-        PeriodicWorkRequest notificationRequestPeriodic = new PeriodicWorkRequest.Builder(NotificationWorker.class, 15,
-                TimeUnit.MINUTES)
-                .setConstraints(constraints)
-                .setInputData(installationData)
-                .build();
-
-        WorkManager.getInstance().enqueue(notificationRequestPeriodic);
-    }
-
-    private void cancelNotification() {
-        WorkManager instance = WorkManager.getInstance();
-        instance.cancelAllWork();
     }
 }
