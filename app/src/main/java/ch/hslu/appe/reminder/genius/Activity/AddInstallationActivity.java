@@ -1,8 +1,6 @@
 package ch.hslu.appe.reminder.genius.Activity;
 
-import android.content.Context;
 import android.content.ContextWrapper;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -28,7 +26,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -38,6 +35,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import ch.hslu.appe.reminder.genius.Adapter.ShowInstallationImageAdapter;
 import ch.hslu.appe.reminder.genius.DB.Entity.Contact;
@@ -79,7 +77,7 @@ public class AddInstallationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_installation);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         contactViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
         productCategoryViewModel = ViewModelProviders.of(this).get(ProductCategoryViewModel.class);
@@ -94,6 +92,15 @@ public class AddInstallationActivity extends AppCompatActivity {
         if (getIntent().hasExtra(INSTALLATION_TO_EDIT)) {
             installation = getIntent().getParcelableExtra(INSTALLATION_TO_EDIT);
 
+            installationImageViewModel.getImagesForInstallation(installation.installationId)
+                    .observe(this, imageIds ->
+                            imageViewModel.getImagesById(imageIds.stream()
+                            .map(Image::getImageId)
+                            .toArray(Integer[]::new))
+                            .observe(this, images -> {
+                                tempImages.addAll(images);
+                                updateAdapter();
+                            }));
         } else {
             installation = Installation.builder().defaultInstallation();
         }
@@ -114,6 +121,9 @@ public class AddInstallationActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         // Make RecyclerView Horizontal
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+    }
+
+    private void updateAdapter() {
         adapter.setImages(tempImages);
     }
 
@@ -136,7 +146,7 @@ public class AddInstallationActivity extends AppCompatActivity {
     private void addNotesTextViewListener() {
         TextView notesTextView = findViewById(R.id.add_installation_notes_text_view);
         notesTextView.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus == false) {
+            if (!hasFocus) {
                 installation.setNotes(String.valueOf(notesTextView.getText()));
             }
         });
@@ -169,12 +179,11 @@ public class AddInstallationActivity extends AppCompatActivity {
 
     private void addNumberPickerListener() {
         //Get the widgets reference from XML layout
-        final TextView tv = findViewById(R.id.textView6);
         NumberPicker np = findViewById(R.id.add_installation_service_intervall_number);
 
         //Populate NumberPicker values from minimum and maximum value range
         //Set the minimum value of NumberPicker
-        np.setMinValue(0);
+        np.setMinValue(1);
         //Specify the maximum value/number of NumberPicker
         np.setMaxValue(10);
         //Gets whether the selector wheel wraps when reaching the min/max value.
@@ -320,7 +329,7 @@ public class AddInstallationActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.save_menu, menu);
+        getMenuInflater().inflate(R.menu.save_menu_with_picture, menu);
         return true;
     }
 
@@ -334,33 +343,11 @@ public class AddInstallationActivity extends AppCompatActivity {
             this.saveImagesToInstallation(installationId);
 
             this.finish();
+        } else if (id == R.id.action_add_picture) {
+            dispatchTakePictureIntent();
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private String saveToInternalStorage(Bitmap bitmapImage, String fileName){
-        ContextWrapper cw = new ContextWrapper(this.getApplicationContext());
-        // path to /data/data/yourapp/app_data/installationImages
-        File directory = cw.getDir("installationImages", Context.MODE_PRIVATE);
-        // Create imageDir
-        File mypath = new File(directory, fileName);
-
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(mypath);
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return directory.getAbsolutePath();
     }
 
     private void dispatchTakePictureIntent() {
@@ -412,11 +399,8 @@ public class AddInstallationActivity extends AppCompatActivity {
             Image newImage = new Image(currentPhotoPath, "Image Description");
             tempImages.add(newImage);
             adapter.setImages(tempImages);
+            updateAdapter();
         }
-    }
-
-    public void takePicture(View view) {
-        dispatchTakePictureIntent();
     }
 
     /** Loading pics from DB and display them on View

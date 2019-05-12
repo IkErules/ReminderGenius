@@ -95,6 +95,8 @@
 
     <string name="title_activity_show_image_fullscreen">ShowImageFullscreenActivity</string>
     <string name="title_activity_image_fullscreen">Bild im Vollbildmodus anzeigen</string>
+    <string name="add_installation_notification_checkbox_hint">Erinnerungen</string>
+    <string name="menu_picture">Bild hinzufügen</string>
     <string name="notification_title">Service bald fällig</string>
     <string name="notification_text">%1$s, %2$s</string>
     <string name="main_action_show_notification_text">Benachrichtigung erzeugen</string>

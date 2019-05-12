@@ -34,9 +34,15 @@ public class ImageRepository {
         return (int) this.imageDao.insert(image);
     }
 
-    public LiveData<Image> getImageWithPath(String path) { return this.imageDao.findImageWithPath(path); }
+    public LiveData<Image> getImageWithPath(String path) {
+        return this.imageDao.findImageWithPath(path);
+    }
 
     public void deleteAllImages() { new deleteAllImagesAsyncTask(this.imageDao).execute(); }
+
+    public LiveData<List<Image>> getImagesById(Integer... ids) {
+        return this.imageDao.findImagesById(ids);
+    }
 
     private static class insertAsyncTask extends AsyncTask<Image, Void, Long> {
 
