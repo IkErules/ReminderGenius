@@ -5,13 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -88,7 +88,7 @@ public class ShowInstallationActivity extends AppCompatActivity {
 
     private void observeImages() {
         recyclerView = findViewById(R.id.show_installation_image_recycler_view);
-        adapter = new ShowInstallationImageAdapter(this, this.installationImageViewModel);
+        adapter = new ShowInstallationImageAdapter(this);
         recyclerView.setAdapter(adapter);
         // Make RecyclerView Horizontal
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -152,10 +152,10 @@ public class ShowInstallationActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.show_installation_notes_text_view)).setText(this.installation.getNotes());
         ((TextView) findViewById(R.id.show_installation_expiredate_text_view)).setText(getResources().getString(R.string.show_installation_next_service_text) + ": " + this.installation.getFriendlyExpireDateAsString());
 
-        ((CheckBox) findViewById(R.id.show_installation_notify_customer_mail_check_box)).setActivated(this.installation.getNotifyCustomerMail());
-        ((CheckBox) findViewById(R.id.show_installation_notify_customer_sms_check_box)).setActivated(this.installation.getNotifyCustomerSms());
-        ((CheckBox) findViewById(R.id.show_installation_notify_technician_mail_check_box)).setActivated(this.installation.getNotifyCreatorMail());
-        ((CheckBox) findViewById(R.id.show_installation_notify_technician_sms_check_box)).setActivated(this.installation.getNotifyCreatorSms());
+        ((CheckBox) findViewById(R.id.show_installation_notify_customer_mail_check_box)).setChecked(this.installation.getNotifyCustomerMail());
+        ((CheckBox) findViewById(R.id.show_installation_notify_customer_sms_check_box)).setChecked(this.installation.getNotifyCustomerSms());
+        ((CheckBox) findViewById(R.id.show_installation_notify_technician_mail_check_box)).setChecked(this.installation.getNotifyCreatorMail());
+        ((CheckBox) findViewById(R.id.show_installation_notify_technician_sms_check_box)).setChecked(this.installation.getNotifyCreatorSms());
 
     }
 
@@ -200,7 +200,6 @@ public class ShowInstallationActivity extends AppCompatActivity {
         address.setOnClickListener((View v) -> {
             //onContactAddressClicked();
         });
-
         TextView mail = (TextView) findViewById(R.id.show_contact_mail_text_view);
         mail.setOnClickListener((View v) -> {
             //onContactMailClicked();

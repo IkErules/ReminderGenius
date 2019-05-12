@@ -34,6 +34,7 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -41,11 +42,13 @@ import java.util.Objects;
 import ch.hslu.appe.reminder.genius.Adapter.InstallationAdapter;
 import ch.hslu.appe.reminder.genius.BroadCastReceiver.BootBroadcastReceiver;
 import ch.hslu.appe.reminder.genius.DB.Entity.Installation;
+import ch.hslu.appe.reminder.genius.DB.Entity.ProductCategory;
 import ch.hslu.appe.reminder.genius.Fragment.SettingsFragment;
 import ch.hslu.appe.reminder.genius.R;
 import ch.hslu.appe.reminder.genius.ViewModel.ContactViewModel;
 import ch.hslu.appe.reminder.genius.ViewModel.InstallationViewModel;
 import ch.hslu.appe.reminder.genius.ViewModel.ProductCategoryViewModel;
+import ch.hslu.appe.reminder.genius.Worker.NotificationWorker;
 
 import static ch.hslu.appe.reminder.genius.Activity.ShowInstallationActivity.SHOW_INSTALLATION;
 
@@ -88,7 +91,6 @@ public class MainActivity extends AppCompatActivity
         this.installationViewModel = ViewModelProviders.of(this).get(InstallationViewModel.class);
         this.productCategoryViewModel = ViewModelProviders.of(this).get(ProductCategoryViewModel.class);
         this.contactViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
-
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         observeInstallation();
@@ -226,14 +228,16 @@ public class MainActivity extends AppCompatActivity
                 Objects.requireNonNull(notificationManager).createNotificationChannel(channel);
             }
 
-            Objects.requireNonNull(notificationManager).notify(installation.getInstallationId(), this.createNotification(
-                    getApplicationContext().getResources().getString(R.string.notification_title),
-                    getApplicationContext().getResources().getString(R.string.notification_text) + ": " + Integer.toString(installation.getInstallationId()),
-                    "Installation: " + Integer.toString(installation.getInstallationId()) + "\n" +
-                            "Fälligkeitsdatum: " + installation.getExpireDate().toString() + "\n" +
-                            "Produkt: " + Integer.toString(installation.getProductCategoryId()) + "\n" +
-                            "Kontakt: " + Integer.toString(installation.getContactId()),
-                    pendingIntent));
+            contactViewModel.getContactById(installation.getContactId()).observe(this, contact ->
+                    Objects.requireNonNull(notificationManager).notify(installation.getInstallationId(), this.createNotification(
+                            getApplicationContext().getResources().getString(R.string.notification_title),
+                            "Kunde: " + contact.getLastName() + " " + installation.getFriendlyExpireDateAsString(),
+                            "Installation: " + Integer.toString(installation.getInstallationId()) + "\n" +
+                                    "Fälligkeitsdatum: " + installation.getExpireDate().toString() + "\n" +
+                                    "Produkt: " + Integer.toString(installation.getProductCategoryId()) + "\n" +
+                                    "Kontakt: " + contact.getFormattedAddressWithName(),
+                            pendingIntent))
+                    );
 
             notificationCounter += 1;
         }

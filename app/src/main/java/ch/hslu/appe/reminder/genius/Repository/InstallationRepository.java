@@ -45,8 +45,12 @@ public class InstallationRepository {
         return this.installationDao.findInstallationByAllProperties(prodCatId, contactId, prodDetails, instDate, expireDate, serviceInterval,
                 notes, notCustMail, notCustSms, notCreatorMail, notCreatorSms); }
 
-    public void insert (Installation installation) {
-        new insertAsyncTask(this.installationDao).execute(installation);
+    public void insert (Installation... installations) {
+        new insertAsyncTask(this.installationDao).execute(installations);
+    }
+
+    public int insert (Installation installation) {
+        return (int) this.installationDao.insert(installation);
     }
 
     public void deleteAllInstallations() { new DeleteAllInstallationsAsyncTask(this.installationDao).execute(); }

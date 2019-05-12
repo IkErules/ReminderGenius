@@ -1,35 +1,44 @@
 package ch.hslu.appe.reminder.genius.Activity;
 
-import android.content.Context;
 import android.content.ContextWrapper;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
+import android.content.Intent;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
+import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
+import ch.hslu.appe.reminder.genius.Adapter.ShowInstallationImageAdapter;
 import ch.hslu.appe.reminder.genius.DB.Entity.Contact;
 import ch.hslu.appe.reminder.genius.DB.Entity.Image;
 import ch.hslu.appe.reminder.genius.DB.Entity.Installation;
@@ -47,6 +56,7 @@ import static java.time.format.DateTimeFormatter.*;
 
 public class AddInstallationActivity extends AppCompatActivity {
 
+    static final int REQUEST_IMAGE_CAPTURE = 569;
     private static final String DATE_FORMAT = "dd.MM.yyyy";
     public static final String INSTALLATION_TO_EDIT = "installation.to.edit";
     private ContactViewModel contactViewModel;
@@ -56,13 +66,21 @@ public class AddInstallationActivity extends AppCompatActivity {
     private InstallationImageViewModel installationImageViewModel;
     private Installation installation;
 
+    private boolean hasToSetDefaultServiceIntervalFromProduct = true;
+
+    private String currentPhotoPath;
+    private List<Image> tempImages;
+
+    private RecyclerView recyclerView;
+    private ShowInstallationImageAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_installation);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         contactViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
         productCategoryViewModel = ViewModelProviders.of(this).get(ProductCategoryViewModel.class);
@@ -70,76 +88,71 @@ public class AddInstallationActivity extends AppCompatActivity {
         imageViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
         installationImageViewModel = ViewModelProviders.of(this).get(InstallationImageViewModel.class);
 
-        productCategoryViewModel.insert(new ProductCategory("Test-Category", 1, "Test Kategorie mit Beschreibung."));
+        recyclerView = findViewById(R.id.add_installation_image_recycler_view);
+        recyclerView.setHasFixedSize(false);
+        tempImages = new ArrayList<>();
 
+        setInstallationFromIntent();
+        addProductToSpinner();
+        addCustomersToSpinner();
+        addInstallationDatePickerListener();
+        addNumberPickerListener();
+        populateTextFieldsFromInstallation();
+        observeImages();
+    }
+
+    private void setInstallationFromIntent() {
         if (getIntent().hasExtra(INSTALLATION_TO_EDIT)) {
             installation = getIntent().getParcelableExtra(INSTALLATION_TO_EDIT);
 
+            installationImageViewModel.getImagesForInstallation(installation.installationId)
+                    .observe(this, imageIds ->
+                            imageViewModel.getImagesById(imageIds.stream()
+                            .map(Image::getImageId)
+                            .toArray(Integer[]::new))
+                            .observe(this, images -> {
+                                tempImages.addAll(images);
+                                updateAdapter();
+                            }));
+            hasToSetDefaultServiceIntervalFromProduct = false;
         } else {
             installation = Installation.builder().defaultInstallation();
+            hasToSetDefaultServiceIntervalFromProduct = true;
         }
-
-        addProductToSpinner();
-        addCustomersToSpinner();
-        addExpireDatePickerListener();
-        addInstallationDatePickerListener();
-        addNumberPickerListener();
-        addNotesTextViewListener();
-        populateTextFieldsFromInstallation();
     }
 
-    private void addTestImages(int installationId) {
-        addImage(R.drawable.eagle, "eagle.jpg", "Test Eagle Image");
-        addImage(R.drawable.bear, "bear.jpg", "Test Bear Image");
-        addImage(R.drawable.bonobo, "bonobo.jpg", "Test Bonobo Image");
-        addImage(R.drawable.horse, "horse.jpg", "Test Horse Image");
+    private void observeImages() {
+        recyclerView = findViewById(R.id.add_installation_image_recycler_view);
+        adapter = new ShowInstallationImageAdapter(this);
+        recyclerView.setAdapter(adapter);
+        // Make RecyclerView Horizontal
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
     }
 
-    private void addImage(int resourceId, String fileName, String description) {
-        this.saveToInternalStorage((Bitmap) BitmapFactory.decodeResource(this.getResources(), resourceId), fileName);
-        File directory = getDir("installationImages", Context.MODE_PRIVATE);
-        String path = (new File(directory, fileName)).toString();
-
-        imageViewModel.insert(new Image(path, description));
-
-        this.createInstallationImageRelation(path);
+    private void updateAdapter() {
+        TextView imageLabel = findViewById(R.id.add_installation_pictures_text_view);
+        if (tempImages.size() != 0) {
+            imageLabel.setVisibility(View.VISIBLE);
+        } else {
+            imageLabel.setVisibility(View.INVISIBLE);
+        }
+        adapter.setImages(tempImages);
     }
 
-    private void createInstallationImageRelation(String path) {
-        this.imageViewModel.getImageWithPath(path).observe(this, new Observer<Image>() {
-            @Override
-            public void onChanged(@Nullable final Image imageFromDb) {
-                Log.d("AddInstallationActivity", "Adding InstallationImage Relation: " + imageFromDb.toString() + ", " + installation.toString());
-                installationImageViewModel.insert(new InstallationImage(installation.getInstallationId(), imageFromDb.getImageId()));
-            }
+    private void saveTempImages(int installationId) {
+        tempImages.forEach(image -> {
+            int imageId = imageViewModel.insert(image);
+            installationImageViewModel.insert(new InstallationImage(installationId, imageId));
         });
     }
 
-    private void observeInstallationInsertion() {
-        this.installationViewModel.getInstallationByAllProperties(installation.getProductCategoryId(), installation.getContactId(),
-                installation.getProductDetails(), installation.getInstallationDate(), installation.getExpireDate(), installation.getServiceInterval(),
-                installation.getNotes(), installation.getNotifyCustomerMail(), installation.getNotifyCustomerSms(), installation.getNotifyCreatorMail(),
-                installation.getNotifyCreatorSms()).observe(this, new Observer<Installation>() {
-            @Override
-            public void onChanged(@Nullable final Installation installationFromDb) {
-                if (installationFromDb != null) {
-                    installation = installationFromDb;
-                    Log.d("AddInstallationActivity", "Added Installation: " + installationFromDb.toString());
-                    addTestImages(installationFromDb.getInstallationId());
-                } else {
-                    Log.w("AddInstallationActivity", "Installation not yet ready.");
-                }
-            }
-        });
-    }
-
-    private void addNotesTextViewListener() {
-        TextView notesTextView = findViewById(R.id.add_installation_notes_text_view);
-        notesTextView.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus == false) {
-                installation.setNotes(String.valueOf(notesTextView.getText()));
-            }
-        });
+    private void saveImagesToInstallation(int installationId) {
+        if (installationId != 0) {
+            Log.d("AddInstallationActivity", "Added Installation: " + installationId);
+            saveTempImages(installationId);
+        } else {
+            Log.w("AddInstallationActivity", "Installation not yet ready.");
+        }
     }
 
     private void populateTextFieldsFromInstallation() {
@@ -153,6 +166,14 @@ public class AddInstallationActivity extends AppCompatActivity {
                 .setText(installation.getExpireDate().format(ofPattern(DATE_FORMAT)));
         ((TextView) findViewById(R.id.add_installation_notes_text_view))
                 .setText(installation.getNotes());
+        ((CheckBox) findViewById(R.id.add_installation_notify_customer_mail_check_box))
+                .setChecked(installation.getNotifyCustomerMail());
+        ((CheckBox) findViewById(R.id.add_installation_notify_customer_sms_check_box))
+                .setChecked(installation.getNotifyCustomerSms());
+        ((CheckBox) findViewById(R.id.add_installation_notify_technician_mail_check_box))
+                .setChecked(installation.getNotifyCreatorMail());
+        ((CheckBox) findViewById(R.id.add_installation_notify_technician_sms_check_box))
+                .setChecked(installation.getNotifyCreatorSms());
     }
 
     private void setInstallationFromTextFields() {
@@ -165,16 +186,23 @@ public class AddInstallationActivity extends AppCompatActivity {
         CharSequence notes = ((TextView) findViewById(R.id.add_installation_notes_text_view))
                 .getText();
         installation.setNotes(String.valueOf(notes));
+        installation.setNotifyCustomerMail(
+                ((CheckBox) findViewById(R.id.add_installation_notify_customer_mail_check_box)).isChecked());
+        installation.setNotifyCustomerSms(
+                ((CheckBox) findViewById(R.id.add_installation_notify_customer_sms_check_box)).isChecked());
+        installation.setNotifyCreatorMail(
+                ((CheckBox) findViewById(R.id.add_installation_notify_technician_mail_check_box)).isChecked());
+        installation.setNotifyCreatorSms(
+                ((CheckBox) findViewById(R.id.add_installation_notify_technician_sms_check_box)).isChecked());
     }
 
     private void addNumberPickerListener() {
         //Get the widgets reference from XML layout
-        final TextView tv = findViewById(R.id.textView6);
         NumberPicker np = findViewById(R.id.add_installation_service_intervall_number);
 
         //Populate NumberPicker values from minimum and maximum value range
         //Set the minimum value of NumberPicker
-        np.setMinValue(0);
+        np.setMinValue(1);
         //Specify the maximum value/number of NumberPicker
         np.setMaxValue(10);
         //Gets whether the selector wheel wraps when reaching the min/max value.
@@ -184,7 +212,7 @@ public class AddInstallationActivity extends AppCompatActivity {
         np.setOnValueChangedListener((picker, oldVal, newVal) -> {
             installation.setServiceInterval(newVal);
             installation.setExpireDate(installation.getInstallationDate().plusYears(newVal));
-            updateExpirationDateView();
+            updateExpirationDateViewFromInstallation();
         });
     }
 
@@ -193,6 +221,7 @@ public class AddInstallationActivity extends AppCompatActivity {
 
         HashMap<Integer, ProductCategory> productMapper = new HashMap<>();
         ArrayAdapter<String> productAdapter= new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item);
+        boolean comesFromStart = false;
 
         productCategoryViewModel.getAllProductsCategory().observe(this, products -> {
             Collections.sort(products);
@@ -215,16 +244,23 @@ public class AddInstallationActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ProductCategory selectedProduct = productMapper.get(position);
-                installation.setProductCategoryId(selectedProduct.getProductCategoryId());
-                installation.setServiceInterval(selectedProduct.getDefaultServiceInterval());
-                installation.setExpireDate(installation.getInstallationDate()
-                        .plusYears(selectedProduct.getDefaultServiceInterval()));
-                ((TextView) findViewById(R.id.add_installation_product_details_text_view))
-                        .setText(selectedProduct.getDescription());
-                ((NumberPicker) findViewById(R.id.add_installation_service_intervall_number))
-                        .setValue(selectedProduct.getDefaultServiceInterval());
-                updateExpirationDateView();
+                if (hasToSetDefaultServiceIntervalFromProduct) {
+                    ProductCategory selectedProduct = productMapper.get(position);
+                    installation.setProductCategoryId(selectedProduct.getProductCategoryId());
+                    installation.setProductDetails(selectedProduct.getDescription());
+                    installation.setServiceInterval(selectedProduct.getDefaultServiceInterval());
+                    installation.setExpireDate(installation.getInstallationDate()
+                            .plusYears(selectedProduct.getDefaultServiceInterval()));
+
+                    ((TextView) findViewById(R.id.add_installation_product_details_text_view))
+                            .setText(selectedProduct.getDescription());
+                    ((NumberPicker) findViewById(R.id.add_installation_service_intervall_number))
+                            .setValue(selectedProduct.getDefaultServiceInterval());
+
+                    updateExpirationDateViewFromInstallation();
+                }
+
+                hasToSetDefaultServiceIntervalFromProduct = true;
             }
 
             @Override
@@ -267,26 +303,6 @@ public class AddInstallationActivity extends AppCompatActivity {
         });
     }
 
-    private void addExpireDatePickerListener() {
-        TextView expireDate = findViewById(R.id.add_installation_expire_date_text_view);
-        expireDate.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                LocalDate initDate = convertToLocalDate(String.valueOf(expireDate.getText()));
-                DatepickerFragment newFragment = new DatepickerFragment(initDate);
-                newFragment.setDateSetListener((view, year, month, day) -> {
-                    LocalDate choosenDate = LocalDate.of(view.getYear(), view.getMonth(), view.getDayOfMonth());
-                    expireDate.setText(choosenDate.format(ofPattern(DATE_FORMAT)));
-                    installation.setExpireDate(choosenDate);
-                });
-                newFragment.show(getSupportFragmentManager(), "date_picker_expire_date");
-            } else {
-                LocalDate inputDate = convertToLocalDate(String.valueOf(expireDate.getText()));
-                expireDate.setText(inputDate.format(ofPattern(DATE_FORMAT)));
-                installation.setExpireDate(inputDate);
-            }
-        });
-    }
-
     private LocalDate convertToLocalDate(String toConvert) {
         LocalDate converted = LocalDate.now();
         try {
@@ -312,7 +328,7 @@ public class AddInstallationActivity extends AppCompatActivity {
         });
     }
 
-    private void updateExpirationDateView() {
+    private void updateExpirationDateViewFromInstallation() {
         TextView textView = findViewById(R.id.add_installation_expire_date_text_view);
         textView.setText(installation.getExpireDate().format(ofPattern(DATE_FORMAT)));
     }
@@ -320,7 +336,7 @@ public class AddInstallationActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.save_menu, menu);
+        getMenuInflater().inflate(R.menu.save_menu_with_picture, menu);
         return true;
     }
 
@@ -330,38 +346,92 @@ public class AddInstallationActivity extends AppCompatActivity {
 
         if (id == R.id.action_save) {
             setInstallationFromTextFields();
-            installationViewModel.insert(installation);
-            /* Testing Only: Add Sample Pictures to Installation.
-            this.observeInstallationInsertion();
-            */
+            int installationId = installationViewModel.insert(installation);
+            this.saveImagesToInstallation(installationId);
 
             this.finish();
+        } else if (id == R.id.action_add_picture) {
+            dispatchTakePictureIntent();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private String saveToInternalStorage(Bitmap bitmapImage, String fileName){
-        ContextWrapper cw = new ContextWrapper(this.getApplicationContext());
-        // path to /data/data/yourapp/app_data/installationImages
-        File directory = cw.getDir("installationImages", Context.MODE_PRIVATE);
-        // Create imageDir
-        File mypath = new File(directory, fileName);
-
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(mypath);
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
             try {
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
-        return directory.getAbsolutePath();
     }
+
+    private File createImageFile() throws IOException {
+        ContextWrapper cw = new ContextWrapper(this.getApplicationContext());
+        // path to /data/data/yourapp/app_data/installationImages
+        //File directory = cw.getDir("installationImages", Context.MODE_PRIVATE);
+        File directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        //directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                directory);
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Image newImage = new Image(currentPhotoPath, "Image Description");
+            tempImages.add(newImage);
+            adapter.setImages(tempImages);
+            updateAdapter();
+        }
+    }
+
+    /** Loading pics from DB and display them on View
+    private void setPic() {
+        // Get the dimensions of the View
+        int targetW = imageView.getWidth();
+        int targetH = imageView.getHeight();
+
+        // Get the dimensions of the bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(currentPhotoPath, boptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        // Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, boptions);
+        imageView.setImageBitmap(bitmap);
+    } */
 }

@@ -29,6 +29,10 @@ public interface ImageDao {
     @Query("SELECT * FROM image WHERE path = :search ")
     public LiveData<Image> findImageWithPath(String search);
 
+
+    @Query("SELECT * FROM image WHERE imageId IN (:ids)")
+    public LiveData<List<Image>> findImagesById(Integer... ids);
+
     @Query("SELECT * from image ORDER BY imageId ASC")
     public LiveData<List<Image>> getAllImages();
 }

@@ -12,8 +12,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
@@ -22,13 +20,10 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
-import ch.hslu.appe.reminder.genius.Activity.MainActivity;
 import ch.hslu.appe.reminder.genius.Activity.ShowInstallationActivity;
 import ch.hslu.appe.reminder.genius.DB.Dao.ContactDao;
 import ch.hslu.appe.reminder.genius.DB.Dao.InstallationDao;
@@ -39,9 +34,6 @@ import ch.hslu.appe.reminder.genius.DB.Entity.ProductCategory;
 import ch.hslu.appe.reminder.genius.DB.ReminderGeniusRoomDb;
 import ch.hslu.appe.reminder.genius.Fragment.SettingsFragment;
 import ch.hslu.appe.reminder.genius.R;
-import ch.hslu.appe.reminder.genius.Repository.InstallationRepository;
-import ch.hslu.appe.reminder.genius.ViewModel.InstallationViewModel;
-import ch.hslu.appe.reminder.genius.ViewModel.ProductCategoryViewModel;
 
 import static ch.hslu.appe.reminder.genius.Activity.ShowInstallationActivity.SHOW_INSTALLATION;
 

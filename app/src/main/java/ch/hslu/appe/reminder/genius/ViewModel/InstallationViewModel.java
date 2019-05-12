@@ -44,7 +44,9 @@ public class InstallationViewModel extends AndroidViewModel {
         return repository.getInstallationByAllProperties(prodCatId, contactId, prodDetails, instDate, expireDate, serviceInterval,
                 notes, notCustMail, notCustSms, notCreatorMail, notCreatorSms); }
 
-    public void insert(Installation installation) { this.repository.insert(installation); }
+    public void insert(Installation... installations) { this.repository.insert(installations); }
+
+    public int insert(Installation installation) { return this.repository.insert(installation); }
 
     public void deleteAllInstallations() {
         Log.i("InstallationViewModel", "Deleting all Installations from DB!");

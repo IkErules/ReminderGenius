@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import ch.hslu.appe.reminder.genius.Activity.ImageFullScreenActivity;
@@ -29,15 +30,13 @@ public class ShowInstallationImageAdapter extends RecyclerView.Adapter<ShowInsta
 
     private final LayoutInflater mInflater;
 
-    private List<Image> images; // Cached copy of images
+    private List<Image> images = new ArrayList<>(); // Cached copy of images
 
     private Activity context;
-    private InstallationImageViewModel installationImageViewModel;
 
-    public ShowInstallationImageAdapter(Activity context, InstallationImageViewModel installationImageViewModel) {
+    public ShowInstallationImageAdapter(Activity context) {
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
-        this.installationImageViewModel = installationImageViewModel;
     }
 
     @Override

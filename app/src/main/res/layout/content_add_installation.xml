@@ -1,156 +1,257 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".Activity.AddInstallationActivity"
-    tools:showIn="@layout/activity_add_installation">
+    android:layout_width="wrap_content"
+    android:layout_marginTop="?android:attr/actionBarSize" >
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".Activity.AddInstallationActivity"
+        tools:showIn="@layout/activity_add_installation">
 
-    <Spinner
-        android:id="@+id/add_installation_product_spinner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/activity_vertical_margin"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="@dimen/activity_vertical_margin"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        <Spinner
+            android:id="@+id/add_installation_product_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="@dimen/activity_vertical_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-    <Spinner
-        android:id="@+id/add_installation_customer_spinner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/activity_vertical_margin"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="@dimen/activity_vertical_margin"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        <Spinner
+            android:id="@+id/add_installation_customer_spinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="@dimen/activity_vertical_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/add_installation_product_spinner_hint"
-        app:layout_constraintStart_toStartOf="@+id/add_installation_product_spinner"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/add_installation_product_spinner_hint"
+            app:layout_constraintStart_toStartOf="@+id/add_installation_product_spinner"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/add_installation_customer_spinner_hint"
-        app:layout_constraintStart_toStartOf="@+id/add_installation_customer_spinner"
-        app:layout_constraintTop_toBottomOf="@+id/add_installation_product_details_text_view" />
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/add_installation_customer_spinner_hint"
+            app:layout_constraintStart_toStartOf="@+id/add_installation_customer_spinner"
+            app:layout_constraintTop_toBottomOf="@+id/add_installation_product_details_text_view" />
 
-    <EditText
-        android:id="@+id/add_installation_installation_date_text_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/activity_vertical_margin"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="@string/main_date_time_picker_hint"
-        android:inputType="date"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        <EditText
+            android:id="@+id/add_installation_installation_date_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/main_date_time_picker_hint"
+            android:inputType="date"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
-    <EditText
-        android:id="@+id/add_installation_expire_date_text_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/activity_vertical_margin"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:enabled="true"
-        android:hint="@string/main_date_time_picker_hint"
-        android:inputType="date"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        <EditText
+            android:id="@+id/add_installation_expire_date_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
+            android:layout_marginTop="8dp"
+            android:clickable="false"
+            android:ems="10"
+            android:enabled="false"
+            android:hint="@string/main_date_time_picker_hint"
+            android:inputType="date"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/add_installation_installation_date"
-        app:layout_constraintStart_toStartOf="@+id/add_installation_installation_date_text_view"
-        app:layout_constraintTop_toBottomOf="@+id/add_installation_customer_spinner" />
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:text="@string/add_installation_installation_date"
+            app:layout_constraintStart_toStartOf="@+id/add_installation_installation_date_text_view"
+            app:layout_constraintTop_toBottomOf="@+id/add_installation_customer_spinner" />
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/add_installation_expire_date_hint"
-        app:layout_constraintStart_toStartOf="@+id/add_installation_expire_date_text_view"
-        app:layout_constraintTop_toBottomOf="@+id/add_installation_installation_date_text_view" />
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/add_installation_expire_date_hint"
+            app:layout_constraintStart_toStartOf="@+id/add_installation_expire_date_text_view"
+            app:layout_constraintTop_toBottomOf="@+id/add_installation_installation_date_text_view" />
 
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/add_installation_service_intervall_text_view"
-        app:layout_constraintStart_toEndOf="@+id/add_installation_installation_date_text_view"
-        app:layout_constraintTop_toBottomOf="@+id/add_installation_customer_spinner" />
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:text="@string/add_installation_service_intervall_text_view"
+            app:layout_constraintStart_toStartOf="@+id/add_installation_service_intervall_number"
+            app:layout_constraintTop_toBottomOf="@+id/add_installation_customer_spinner" />
 
-    <NumberPicker
-        android:id="@+id/add_installation_service_intervall_number"
-        android:layout_width="95dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="@string/add_installation_service_intervall_number"
-        android:inputType="number"
-        app:layout_constraintStart_toEndOf="@+id/add_installation_expire_date_text_view"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+        <NumberPicker
+            android:id="@+id/add_installation_service_intervall_number"
+            android:layout_width="95dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:ems="10"
+            android:hint="@string/add_installation_service_intervall_number"
+            android:inputType="number"
+            app:layout_constraintEnd_toEndOf="@+id/add_installation_customer_spinner"
+            app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
-    <TextView
-        android:id="@+id/add_installation_product_details_text_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/activity_vertical_margin"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="@dimen/activity_vertical_margin"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_installation_product_spinner" />
+        <TextView
+            android:id="@+id/add_installation_product_details_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="@dimen/activity_vertical_margin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_installation_product_spinner" />
 
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/add_installation_notes_hint"
-        app:layout_constraintStart_toStartOf="@+id/add_installation_notes_text_view"
-        app:layout_constraintTop_toBottomOf="@+id/add_installation_service_intervall_number" />
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:text="@string/add_installation_notes_hint"
+            app:layout_constraintStart_toStartOf="@+id/add_installation_notes_text_view"
+            app:layout_constraintTop_toBottomOf="@+id/add_installation_notify_technician_sms_check_box" />
 
-    <EditText
-        android:id="@+id/add_installation_notes_text_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/activity_vertical_margin"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="@dimen/activity_vertical_margin"
-        android:ems="10"
-        android:inputType="textMultiLine"
-        android:maxLines="5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <EditText
+            android:id="@+id/add_installation_notes_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="@dimen/activity_vertical_margin"
+            android:ems="10"
+            android:inputType="textMultiLine"
+            android:maxLines="5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+        <CheckBox
+            android:id="@+id/add_installation_notify_customer_mail_check_box"
+            style="@style/details_check_box"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="@dimen/activity_vertical_margin"
+            android:text="@string/show_installation_notifycustomermail_check_box"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+        <CheckBox
+            android:id="@+id/add_installation_notify_customer_sms_check_box"
+            style="@style/details_check_box"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="@dimen/activity_vertical_margin"
+            android:text="@string/show_installation_notifycustomersms_check_box"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/add_installation_notify_customer_mail_check_box" />
+
+        <CheckBox
+            android:id="@+id/add_installation_notify_technician_mail_check_box"
+            style="@style/details_check_box"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="@dimen/activity_vertical_margin"
+            android:text="@string/show_installation_notifytechnicianmail_check_box"
+            app:layout_constraintTop_toBottomOf="@+id/add_installation_notify_customer_sms_check_box"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <CheckBox
+            android:id="@+id/add_installation_notify_technician_sms_check_box"
+            style="@style/details_check_box"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="@dimen/activity_vertical_margin"
+            android:text="@string/show_installation_notifytechniciansms_check_box"
+            app:layout_constraintTop_toBottomOf="@+id/add_installation_notify_technician_mail_check_box"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/relativeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="10dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_installation_pictures_text_view"
+            tools:context=".Activity.ShowContactActivity"
+            tools:showIn="@layout/content_add_installation">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/add_installation_image_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                tools:listitem="@layout/show_installation_image_list_recycler_view_item" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:text="@string/add_installation_notification_checkbox_hint"
+            app:layout_constraintStart_toStartOf="@+id/add_installation_notify_customer_mail_check_box"
+            app:layout_constraintTop_toBottomOf="@+id/add_installation_expire_date_text_view" />
+
+        <TextView
+            android:id="@+id/add_installation_pictures_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:text="@string/add_installation_images_hint"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/add_installation_notes_text_view"
+            app:layout_constraintTop_toBottomOf="@+id/add_installation_notes_text_view" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
