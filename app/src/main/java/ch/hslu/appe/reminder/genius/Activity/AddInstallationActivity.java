@@ -66,6 +66,8 @@ public class AddInstallationActivity extends AppCompatActivity {
     private InstallationImageViewModel installationImageViewModel;
     private Installation installation;
 
+    private boolean hasToSetDefaultServiceIntervalFromProduct = true;
+
     private String currentPhotoPath;
     private List<Image> tempImages;
 
@@ -90,6 +92,16 @@ public class AddInstallationActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(false);
         tempImages = new ArrayList<>();
 
+        setInstallationFromIntent();
+        addProductToSpinner();
+        addCustomersToSpinner();
+        addInstallationDatePickerListener();
+        addNumberPickerListener();
+        populateTextFieldsFromInstallation();
+        observeImages();
+    }
+
+    private void setInstallationFromIntent() {
         if (getIntent().hasExtra(INSTALLATION_TO_EDIT)) {
             installation = getIntent().getParcelableExtra(INSTALLATION_TO_EDIT);
 
@@ -102,18 +114,11 @@ public class AddInstallationActivity extends AppCompatActivity {
                                 tempImages.addAll(images);
                                 updateAdapter();
                             }));
+            hasToSetDefaultServiceIntervalFromProduct = false;
         } else {
             installation = Installation.builder().defaultInstallation();
+            hasToSetDefaultServiceIntervalFromProduct = true;
         }
-
-        addProductToSpinner();
-        addCustomersToSpinner();
-        addExpireDatePickerListener();
-        addInstallationDatePickerListener();
-        addNumberPickerListener();
-        addNotesTextViewListener();
-        populateTextFieldsFromInstallation();
-        observeImages();
     }
 
     private void observeImages() {
@@ -148,15 +153,6 @@ public class AddInstallationActivity extends AppCompatActivity {
         } else {
             Log.w("AddInstallationActivity", "Installation not yet ready.");
         }
-    }
-
-    private void addNotesTextViewListener() {
-        TextView notesTextView = findViewById(R.id.add_installation_notes_text_view);
-        notesTextView.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-                installation.setNotes(String.valueOf(notesTextView.getText()));
-            }
-        });
     }
 
     private void populateTextFieldsFromInstallation() {
@@ -216,7 +212,7 @@ public class AddInstallationActivity extends AppCompatActivity {
         np.setOnValueChangedListener((picker, oldVal, newVal) -> {
             installation.setServiceInterval(newVal);
             installation.setExpireDate(installation.getInstallationDate().plusYears(newVal));
-            updateExpirationDateView();
+            updateExpirationDateViewFromInstallation();
         });
     }
 
@@ -225,6 +221,7 @@ public class AddInstallationActivity extends AppCompatActivity {
 
         HashMap<Integer, ProductCategory> productMapper = new HashMap<>();
         ArrayAdapter<String> productAdapter= new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item);
+        boolean comesFromStart = false;
 
         productCategoryViewModel.getAllProductsCategory().observe(this, products -> {
             Collections.sort(products);
@@ -247,16 +244,23 @@ public class AddInstallationActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ProductCategory selectedProduct = productMapper.get(position);
-                installation.setProductCategoryId(selectedProduct.getProductCategoryId());
-                installation.setServiceInterval(selectedProduct.getDefaultServiceInterval());
-                installation.setExpireDate(installation.getInstallationDate()
-                        .plusYears(selectedProduct.getDefaultServiceInterval()));
-                ((TextView) findViewById(R.id.add_installation_product_details_text_view))
-                        .setText(selectedProduct.getDescription());
-                ((NumberPicker) findViewById(R.id.add_installation_service_intervall_number))
-                        .setValue(selectedProduct.getDefaultServiceInterval());
-                updateExpirationDateView();
+                if (hasToSetDefaultServiceIntervalFromProduct) {
+                    ProductCategory selectedProduct = productMapper.get(position);
+                    installation.setProductCategoryId(selectedProduct.getProductCategoryId());
+                    installation.setProductDetails(selectedProduct.getDescription());
+                    installation.setServiceInterval(selectedProduct.getDefaultServiceInterval());
+                    installation.setExpireDate(installation.getInstallationDate()
+                            .plusYears(selectedProduct.getDefaultServiceInterval()));
+
+                    ((TextView) findViewById(R.id.add_installation_product_details_text_view))
+                            .setText(selectedProduct.getDescription());
+                    ((NumberPicker) findViewById(R.id.add_installation_service_intervall_number))
+                            .setValue(selectedProduct.getDefaultServiceInterval());
+
+                    updateExpirationDateViewFromInstallation();
+                }
+
+                hasToSetDefaultServiceIntervalFromProduct = true;
             }
 
             @Override
@@ -299,26 +303,6 @@ public class AddInstallationActivity extends AppCompatActivity {
         });
     }
 
-    private void addExpireDatePickerListener() {
-        TextView expireDate = findViewById(R.id.add_installation_expire_date_text_view);
-        expireDate.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                LocalDate initDate = convertToLocalDate(String.valueOf(expireDate.getText()));
-                DatepickerFragment newFragment = new DatepickerFragment(initDate);
-                newFragment.setDateSetListener((view, year, month, day) -> {
-                    LocalDate choosenDate = LocalDate.of(view.getYear(), view.getMonth(), view.getDayOfMonth());
-                    expireDate.setText(choosenDate.format(ofPattern(DATE_FORMAT)));
-                    installation.setExpireDate(choosenDate);
-                });
-                newFragment.show(getSupportFragmentManager(), "date_picker_expire_date");
-            } else {
-                LocalDate inputDate = convertToLocalDate(String.valueOf(expireDate.getText()));
-                expireDate.setText(inputDate.format(ofPattern(DATE_FORMAT)));
-                installation.setExpireDate(inputDate);
-            }
-        });
-    }
-
     private LocalDate convertToLocalDate(String toConvert) {
         LocalDate converted = LocalDate.now();
         try {
@@ -344,7 +328,7 @@ public class AddInstallationActivity extends AppCompatActivity {
         });
     }
 
-    private void updateExpirationDateView() {
+    private void updateExpirationDateViewFromInstallation() {
         TextView textView = findViewById(R.id.add_installation_expire_date_text_view);
         textView.setText(installation.getExpireDate().format(ofPattern(DATE_FORMAT)));
     }
