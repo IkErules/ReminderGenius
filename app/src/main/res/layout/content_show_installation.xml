@@ -45,36 +45,36 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/show_installation_contact_text_view"
             style="@style/details_text_no_drawable"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
+            android:layout_marginEnd="@dimen/activity_vertical_margin"
             android:background="?android:attr/selectableItemBackground"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/show_installation_contact_header_text_view" />
-        <!--
-        <View
-            android:id="@+id/installation_detail_divider"
-            style="@style/details_divider_indent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/show_installation_contact_text_view" />
-            -->
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/show_installation_mail_text_view"
             style="@style/details_text_no_drawable"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
+            android:layout_marginEnd="@dimen/activity_vertical_margin"
             android:background="?android:attr/selectableItemBackground"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/show_installation_contact_text_view" />
-
-        <!--
-        <View
-            android:id="@+id/installation_detail_divider2"
-            style="@style/details_divider_indent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/show_installation_mail_text_view" />
-            -->
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/show_installation_phone_text_view"
             style="@style/details_text_no_drawable"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_vertical_margin"
+            android:layout_marginEnd="@dimen/activity_vertical_margin"
             android:background="?android:attr/selectableItemBackground"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/show_installation_mail_text_view" />
 
@@ -137,28 +137,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/show_installation_header_text_view" />
 
-        <!--
-        <View
-            android:id="@+id/installation_detail_divider6"
-            style="@style/details_divider_indent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/show_installation_expiredate_text_view" />
-            -->
-
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/show_installation_notes_text_view"
             style="@style/details_text_no_drawable"
             android:background="?android:attr/selectableItemBackground"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/show_installation_expiredate_text_view" />
-
-        <!--
-        <View
-            android:id="@+id/installation_detail_divider7"
-            style="@style/details_divider_indent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/show_installation_notes_text_view" />
-            -->
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_notify_technician_sms_check_box" />
 
         <CheckBox
             android:id="@+id/show_installation_notify_customer_mail_check_box"
@@ -168,7 +152,7 @@
             android:clickable="false"
             android:text="@string/show_installation_notifycustomermail_check_box"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/show_installation_notes_text_view" />
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_expiredate_text_view" />
 
         <CheckBox
             android:id="@+id/show_installation_notify_customer_sms_check_box"
@@ -207,7 +191,7 @@
             android:padding="10dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/show_installation_notify_technician_sms_check_box"
+            app:layout_constraintTop_toBottomOf="@+id/show_installation_notes_text_view"
             tools:context=".Activity.ShowContactActivity"
             tools:showIn="@layout/activity_main">
 
