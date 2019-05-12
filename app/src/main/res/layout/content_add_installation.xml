@@ -216,10 +216,11 @@
             android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:padding="10dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_installation_notes_text_view"
+            app:layout_constraintTop_toBottomOf="@id/add_installation_pictures_text_view"
             tools:context=".Activity.ShowContactActivity"
             tools:showIn="@layout/content_add_installation">
 
@@ -227,10 +228,8 @@
                 android:id="@+id/add_installation_image_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:orientation="horizontal"
                 tools:listitem="@layout/show_installation_image_list_recycler_view_item" />
-
         </RelativeLayout>
 
         <TextView
@@ -242,5 +241,17 @@
             android:text="@string/add_installation_notification_checkbox_hint"
             app:layout_constraintStart_toStartOf="@+id/add_installation_notify_customer_mail_check_box"
             app:layout_constraintTop_toBottomOf="@+id/add_installation_expire_date_text_view" />
+
+        <TextView
+            android:id="@+id/add_installation_pictures_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:text="@string/add_installation_images_hint"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/add_installation_notes_text_view"
+            app:layout_constraintTop_toBottomOf="@+id/add_installation_notes_text_view" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

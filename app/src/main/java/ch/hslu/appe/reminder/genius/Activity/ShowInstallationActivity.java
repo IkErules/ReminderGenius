@@ -146,10 +146,10 @@ public class ShowInstallationActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.show_installation_notes_text_view)).setText(this.installation.getNotes());
         ((TextView) findViewById(R.id.show_installation_expiredate_text_view)).setText(getResources().getString(R.string.show_installation_next_service_text) + ": " + this.installation.getFriendlyExpireDateAsString());
 
-        ((CheckBox) findViewById(R.id.show_installation_notify_customer_mail_check_box)).setActivated(this.installation.getNotifyCustomerMail());
-        ((CheckBox) findViewById(R.id.show_installation_notify_customer_sms_check_box)).setActivated(this.installation.getNotifyCustomerSms());
-        ((CheckBox) findViewById(R.id.show_installation_notify_technician_mail_check_box)).setActivated(this.installation.getNotifyCreatorMail());
-        ((CheckBox) findViewById(R.id.show_installation_notify_technician_sms_check_box)).setActivated(this.installation.getNotifyCreatorSms());
+        ((CheckBox) findViewById(R.id.show_installation_notify_customer_mail_check_box)).setChecked(this.installation.getNotifyCustomerMail());
+        ((CheckBox) findViewById(R.id.show_installation_notify_customer_sms_check_box)).setChecked(this.installation.getNotifyCustomerSms());
+        ((CheckBox) findViewById(R.id.show_installation_notify_technician_mail_check_box)).setChecked(this.installation.getNotifyCreatorMail());
+        ((CheckBox) findViewById(R.id.show_installation_notify_technician_sms_check_box)).setChecked(this.installation.getNotifyCreatorSms());
 
     }
 

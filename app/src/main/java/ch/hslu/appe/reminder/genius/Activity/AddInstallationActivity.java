@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -124,6 +125,12 @@ public class AddInstallationActivity extends AppCompatActivity {
     }
 
     private void updateAdapter() {
+        TextView imageLabel = findViewById(R.id.add_installation_pictures_text_view);
+        if (tempImages.size() != 0) {
+            imageLabel.setVisibility(View.VISIBLE);
+        } else {
+            imageLabel.setVisibility(View.INVISIBLE);
+        }
         adapter.setImages(tempImages);
     }
 
@@ -163,6 +170,14 @@ public class AddInstallationActivity extends AppCompatActivity {
                 .setText(installation.getExpireDate().format(ofPattern(DATE_FORMAT)));
         ((TextView) findViewById(R.id.add_installation_notes_text_view))
                 .setText(installation.getNotes());
+        ((CheckBox) findViewById(R.id.add_installation_notify_customer_mail_check_box))
+                .setChecked(installation.getNotifyCustomerMail());
+        ((CheckBox) findViewById(R.id.add_installation_notify_customer_sms_check_box))
+                .setChecked(installation.getNotifyCustomerSms());
+        ((CheckBox) findViewById(R.id.add_installation_notify_technician_mail_check_box))
+                .setChecked(installation.getNotifyCreatorMail());
+        ((CheckBox) findViewById(R.id.add_installation_notify_technician_sms_check_box))
+                .setChecked(installation.getNotifyCreatorSms());
     }
 
     private void setInstallationFromTextFields() {
@@ -175,6 +190,14 @@ public class AddInstallationActivity extends AppCompatActivity {
         CharSequence notes = ((TextView) findViewById(R.id.add_installation_notes_text_view))
                 .getText();
         installation.setNotes(String.valueOf(notes));
+        installation.setNotifyCustomerMail(
+                ((CheckBox) findViewById(R.id.add_installation_notify_customer_mail_check_box)).isChecked());
+        installation.setNotifyCustomerSms(
+                ((CheckBox) findViewById(R.id.add_installation_notify_customer_sms_check_box)).isChecked());
+        installation.setNotifyCreatorMail(
+                ((CheckBox) findViewById(R.id.add_installation_notify_technician_mail_check_box)).isChecked());
+        installation.setNotifyCreatorSms(
+                ((CheckBox) findViewById(R.id.add_installation_notify_technician_sms_check_box)).isChecked());
     }
 
     private void addNumberPickerListener() {
