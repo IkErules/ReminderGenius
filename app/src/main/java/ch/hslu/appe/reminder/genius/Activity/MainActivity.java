@@ -233,7 +233,7 @@ public class MainActivity extends AppCompatActivity
                             getApplicationContext().getResources().getString(R.string.notification_title),
                             "Kunde: " + contact.getLastName() + " " + installation.getFriendlyExpireDateAsString(),
                             "Installation: " + Integer.toString(installation.getInstallationId()) + "\n" +
-                                    "Fälligkeitsdatum: " + installation.getExpireDate().toString() + "\n" +
+                                    "Fälligkeitsdatum: " + installation.getFriendlyExpireDateAsString() + "\n" +
                                     "Produkt: " + Integer.toString(installation.getProductCategoryId()) + "\n" +
                                     "Kontakt: " + contact.getFormattedAddressWithName(),
                             pendingIntent))
