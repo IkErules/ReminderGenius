@@ -74,10 +74,42 @@
     <string name="show_installation_notifycustomersms_check_box">Kontakt per SMS benachrichtigen</string>
     <string name="show_installation_notifytechnicianmail_check_box">Mich per Mail benachrichtigen</string>
     <string name="show_installation_notifytechniciansms_check_box">Mich per SMS benachrichtigen</string>
+    <string name="show_installation_next_service_text">Nächster Service</string>
+    <string name="show_installation_installation_text">Installation</string>
+    <string name="expiring_service_fragment_text">Es ist bald ein Service für fällig. Soll der Kunde benachrichtigt werden?</string>
+    <string name="expiring_service_fragment_send_email_text">E-Mail</string>
+    <string name="expiring_service_fragment_send_sms_text">SMS</string>
+    <string name="send_email_subject">Service für Ihre Sanitärinstallation</string>
+    <string name="send_email_content">Sehr geehrter Kunde\n\n
+    Für die Sanitärinstallation vom %1$s ist bald wieder ein Service fällig\n
+    Bitte kontaktieren Sie mich, sodass wir einen Termin vereinbaren können.\n\n
+
+    Freundliche Grüsse
+    </string>
+    <string name="send_sms_content">Sehr geehrter Kunde\n\n
+    Für die Sanitärinstallation vom %1$s ist bald wieder ein Service fällig\n
+    Bitte kontaktieren Sie mich, sodass wir einen Termin vereinbaren können.\n\n
+
+    Freundliche Grüsse
+    </string>
 
     <string name="title_activity_show_image_fullscreen">ShowImageFullscreenActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_image_fullscreen">Bild im Vollbildmodus anzeigen</string>
+    <string name="notification_title">Service bald fällig</string>
+    <string name="notification_text">%1$s, %2$s</string>
+    <string name="main_action_show_notification_text">Benachrichtigung erzeugen</string>
+    <string name="notification_category_text">Fällige Services</string>
+    <string name="notification_category_description_text">Zeigt bald fällige Services an</string>
+
+    <string name="preferences_notification_category">Benachrichtigungen</string>
+    <string name="preferences_display_notifications_title_text">Benachrichtigungen anzeigen</string>
+    <string name="preferences_display_notifications_summary_text">Sollen Benachrichtigungen für bald fällige Services angezeigt werden?</string>
+    <string name="preferences_display_notifications_months_summary_text">Benachrichtigungen werden so weit im Voraus angezeigt.</string>
+    <string name="preferences_display_notifications_months_title_text">Monate im Voraus</string>
+    <string name="preferences_display_notifications_frequency_days_summary_text">Neue Benachrichtigungen werden alle x Tage erstellt.</string>
+    <string name="preferences_display_notifications_frequency_days_title_text">Häufigkeit der Benachrichtigung</string>
+    <string name="notification_due_date_text">Fälligkeitsdatum</string>
+    <string name="notification_product_text">Produkt</string>
+
 
 </resources>

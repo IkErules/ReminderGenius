@@ -27,7 +27,16 @@ public class InstallationRepository {
         return this.allInstallations;
     }
 
+
+    public LiveData<List<Installation>> getInstallationsByExpireDate(LocalDate date) {
+        return this.installationDao.findInstallationsByExpireDate(date);
+    }
+
     public LiveData<Installation> getInstallationById(int id) { return this.installationDao.findInstallationById(id); }
+
+    public Installation getSingleInstallationByIdSync(int id) {
+        return this.installationDao.findSingleInstallationById(id);
+    }
 
     public LiveData<Installation> getInstallationByAllProperties(int prodCatId, int contactId, String prodDetails, LocalDate instDate,
                                                                  LocalDate expireDate, int serviceInterval, String notes,
@@ -40,10 +49,10 @@ public class InstallationRepository {
         new insertAsyncTask(this.installationDao).execute(installation);
     }
 
-    public void deleteAllInstallations() { new deleteAllInstallationsAsyncTask(this.installationDao).execute(); }
+    public void deleteAllInstallations() { new DeleteAllInstallationsAsyncTask(this.installationDao).execute(); }
 
     public void delete(Installation installation) {
-        new deleteInstallationsAsyncTask(this.installationDao).execute(installation);
+        new DeleteInstallationsAsyncTask(this.installationDao).execute(installation);
     }
 
     private static class insertAsyncTask extends AsyncTask<Installation, Void, Void> {
@@ -61,11 +70,11 @@ public class InstallationRepository {
         }
     }
 
-    private static class deleteAllInstallationsAsyncTask extends AsyncTask<Void, Void, Void> {
+    private static class DeleteAllInstallationsAsyncTask extends AsyncTask<Void, Void, Void> {
 
         private InstallationDao mAsyncTaskDao;
 
-        deleteAllInstallationsAsyncTask(InstallationDao dao) {
+        DeleteAllInstallationsAsyncTask(InstallationDao dao) {
             this.mAsyncTaskDao = dao;
         }
 
@@ -76,11 +85,11 @@ public class InstallationRepository {
         }
     }
 
-    private static class deleteInstallationsAsyncTask extends AsyncTask<Installation, Void, Void> {
+    private static class DeleteInstallationsAsyncTask extends AsyncTask<Installation, Void, Void> {
 
         private InstallationDao mAsyncTaskDao;
 
-        deleteInstallationsAsyncTask(InstallationDao dao) {
+        DeleteInstallationsAsyncTask(InstallationDao dao) {
             this.mAsyncTaskDao = dao;
         }
 
@@ -90,4 +99,31 @@ public class InstallationRepository {
             return null;
         }
     }
+
+    /* Sample Query AsyncTask
+    private void asyncQueryInstallationFinished(Installation results) {
+        searchResults.setValue(results);
+    }
+
+    private static class QueryInstallationAsyncTask extends
+            AsyncTask<Integer, Void, Installation> {
+
+        private InstallationDao asyncTaskDao;
+        private InstallationRepository delegate = null;
+
+        QueryInstallationAsyncTask(InstallationDao dao) {
+            asyncTaskDao = dao;
+        }
+
+        @Override
+        protected Installation doInBackground(final Integer... params) {
+            return asyncTaskDao.findSingleInstallationById(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Installation result) {
+            delegate.asyncQueryInstallationFinished(result);
+        }
+    }
+    */
 }

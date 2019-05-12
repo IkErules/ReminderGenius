@@ -30,6 +30,9 @@ public interface ContactDao {
     @Query("SELECT * FROM Contact WHERE contactId = :id")
     public LiveData<Contact> findContactById(int id);
 
+    @Query("SELECT * FROM Contact WHERE contactId = :id")
+    public Contact findSingleContactById(int id);
+
     @Query("SELECT * FROM Contact WHERE firstName LIKE :search " +
             "OR lastName LIKE :search")
     public LiveData<List<Contact>> findContactsWithName(String search);

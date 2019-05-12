@@ -9,6 +9,7 @@ import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static androidx.room.ForeignKey.NO_ACTION;
 
@@ -32,7 +33,7 @@ public class Installation implements Parcelable {
     @NonNull
     private int contactId;
     private String productDetails;
-    private LocalDate  installationDate;
+    private LocalDate installationDate;
     private LocalDate expireDate;
     private int serviceInterval;
     private String notes;
@@ -82,6 +83,14 @@ public class Installation implements Parcelable {
     public boolean getNotifyCustomerSms(){return this.notifyCustomerSms;}
     public boolean getNotifyCreatorMail(){return this.notifyCreatorMail;}
     public boolean getNotifyCreatorSms(){return this.notifyCreatorSms;}
+
+    public String getFriendlyExpireDateAsString() {
+        return this.getExpireDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    }
+
+    public String getFriendlyInstallationDateAsString() {
+        return this.getInstallationDate().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+    }
 
     public void setInstallationId(int installationId) {
         this.installationId = installationId;

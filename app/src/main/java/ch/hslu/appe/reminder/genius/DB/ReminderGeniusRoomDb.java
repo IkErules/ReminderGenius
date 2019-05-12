@@ -43,6 +43,7 @@ public abstract class ReminderGeniusRoomDb extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             ReminderGeniusRoomDb.class, "remindergenius_database")
                             .fallbackToDestructiveMigration()
+                            .allowMainThreadQueries()
                             .build();
                 }
             }
