@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="ch.hslu.appe.reminder.genius">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -15,10 +14,20 @@
         android:roundIcon="@mipmap/ic_launcher_remind_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.android.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
+
         <activity android:name=".Activity.AppPreferencesActivity"
             android:parentActivityName=".Activity.MainActivity"/>
-        <activity
-            android:name=".Activity.ImageFullScreenActivity"
+        <activity android:name=".Activity.ImageFullScreenActivity"
             android:label="@string/title_activity_image_fullscreen"
             android:parentActivityName=".Activity.ShowInstallationActivity"
             android:theme="@style/AppTheme.FullScreen" />

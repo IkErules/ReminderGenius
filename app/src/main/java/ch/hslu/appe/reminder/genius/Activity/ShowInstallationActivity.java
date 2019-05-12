@@ -80,25 +80,19 @@ public class ShowInstallationActivity extends AppCompatActivity {
         this.setProductCategoryFromInstallation();
 
         this.observeImages();
-
         this.showInstallation();
-
-        //this.registerListeners();
     }
 
     private void observeImages() {
         recyclerView = findViewById(R.id.show_installation_image_recycler_view);
-        adapter = new ShowInstallationImageAdapter(this, this.installationImageViewModel);
+        adapter = new ShowInstallationImageAdapter(this);
         recyclerView.setAdapter(adapter);
         // Make RecyclerView Horizontal
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        this.installationImageViewModel.getImagesForInstallation(this.installation.getInstallationId()).observe(this, new Observer<List<Image>>() {
-            @Override
-            public void onChanged(@Nullable final List<Image> images) {
-                // Update the cached copy of the words in the adapter.
-                adapter.setImages(images);
-            }
+        installationImageViewModel.getImagesForInstallation(installation.getInstallationId()).observe(this, images -> {
+            // Update the cached copy of the words in the adapter.
+            adapter.setImages(images);
         });
     }
 

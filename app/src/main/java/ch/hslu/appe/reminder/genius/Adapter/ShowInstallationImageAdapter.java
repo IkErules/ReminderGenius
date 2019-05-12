@@ -32,12 +32,10 @@ public class ShowInstallationImageAdapter extends RecyclerView.Adapter<ShowInsta
     private List<Image> images; // Cached copy of images
 
     private Activity context;
-    private InstallationImageViewModel installationImageViewModel;
 
-    public ShowInstallationImageAdapter(Activity context, InstallationImageViewModel installationImageViewModel) {
+    public ShowInstallationImageAdapter(Activity context) {
         this.mInflater = LayoutInflater.from(context);
         this.context = context;
-        this.installationImageViewModel = installationImageViewModel;
     }
 
     @Override

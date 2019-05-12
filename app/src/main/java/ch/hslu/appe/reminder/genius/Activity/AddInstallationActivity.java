@@ -3,15 +3,20 @@ package ch.hslu.appe.reminder.genius.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
+import android.content.Intent;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
+import androidx.core.content.FileProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,11 +30,16 @@ import android.widget.TextView;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
+import ch.hslu.appe.reminder.genius.Adapter.ShowInstallationImageAdapter;
 import ch.hslu.appe.reminder.genius.DB.Entity.Contact;
 import ch.hslu.appe.reminder.genius.DB.Entity.Image;
 import ch.hslu.appe.reminder.genius.DB.Entity.Installation;
@@ -47,6 +57,7 @@ import static java.time.format.DateTimeFormatter.*;
 
 public class AddInstallationActivity extends AppCompatActivity {
 
+    static final int REQUEST_IMAGE_CAPTURE = 569;
     private static final String DATE_FORMAT = "dd.MM.yyyy";
     public static final String INSTALLATION_TO_EDIT = "installation.to.edit";
     private ContactViewModel contactViewModel;
@@ -55,6 +66,12 @@ public class AddInstallationActivity extends AppCompatActivity {
     private ImageViewModel imageViewModel;
     private InstallationImageViewModel installationImageViewModel;
     private Installation installation;
+
+    private String currentPhotoPath;
+    private List<Image> tempImages;
+
+    private RecyclerView recyclerView;
+    private ShowInstallationImageAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +87,9 @@ public class AddInstallationActivity extends AppCompatActivity {
         imageViewModel = ViewModelProviders.of(this).get(ImageViewModel.class);
         installationImageViewModel = ViewModelProviders.of(this).get(InstallationImageViewModel.class);
 
-        productCategoryViewModel.insert(new ProductCategory("Test-Category", 1, "Test Kategorie mit Beschreibung."));
+        recyclerView = findViewById(R.id.add_installation_image_recycler_view);
+        recyclerView.setHasFixedSize(false);
+        tempImages = new ArrayList<>();
 
         if (getIntent().hasExtra(INSTALLATION_TO_EDIT)) {
             installation = getIntent().getParcelableExtra(INSTALLATION_TO_EDIT);
@@ -86,33 +105,29 @@ public class AddInstallationActivity extends AppCompatActivity {
         addNumberPickerListener();
         addNotesTextViewListener();
         populateTextFieldsFromInstallation();
+        observeImages();
     }
 
-    private void addTestImages(int installationId) {
-        addImage(R.drawable.eagle, "eagle.jpg", "Test Eagle Image", installationId);
-        addImage(R.drawable.bear, "bear.jpg", "Test Bear Image", installationId);
-        addImage(R.drawable.bonobo, "bonobo.jpg", "Test Bonobo Image", installationId);
-        addImage(R.drawable.horse, "horse.jpg", "Test Horse Image", installationId);
+    private void observeImages() {
+        recyclerView = findViewById(R.id.add_installation_image_recycler_view);
+        adapter = new ShowInstallationImageAdapter(this);
+        recyclerView.setAdapter(adapter);
+        // Make RecyclerView Horizontal
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        adapter.setImages(tempImages);
     }
 
-    private void addImage(int resourceId, String fileName, String description, int installationId) {
-        this.saveToInternalStorage((Bitmap) BitmapFactory.decodeResource(this.getResources(), resourceId), fileName);
-        File directory = getDir("installationImages", Context.MODE_PRIVATE);
-        String path = (new File(directory, fileName)).toString();
-
-        int imageId = imageViewModel.insert(new Image(path, description));
-
-        this.createInstallationImageRelation(installationId, imageId);
-    }
-
-    private void createInstallationImageRelation(int installationId, int imageId) {
-        installationImageViewModel.insert(new InstallationImage(installationId, imageId));
+    private void saveTempImages(int installationId) {
+        tempImages.forEach(image -> {
+            int imageId = imageViewModel.insert(image);
+            installationImageViewModel.insert(new InstallationImage(installationId, imageId));
+        });
     }
 
     private void saveImagesToInstallation(int installationId) {
         if (installationId != 0) {
             Log.d("AddInstallationActivity", "Added Installation: " + installationId);
-            addTestImages(installationId);
+            saveTempImages(installationId);
         } else {
             Log.w("AddInstallationActivity", "Installation not yet ready.");
         }
@@ -347,4 +362,85 @@ public class AddInstallationActivity extends AppCompatActivity {
         }
         return directory.getAbsolutePath();
     }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        ContextWrapper cw = new ContextWrapper(this.getApplicationContext());
+        // path to /data/data/yourapp/app_data/installationImages
+        //File directory = cw.getDir("installationImages", Context.MODE_PRIVATE);
+        File directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
+        //directory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                directory);
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Image newImage = new Image(currentPhotoPath, "Image Description");
+            tempImages.add(newImage);
+            adapter.setImages(tempImages);
+        }
+    }
+
+    public void takePicture(View view) {
+        dispatchTakePictureIntent();
+    }
+
+    /** Loading pics from DB and display them on View
+    private void setPic() {
+        // Get the dimensions of the View
+        int targetW = imageView.getWidth();
+        int targetH = imageView.getHeight();
+
+        // Get the dimensions of the bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(currentPhotoPath, boptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        // Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath, boptions);
+        imageView.setImageBitmap(bitmap);
+    } */
 }
