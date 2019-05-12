@@ -123,7 +123,7 @@ public class ShowInstallationActivity extends AppCompatActivity {
     }
 
     private void setContactFromInstallation() {
-        this.contactViewModel.getContactById(this.installation.getProductCategoryId()).observe(this, new Observer<Contact>() {
+        this.contactViewModel.getContactById(this.installation.getContactId()).observe(this, new Observer<Contact>() {
             @Override
             public void onChanged(@Nullable final Contact contactFromDb) {
                 // Update the cached copy
