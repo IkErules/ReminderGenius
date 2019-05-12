@@ -26,8 +26,12 @@ public class ImageRepository {
         return this.allImages;
     }
 
-    public void insert (Image image) {
-        new insertAsyncTask(this.imageDao).execute(image);
+    public void insert (Image... images) {
+        new insertAsyncTask(this.imageDao).execute(images);
+    }
+
+    public int insert (Image image) {
+        return (int) this.imageDao.insert(image);
     }
 
     public LiveData<Image> getImageWithPath(String path) { return this.imageDao.findImageWithPath(path); }

@@ -16,7 +16,7 @@ import ch.hslu.appe.reminder.genius.DB.Entity.Installation;
 @Dao
 public interface InstallationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Installation contact);
+    long insert(Installation contact);
 
     @Update
     public void updateInstallations(Installation... installations);

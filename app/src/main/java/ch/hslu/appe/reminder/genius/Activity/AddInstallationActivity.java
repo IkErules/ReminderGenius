@@ -89,48 +89,33 @@ public class AddInstallationActivity extends AppCompatActivity {
     }
 
     private void addTestImages(int installationId) {
-        addImage(R.drawable.eagle, "eagle.jpg", "Test Eagle Image");
-        addImage(R.drawable.bear, "bear.jpg", "Test Bear Image");
-        addImage(R.drawable.bonobo, "bonobo.jpg", "Test Bonobo Image");
-        addImage(R.drawable.horse, "horse.jpg", "Test Horse Image");
+        addImage(R.drawable.eagle, "eagle.jpg", "Test Eagle Image", installationId);
+        addImage(R.drawable.bear, "bear.jpg", "Test Bear Image", installationId);
+        addImage(R.drawable.bonobo, "bonobo.jpg", "Test Bonobo Image", installationId);
+        addImage(R.drawable.horse, "horse.jpg", "Test Horse Image", installationId);
     }
 
-    private void addImage(int resourceId, String fileName, String description) {
+    private void addImage(int resourceId, String fileName, String description, int installationId) {
         this.saveToInternalStorage((Bitmap) BitmapFactory.decodeResource(this.getResources(), resourceId), fileName);
         File directory = getDir("installationImages", Context.MODE_PRIVATE);
         String path = (new File(directory, fileName)).toString();
 
-        imageViewModel.insert(new Image(path, description));
+        int imageId = imageViewModel.insert(new Image(path, description));
 
-        this.createInstallationImageRelation(path);
+        this.createInstallationImageRelation(installationId, imageId);
     }
 
-    private void createInstallationImageRelation(String path) {
-        this.imageViewModel.getImageWithPath(path).observe(this, new Observer<Image>() {
-            @Override
-            public void onChanged(@Nullable final Image imageFromDb) {
-                Log.d("AddInstallationActivity", "Adding InstallationImage Relation: " + imageFromDb.toString() + ", " + installation.toString());
-                installationImageViewModel.insert(new InstallationImage(installation.getInstallationId(), imageFromDb.getImageId()));
-            }
-        });
+    private void createInstallationImageRelation(int installationId, int imageId) {
+        installationImageViewModel.insert(new InstallationImage(installationId, imageId));
     }
 
-    private void observeInstallationInsertion() {
-        this.installationViewModel.getInstallationByAllProperties(installation.getProductCategoryId(), installation.getContactId(),
-                installation.getProductDetails(), installation.getInstallationDate(), installation.getExpireDate(), installation.getServiceInterval(),
-                installation.getNotes(), installation.getNotifyCustomerMail(), installation.getNotifyCustomerSms(), installation.getNotifyCreatorMail(),
-                installation.getNotifyCreatorSms()).observe(this, new Observer<Installation>() {
-            @Override
-            public void onChanged(@Nullable final Installation installationFromDb) {
-                if (installationFromDb != null) {
-                    installation = installationFromDb;
-                    Log.d("AddInstallationActivity", "Added Installation: " + installationFromDb.toString());
-                    addTestImages(installationFromDb.getInstallationId());
-                } else {
-                    Log.w("AddInstallationActivity", "Installation not yet ready.");
-                }
-            }
-        });
+    private void saveImagesToInstallation(int installationId) {
+        if (installationId != 0) {
+            Log.d("AddInstallationActivity", "Added Installation: " + installationId);
+            addTestImages(installationId);
+        } else {
+            Log.w("AddInstallationActivity", "Installation not yet ready.");
+        }
     }
 
     private void addNotesTextViewListener() {
@@ -330,10 +315,8 @@ public class AddInstallationActivity extends AppCompatActivity {
 
         if (id == R.id.action_save) {
             setInstallationFromTextFields();
-            installationViewModel.insert(installation);
-            /* Testing Only: Add Sample Pictures to Installation.
-            this.observeInstallationInsertion();
-            */
+            int installationId = installationViewModel.insert(installation);
+            this.saveImagesToInstallation(installationId);
 
             this.finish();
         }

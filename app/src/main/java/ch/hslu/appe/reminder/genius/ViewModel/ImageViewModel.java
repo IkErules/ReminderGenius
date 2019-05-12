@@ -30,7 +30,9 @@ public class ImageViewModel extends AndroidViewModel {
 
     public LiveData<List<Image>> getAllImages() { return this.allImages; }
 
-    public void insert(Image image) { this.repository.insert(image); }
+    public void insert(Image... images) { this.repository.insert(images); }
+
+    public int insert(Image image) { return this.repository.insert(image); }
 
     public LiveData<Image> getImageWithPath(String path) { return repository.getImageWithPath(path); }
 

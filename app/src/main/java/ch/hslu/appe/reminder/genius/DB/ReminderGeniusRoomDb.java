@@ -42,6 +42,7 @@ public abstract class ReminderGeniusRoomDb extends RoomDatabase {
                     // fallbackToDestructiveMigration --> DB WILL BE PURGED ON SCHEMA VERSION UPDATE!
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             ReminderGeniusRoomDb.class, "remindergenius_database")
+                            .allowMainThreadQueries()
                             .fallbackToDestructiveMigration()
                             .allowMainThreadQueries()
                             .build();
